@@ -38,6 +38,9 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+gem "mongoid", "~> 4.0.0"
+gem 'responders'
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0'
 end
