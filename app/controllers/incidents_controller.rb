@@ -10,13 +10,13 @@ class IncidentsController < ApplicationController
     respond_with(@incident)
   end
 
-  def new
-    @incident = Incident.new
-    respond_with(@incident)
-  end
-
-  def edit
-  end
+#  def new
+#    @incident = Incident.new
+#    respond_with(@incident)
+#  end
+#
+#  def edit
+#  end
 
   def create
     @incident = Incident.new(incident_params)
@@ -24,15 +24,15 @@ class IncidentsController < ApplicationController
     respond_with(@incident)
   end
 
-  def update
-    @incident.update(incident_params)
-    respond_with(@incident)
-  end
-
-  def destroy
-    @incident.destroy
-    respond_with(@incident)
-  end
+#  def update
+#    @incident.update(incident_params)
+#    respond_with(@incident)
+#  end
+#
+#  def destroy
+#    @incident.destroy
+#    respond_with(@incident)
+#  end
 
   private
     def set_incident
@@ -41,7 +41,7 @@ class IncidentsController < ApplicationController
 
     def incident_params
       incident = params.require(:incident)
-      incident.permit(:description, :provider_id).tap do |permitted|
+      incident.permit(:description, :provider_id, :provider).tap do |permitted|
         permitted[:details] = incident[:details]
       end
     end

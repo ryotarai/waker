@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+require_relative '../config/environment'
+
+logger = Logger.new(STDOUT)
+
+while true
+  begin
+    logger.debug 'Start escalation phase.'
+
+    assignees_of_incidents = {}
+    EscalationQueue.where(:escalate_at.lte => Time.now).each do |job|
+      case job.assignee
+      when User
+        assignee = job.assignee
+      else
+        logger.error 'Invalid job.assignee'
+      end
+
+      assignees_of_incidents[job.incident] ||= []
+      assignees_of_incidents[job.incident] << assignee
+
+      logger.debug "#{job.incident} is going to be assigned to #{assignee}"
+      # add job to notification queue
+      current_time = Time.now
+      assignee.notifiers.each do |notifier|
+        NotificationQueue.create!(
+          notifier: notifier,
+          incident: job.incident,
+          notify_at: current_time + notifier.notify_after,
+        )
+      end
+
+      job.destroy
+    end
+
+    assignees_of_incidents.each_pair do |incident, assignees|
+      incident.assignees = assignees
+      begin
+        incident.save!
+      rescue => err
+        logger.error err
+      end
+    end
+
+    logger.debug 'Start notification phase.'
+
+    # fetch jobs from notification queue and notify it
+    NotificationQueue.where(:notify_at.lte => Time.now).each do |job|
+      logger.debug "#{job.notifier} is notifying #{job.incident}"
+      job.notifier.notify(job.incident)
+    end
+
+  rescue => err
+    backtrace = err.backtrace.join("\n")
+    logger.error "#{err}\n#{backtrace}"
+  end
+
+  sleep 5
+end
+

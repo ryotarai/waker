@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :incidents
+  resources :notifiers
+
+  resources :escalations
+
+  resources :incidents, only: [:index, :show, :create]
 
   resources :providers
 
