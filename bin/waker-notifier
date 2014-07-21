@@ -35,11 +35,7 @@ while true
 
     assignees_of_incidents.each_pair do |incident, assignees|
       incident.assignees = assignees
-      begin
-        incident.save!
-      rescue => err
-        logger.error err
-      end
+      incident.save!
     end
 
     logger.debug 'Start notification phase.'
@@ -48,6 +44,8 @@ while true
     NotificationQueue.where(:notify_at.lte => Time.now).each do |job|
       logger.debug "#{job.notifier} is notifying #{job.incident}"
       job.notifier.notify(job.incident)
+
+      job.destroy
     end
 
   rescue => err
@@ -55,6 +53,6 @@ while true
     logger.error "#{err}\n#{backtrace}"
   end
 
-  sleep 5
+  sleep 60
 end
 

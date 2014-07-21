@@ -12,6 +12,9 @@ class Notifier
   validates :user, presence: true
 
   def notify(incident)
-    p incident
+    case self.type
+    when 'mail'
+      NotifierMailer.incident(self, incident).deliver
+    end
   end
 end

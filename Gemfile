@@ -42,6 +42,7 @@ gem "mongoid", "~> 4.0.0"
 gem 'simple_enum', '~> 2.0.0' , require: 'simple_enum/mongoid'
 
 gem 'responders'
+gem 'dotenv-rails'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0'
