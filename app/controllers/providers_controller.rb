@@ -40,7 +40,7 @@ class ProvidersController < ApplicationController
     end
 
     def provider_params
-      provider = json_params.require(:provider)
+      provider = params.require(:provider)
       provider.permit(:type).tap do |permitted|
         permitted[:details] = provider[:details]
       end

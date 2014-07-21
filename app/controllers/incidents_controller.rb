@@ -40,7 +40,7 @@ class IncidentsController < ApplicationController
     end
 
     def incident_params
-      incident = json_params.require(:incident)
+      incident = params.require(:incident)
       incident.permit(:description, :provider_id).tap do |permitted|
         permitted[:details] = incident[:details]
       end
