@@ -15,4 +15,13 @@ class ApplicationController < ActionController::Base
     json = JSON.parse(env['rack.request.form_vars'])
     ActionController::Parameters.new(json)
   end
+  
+  def params_with_checking_method
+    if request.get?
+      params_without_checking_method
+    else
+      params_without_checking_method.merge(json_params)
+    end
+  end
+  alias_method_chain :params, :checking_method
 end

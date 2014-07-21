@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :incidents
+
   resources :providers
 
   resources :users
