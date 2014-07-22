@@ -29,6 +29,14 @@ RSpec.configure do |config|
   config.before(:suite) do
     FactoryGirl.lint
   end
+
+  config.before :suite do
+    DatabaseRewinder.clean_all
+  end
+
+  config.after :each do
+    DatabaseRewinder.clean
+  end
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
 =begin

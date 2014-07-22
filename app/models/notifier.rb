@@ -2,22 +2,25 @@ class Notifier < ActiveRecord::Base
   include JsonField
 
   json_field :details
-#  include Mongoid::Document
-#  field :notify_after, type: Integer
-#  field :type, type: String
-#  field :details, type: Hash
-#
+
   belongs_to :user
-#
-#  validates :notify_after, presence: true
-#  validates :type, presence: true
-#  validates :type, inclusion: {in: %w!mail!}
-#  validates :user, presence: true
-#
-#  def notify(incident)
-#    case self.type
-#    when 'mail'
-#      NotifierMailer.incident(self, incident).deliver
-#    end
-#  end
+
+  validates :name, presence: true
+  validates :notify_after, presence: true
+  validates :kind, presence: true
+  validates :kind, inclusion: {in: %w!mail!}
+  validates :user, presence: true
+
+  after_initialize :set_defaults
+
+  def set_defaults
+    self.details ||= {}
+  end
+
+  def notify(incident)
+    case self.kind
+    when 'mail'
+      NotifierMailer.incident(self, incident).deliver
+    end
+  end
 end

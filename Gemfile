@@ -43,6 +43,8 @@ gem 'factory_girl_rails'
 
 gem 'responders'
 gem 'dotenv-rails'
+gem 'database_rewinder'
+
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0'
