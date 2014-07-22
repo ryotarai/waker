@@ -38,7 +38,6 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem "mongoid", "~> 4.0.0"
 gem 'simple_enum', '~> 2.0.0' , require: 'simple_enum/mongoid'
 
 gem 'responders'
