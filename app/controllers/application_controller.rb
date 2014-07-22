@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   end
   
   def params_with_checking_method
-    if request.get?
+    if request.get? || Rails.env.test?
       params_without_checking_method
     else
       params_without_checking_method.merge(json_params)

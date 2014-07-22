@@ -10,13 +10,13 @@ class NotifiersController < ApplicationController
     respond_with(@notifier)
   end
 
-  def new
-    @notifier = Notifier.new
-    respond_with(@notifier)
-  end
-
-  def edit
-  end
+#  def new
+#    @notifier = Notifier.new
+#    respond_with(@notifier)
+#  end
+#
+#  def edit
+#  end
 
   def create
     @notifier = Notifier.new(notifier_params)
@@ -40,6 +40,9 @@ class NotifiersController < ApplicationController
     end
 
     def notifier_params
-      params.require(:notifier).permit(:user, :notify_after, :type, :details)
+      notifier = params.require(:notifier)
+      notifier.permit(:name, :user_id, :notify_after, :kind).tap do |permitted|
+        permitted[:details] = notifier[:details]
+      end
     end
 end

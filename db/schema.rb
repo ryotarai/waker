@@ -11,7 +11,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140720130916) do
+ActiveRecord::Schema.define(version: 20140722135556) do
+
+  create_table "notifiers", force: true do |t|
+    t.string   "name"
+    t.string   "kind"
+    t.text     "details_json"
+    t.integer  "user_id"
+    t.integer  "notify_after"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "notifiers", ["user_id"], name: "index_notifiers_on_user_id"
+
+  create_table "providers", force: true do |t|
+    t.string   "name"
+    t.string   "kind"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "details_json"
+  end
+
+  create_table "samples", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", force: true do |t|
     t.string   "name"

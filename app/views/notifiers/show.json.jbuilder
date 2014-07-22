@@ -1,1 +1,1 @@
-json.extract! @notifier, :id, :user, :notify_after, :type, :details, :created_at, :updated_at
+json.extract! @notifier, :id, :name, :user, :notify_after, :kind, :details, :created_at, :updated_at

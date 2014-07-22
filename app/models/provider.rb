@@ -1,13 +1,23 @@
-class Provider
-  include Mongoid::Document
-  field :name, type: String
-  field :type, type: String
-  field :details, type: Hash
-  has_many :incidents
+class Provider < ActiveRecord::Base
+  include JsonField
 
-  validates :type, presence: true
-  validates :type, inclusion: {in: %w!api!}
-  validates :escalation, presence: true
+  json_field :details
+#  include Mongoid::Document
+#  field :name, type: String
+#  field :type, type: String
+#  field :details, type: Hash
+#  has_many :incidents
+#
+  validates :name, presence: true
+  validates :kind, presence: true
+#  validates :type, inclusion: {in: %w!api!}
+#  validates :escalation, presence: true
+#
+#  belongs_to :escalation
+  
+  after_initialize :set_defaults
 
-  belongs_to :escalation
+  def set_defaults
+    self.details ||= {}
+  end
 end

@@ -1,13 +1,13 @@
 Rails.application.routes.draw do
-  resources :notifiers
+  resources :notifiers, only: [:index, :show, :create, :update, :destroy]
 
   resources :escalations
 
   resources :incidents, only: [:index, :show, :create]
 
-  resources :providers
+  resources :providers, only: [:index, :show, :create, :update, :destroy]
 
-  resources :users
+  resources :users, only: [:index, :show, :create, :update, :destroy]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

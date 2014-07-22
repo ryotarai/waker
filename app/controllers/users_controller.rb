@@ -10,13 +10,13 @@ class UsersController < ApplicationController
     respond_with(@user)
   end
 
-  def new
-    @user = User.new
-    respond_with(@user)
-  end
-
-  def edit
-  end
+#  def new
+#    @user = User.new
+#    respond_with(@user)
+#  end
+#
+#  def edit
+#  end
 
   def create
     @user = User.new(user_params)

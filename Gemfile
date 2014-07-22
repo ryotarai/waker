@@ -39,6 +39,7 @@ gem 'spring',        group: :development
 # gem 'debugger', group: [:development, :test]
 
 gem 'simple_enum', '~> 2.0.0' , require: 'simple_enum/mongoid'
+gem 'factory_girl_rails'
 
 gem 'responders'
 gem 'dotenv-rails'

@@ -10,13 +10,13 @@ class ProvidersController < ApplicationController
     respond_with(@provider)
   end
 
-  def new
-    @provider = Provider.new
-    respond_with(@provider)
-  end
-
-  def edit
-  end
+#  def new
+#    @provider = Provider.new
+#    respond_with(@provider)
+#  end
+#
+#  def edit
+#  end
 
   def create
     @provider = Provider.new(provider_params)
@@ -41,7 +41,7 @@ class ProvidersController < ApplicationController
 
     def provider_params
       provider = params.require(:provider)
-      provider.permit(:type).tap do |permitted|
+      provider.permit(:name, :kind).tap do |permitted|
         permitted[:details] = provider[:details]
       end
     end
