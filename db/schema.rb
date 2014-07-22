@@ -11,7 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140722143209) do
+ActiveRecord::Schema.define(version: 20140722144813) do
+
+  create_table "escalation_rules", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "escalations", force: true do |t|
+    t.integer  "escalate_to_id"
+    t.string   "escalate_to_type"
+    t.integer  "escalate_after"
+    t.integer  "escalation_rule_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "escalations", ["escalate_to_id", "escalate_to_type"], name: "index_escalations_on_escalate_to_id_and_escalate_to_type"
+  add_index "escalations", ["escalation_rule_id"], name: "index_escalations_on_escalation_rule_id"
 
   create_table "incidents", force: true do |t|
     t.text     "description"

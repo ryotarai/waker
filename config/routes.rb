@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :escalation_rules
+
   resources :notifiers, only: [:index, :show, :create, :update, :destroy]
 
   resources :escalations
