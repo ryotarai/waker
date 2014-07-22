@@ -1,10 +1,9 @@
 class Incident < ActiveRecord::Base
-#  include Mongoid::Document
-#  include SimpleEnum::Mongoid
-#  
-#  field :description, type: String
-#  field :details, type: Hash
-#  belongs_to :provider
+  include JsonField
+
+  json_field :details
+
+  belongs_to :provider
 #  has_and_belongs_to_many :assignees, class_name: 'User'
 #
 #  validates :description, presence: true
@@ -12,12 +11,12 @@ class Incident < ActiveRecord::Base
 #
 #  as_enum :status, open: 0, acknowledged: 1, resolved: 2
 #
-#  after_initialize :set_default
+  after_initialize :set_defaults
 #  after_create :trigger_incident
 #
-#  def set_default
-#    self.status ||= :open
-#  end
+  def set_defaults
+    self.details ||= {}
+  end
 #
 #  def trigger_incident
 #    escalation = self.provider.escalation
