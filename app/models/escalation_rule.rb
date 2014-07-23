@@ -1,4 +1,6 @@
 class EscalationRule < ActiveRecord::Base
+  validates :name, presence: true
+
   has_many :escalations
 
   def escalations_hash_array=(array)

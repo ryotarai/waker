@@ -2,8 +2,8 @@
 
 FactoryGirl.define do
   factory :escalation_queue do
-    incident nil
-    escalation nil
-    escalate_at "2014-07-23 23:26:55"
+    incident
+    escalation
+    escalate_at Time.now
   end
 end
