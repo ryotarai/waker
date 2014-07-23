@@ -11,7 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140722144813) do
+ActiveRecord::Schema.define(version: 20140723142655) do
+
+  create_table "escalation_queues", force: true do |t|
+    t.integer  "incident_id"
+    t.integer  "escalation_id"
+    t.datetime "escalate_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "escalation_queues", ["escalation_id"], name: "index_escalation_queues_on_escalation_id"
+  add_index "escalation_queues", ["incident_id"], name: "index_escalation_queues_on_incident_id"
 
   create_table "escalation_rules", force: true do |t|
     t.string   "name"
@@ -59,7 +70,10 @@ ActiveRecord::Schema.define(version: 20140722144813) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "details_json"
+    t.integer  "escalation_rule_id"
   end
+
+  add_index "providers", ["escalation_rule_id"], name: "index_providers_on_escalation_rule_id"
 
   create_table "samples", force: true do |t|
     t.string   "name"

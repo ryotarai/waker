@@ -12,21 +12,21 @@ class Incident < ActiveRecord::Base
 #  as_enum :status, open: 0, acknowledged: 1, resolved: 2
 #
   after_initialize :set_defaults
-#  after_create :trigger_incident
-#
+  after_create :trigger_incident
+
   def set_defaults
     self.details ||= {}
   end
-#
-#  def trigger_incident
-#    escalation = self.provider.escalation
-#    current_time = Time.now
-#    escalation.decoded_rules.each do |rule|
-#      EscalationQueue.create!(
-#        assignee: rule['target'],
-#        incident: self,
-#        escalate_at: current_time + rule['at'],
-#      )
-#    end
-#  end
+
+  def trigger_incident
+    escalation_rule = self.provider.escalation_rule
+    current_time = Time.now
+    escalation_rule.escalations.each do |escalation|
+      EscalationQueue.create!(
+        incident: self,
+        escalation: escalation,
+        escalate_at: current_time + escalation.escalate_after,
+      )
+    end
+  end
 end

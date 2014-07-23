@@ -14,6 +14,7 @@ RSpec.describe "Providers", :type => :request do
         'name' => provider.name,
         'kind' => provider.kind,
         'details' => provider.details,
+        'escalation_rule_id' => provider.escalation_rule.id,
         'url' => provider_url(provider, format: :json),
       }])
       expect(response.status).to be(200)
@@ -29,6 +30,7 @@ RSpec.describe "Providers", :type => :request do
         'name' => provider.name,
         'kind' => provider.kind,
         'details' => provider.details,
+        'escalation_rule_id' => provider.escalation_rule.id,
         'updated_at' => provider.updated_at.as_json,
         'created_at' => provider.created_at.as_json,
       })
@@ -38,12 +40,14 @@ RSpec.describe "Providers", :type => :request do
 
   describe "POST /providers" do
     it "creates a provider" do
-      attributes = attributes_for(:provider)
+      escalation_rule = create(:escalation_rule)
+      attributes = attributes_for(:provider).merge(escalation_rule_id: escalation_rule.id)
       post providers_path, default_params.merge(provider: attributes)
       provider = Provider.last
       expect(provider.name).to eq attributes[:name]
       expect(provider.kind).to eq attributes[:kind]
       expect(provider.details).to eq attributes[:details]
+      expect(provider.escalation_rule).to eq escalation_rule
       expect(response.status).to be(201)
     end
   end

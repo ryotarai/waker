@@ -5,5 +5,6 @@ FactoryGirl.define do
     name 'Default'
     kind 'api'
     details({'key' => 'value'})
+    escalation_rule
   end
 end

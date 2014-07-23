@@ -11,9 +11,9 @@ class Provider < ActiveRecord::Base
   validates :name, presence: true
   validates :kind, presence: true
 #  validates :type, inclusion: {in: %w!api!}
-#  validates :escalation, presence: true
+  validates :escalation_rule, presence: true
 #
-#  belongs_to :escalation
+  belongs_to :escalation_rule
   
   after_initialize :set_defaults
 

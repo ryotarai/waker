@@ -41,7 +41,7 @@ class ProvidersController < ApplicationController
 
     def provider_params
       provider = params.require(:provider)
-      provider.permit(:name, :kind).tap do |permitted|
+      provider.permit(:name, :kind, :escalation_rule_id).tap do |permitted|
         permitted[:details] = provider[:details]
       end
     end
