@@ -43,6 +43,7 @@ gem 'factory_girl_rails'
 gem 'responders'
 gem 'dotenv-rails'
 gem 'database_rewinder'
+gem 'rspec-json_matcher'
 
 
 group :development, :test do

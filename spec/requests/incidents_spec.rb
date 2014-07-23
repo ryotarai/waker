@@ -9,10 +9,20 @@ RSpec.describe "Incidents", :type => :request do
     it "returns incidents" do
       incident = create(:incident)
       get incidents_path, default_params
-      expect(json_response[0]['id']).to eq(incident.id)
-      expect(json_response[0]['description']).to eq(incident.description)
-      expect(json_response[0]['provider']['id']).to eq(incident.provider.id)
-      expect(json_response[0]['details']).to eq(incident.details)
+      expect(response.body).to be_json_as([{
+        'id' => incident.id,
+        'description' => incident.description,
+        'provider' => {
+          'id' => incident.provider.id,
+          'name' => incident.provider.name,
+          'kind' => incident.provider.kind,
+          'created_at' => incident.provider.created_at.as_json,
+          'updated_at' => incident.provider.updated_at.as_json,
+          'details' => incident.provider.details,
+        },
+        'details' => incident.details,
+        'url' => incident_url(incident, format: :json),
+      }])
       expect(response.status).to be(200)
     end
   end
@@ -21,10 +31,21 @@ RSpec.describe "Incidents", :type => :request do
     it "returns an incident" do
       incident = create(:incident)
       get incident_path(incident), default_params
-      expect(json_response['id']).to eq(incident.id)
-      expect(json_response['description']).to eq(incident.description)
-      expect(json_response['provider']['id']).to eq(incident.provider.id)
-      expect(json_response['details']).to eq(incident.details)
+      expect(response.body).to be_json_as({
+        'id' => incident.id,
+        'description' => incident.description,
+        'provider' => {
+          'id' => incident.provider.id,
+          'name' => incident.provider.name,
+          'kind' => incident.provider.kind,
+          'created_at' => incident.provider.created_at.as_json,
+          'updated_at' => incident.provider.updated_at.as_json,
+          'details' => incident.provider.details,
+        },
+        'details' => incident.details,
+        'created_at' => incident.created_at.as_json,
+        'updated_at' => incident.updated_at.as_json,
+      })
       expect(response.status).to be(200)
     end
   end
@@ -34,9 +55,10 @@ RSpec.describe "Incidents", :type => :request do
       provider = create(:provider)
       attributes = attributes_for(:incident).merge(provider_id: provider.id)
       post incidents_path, default_params.merge(incident: attributes)
-      expect(Incident.last.description).to eq(attributes[:description])
-      expect(Incident.last.provider.id).to eq(attributes[:provider_id])
-      expect(Incident.last.details).to eq(attributes[:details])
+      incidnet = Incident.last
+      expect(incidnet.description).to eq(attributes[:description])
+      expect(incidnet.provider.id).to eq(attributes[:provider_id])
+      expect(incidnet.details).to eq(attributes[:details])
       expect(response.status).to be(201)
     end
   end
