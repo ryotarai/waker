@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+require_relative '../config/environment'
+
+logger = Logger.new(STDOUT)
+
+provider = Provider.last
+
+Incident.create!(
+  description: "Hello #{Time.now}",
+  provider: provider,
+  details: {"key" => "value"},
+)
+

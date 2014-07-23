@@ -11,21 +11,22 @@ mail_to = ENV['MAIL_TO']
 
 user = User.find_or_create_by!(name: 'Bob')
 
-notifier = Notifier.find_or_create_by!(user: user, type: 'mail') do |notifier|
+notifier = Notifier.find_or_create_by!(name: 'Default') do |notifier|
+  notifier.user = user
+  notifier.kind = 'mail'
   notifier.notify_after = 0
   notifier.details = {'to' => mail_to}
 end
 
-escalation = Escalation.find_or_create_by!(name: 'Default') do |escalation|
-  escalation.rules = []
-  escalation.rules << {'user' => user.id, 'at' => 0}
-  escalation.rules << {'user' => user.id, 'at' => 60 * 5}
+escalation_rule = EscalationRule.find_or_create_by!(name: 'Default') do |escalation_rule|
+  escalation_rule.escalations << Escalation.new(escalate_to: user, escalate_after: 10)
+  escalation_rule.escalations << Escalation.new(escalate_to: user, escalate_after: 60)
 end
 
 Provider.find_or_create_by!(name: 'Default') do |provider|
-  provider.type = 'api'
+  provider.kind = 'api'
   provider.details = {}
-  provider.escalation = escalation
+  provider.escalation_rule = escalation_rule
 end
 
 

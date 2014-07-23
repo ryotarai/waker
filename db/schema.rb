@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140723142655) do
+ActiveRecord::Schema.define(version: 20140723144616) do
 
   create_table "escalation_queues", force: true do |t|
     t.integer  "incident_id"
@@ -51,6 +51,17 @@ ActiveRecord::Schema.define(version: 20140723142655) do
   end
 
   add_index "incidents", ["provider_id"], name: "index_incidents_on_provider_id"
+
+  create_table "notification_queues", force: true do |t|
+    t.integer  "notifier_id"
+    t.integer  "incident_id"
+    t.datetime "notify_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "notification_queues", ["incident_id"], name: "index_notification_queues_on_incident_id"
+  add_index "notification_queues", ["notifier_id"], name: "index_notification_queues_on_notifier_id"
 
   create_table "notifiers", force: true do |t|
     t.string   "name"

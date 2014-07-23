@@ -7,22 +7,19 @@ while true
   begin
     logger.debug 'Start escalation phase.'
 
-    assignees_of_incidents = {}
-    EscalationQueue.where(:escalate_at.lte => Time.now).each do |job|
-      case job.assignee
+    EscalationQueue.where('escalate_at < ?', Time.now).each do |job|
+      case job.escalation.escalate_to
       when User
-        assignee = job.assignee
+        escalate_to = job.escalation.escalate_to
       else
-        logger.error 'Invalid job.assignee'
+        logger.error 'Invalid escalate_to'
       end
 
-      assignees_of_incidents[job.incident] ||= []
-      assignees_of_incidents[job.incident] << assignee
+      logger.debug "#{job.incident} is going to be escalated to #{escalate_to}"
 
-      logger.debug "#{job.incident} is going to be assigned to #{assignee}"
       # add job to notification queue
       current_time = Time.now
-      assignee.notifiers.each do |notifier|
+      escalate_to.notifiers.each do |notifier|
         NotificationQueue.create!(
           notifier: notifier,
           incident: job.incident,
@@ -33,15 +30,10 @@ while true
       job.destroy
     end
 
-    assignees_of_incidents.each_pair do |incident, assignees|
-      incident.assignees = assignees
-      incident.save!
-    end
-
     logger.debug 'Start notification phase.'
 
     # fetch jobs from notification queue and notify it
-    NotificationQueue.where(:notify_at.lte => Time.now).each do |job|
+    NotificationQueue.where('notify_at < ?', Time.now).each do |job|
       logger.debug "#{job.notifier} is notifying #{job.incident}"
       job.notifier.notify(job.incident)
 
@@ -53,6 +45,6 @@ while true
     logger.error "#{err}\n#{backtrace}"
   end
 
-  sleep 60
+  sleep 10
 end
 
