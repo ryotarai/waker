@@ -47,6 +47,7 @@ gem 'ruby-gmail'
 group :development do
   gem 'pry-rails'
   gem 'pry-byebug'
+  gem 'foreman'
 end
 
 group :development, :test do

@@ -67,7 +67,8 @@ class Provider < ActiveRecord::Base
           Rails.logger.debug "Checking emails with a label '#{label}'"
 
           uids = []
-          gmail.mailbox(label).emails(:unread).each do |message|
+          encoded_label = Net::IMAP.encode_utf7(label)
+          gmail.mailbox(encoded_label).emails(:unread).each do |message|
             uid = message.uid
             uids << uid
 
