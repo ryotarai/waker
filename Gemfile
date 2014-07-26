@@ -43,6 +43,7 @@ gem 'dotenv-rails'
 gem 'database_rewinder'
 gem 'rspec-json_matcher'
 gem 'ruby-gmail'
+gem 'twilio-ruby'
 
 group :development do
   gem 'pry-rails'

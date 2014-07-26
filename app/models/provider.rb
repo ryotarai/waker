@@ -44,13 +44,9 @@ class Provider < ActiveRecord::Base
     end
   end
 
+  require 'gmail'
   class GmailWatcher < BaseWatcher
     CHECK_INTERVAL_SEC = 30
-
-    def initialize(*args)
-      super
-      require 'gmail'
-    end
 
     def start
       @stopped = false
@@ -72,7 +68,6 @@ class Provider < ActiveRecord::Base
             uid = message.uid
             uids << uid
 
-            #binding.pry
             if last_uids[label] && !last_uids[label].include?(uid)
               # new mail
               Rails.logger.debug "New message found: #{message.subject}"
