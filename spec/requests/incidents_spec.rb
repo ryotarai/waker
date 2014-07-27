@@ -8,7 +8,7 @@ RSpec.describe "Incidents", :type => :request do
   describe "GET /incidents" do
     it "returns incidents" do
       incident = create(:incident)
-      get incidents_path, default_params
+      get api_incidents_path, default_params
       expect(response.body).to be_json_as([{
         'id' => incident.id,
         'description' => incident.description,
@@ -21,8 +21,9 @@ RSpec.describe "Incidents", :type => :request do
           'created_at' => incident.provider.created_at.as_json,
           'updated_at' => incident.provider.updated_at.as_json,
         },
+        'status' => incident.status,
         'details' => incident.details,
-        'url' => incident_url(incident, format: :json),
+        'url' => api_incident_url(incident, format: :json),
       }])
       expect(response.status).to be(200)
     end
@@ -31,7 +32,7 @@ RSpec.describe "Incidents", :type => :request do
   describe "GET /incidents/1" do
     it "returns an incident" do
       incident = create(:incident)
-      get incident_path(incident), default_params
+      get api_incident_path(incident), default_params
       expect(response.body).to be_json_as({
         'id' => incident.id,
         'description' => incident.description,
@@ -44,6 +45,7 @@ RSpec.describe "Incidents", :type => :request do
           'created_at' => incident.provider.created_at.as_json,
           'updated_at' => incident.provider.updated_at.as_json,
         },
+        'status' => incident.status,
         'details' => incident.details,
         'created_at' => incident.created_at.as_json,
         'updated_at' => incident.updated_at.as_json,
@@ -56,7 +58,7 @@ RSpec.describe "Incidents", :type => :request do
     it "creates an incident" do
       provider = create(:provider)
       attributes = attributes_for(:incident).merge(provider_id: provider.id)
-      post incidents_path, default_params.merge(incident: attributes)
+      post api_incidents_path, default_params.merge(incident: attributes)
       incidnet = Incident.last
       expect(incidnet.description).to eq(attributes[:description])
       expect(incidnet.provider.id).to eq(attributes[:provider_id])

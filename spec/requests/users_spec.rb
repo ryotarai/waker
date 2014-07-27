@@ -8,11 +8,11 @@ RSpec.describe "Users", :type => :request do
   describe "GET /users" do
     it "returns users" do
       user = create(:user)
-      get users_path, default_params
+      get api_users_path, default_params
       expect(response.body).to be_json_as([{
         'id' => user.id,
         'name' => user.name,
-        'url' => user_url(user, format: :json),
+        'url' => api_user_url(user, format: :json),
       }])
       expect(response.status).to be(200)
     end
@@ -21,7 +21,7 @@ RSpec.describe "Users", :type => :request do
   describe "GET /users/1" do
     it "return a user" do
       user = create(:user)
-      get user_path(user), default_params
+      get api_user_path(user), default_params
       expect(response.body).to be_json_as({
         'id' => user.id,
         'name' => user.name,
@@ -34,7 +34,7 @@ RSpec.describe "Users", :type => :request do
 
   describe "POST /users" do
     it "creates a new user" do
-      post users_path, default_params.merge(user: {name: 'Bob'})
+      post api_users_path, default_params.merge(user: {name: 'Bob'})
       expect(User.last.attributes).to include(
         'name' => 'Bob',
       )

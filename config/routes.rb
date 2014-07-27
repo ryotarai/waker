@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  scope :api, as: :api, defaults: {format: 'json'} do
+
+  namespace :api, defaults: {format: 'json'} do
     scope :v1 do
       resources :escalation_rules
 
@@ -15,6 +16,8 @@ Rails.application.routes.draw do
       end
 
       resources :providers, only: [:index, :show, :create, :update, :destroy]
+
+      resources :shifts, only: [:index, :show, :create, :update, :destroy]
 
       resources :users, only: [:index, :show, :create, :update, :destroy]
     end

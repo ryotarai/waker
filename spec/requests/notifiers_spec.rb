@@ -8,7 +8,7 @@ RSpec.describe "Notifiers", :type => :request do
   describe "get /notifiers" do
     it "returns notifiers" do
       notifier = create(:notifier)
-      get notifiers_path, default_params
+      get api_notifiers_path, default_params
       expect(response.body).to be_json_as([{
         'id' => notifier.id,
         'name' => notifier.name,
@@ -21,7 +21,7 @@ RSpec.describe "Notifiers", :type => :request do
           'created_at' => notifier.user.created_at.as_json,
         },
         'details' => notifier.details,
-        'url' => notifier_url(notifier, format: :json),
+        'url' => api_notifier_url(notifier, format: :json),
       }])
       expect(response.status).to be(200)
     end
@@ -30,7 +30,7 @@ RSpec.describe "Notifiers", :type => :request do
   describe "get /notifiers/1" do
     it "returns a notifier" do
       notifier = create(:notifier)
-      get notifier_path(notifier), default_params
+      get api_notifier_path(notifier), default_params
       expect(response.body).to be_json_as({
         'id' => notifier.id,
         'name' => notifier.name,
@@ -54,7 +54,7 @@ RSpec.describe "Notifiers", :type => :request do
     it "creates a notifier" do
       user = create(:user)
       attributes = attributes_for(:notifier).merge(user_id: user.id)
-      post notifiers_path, default_params.merge(notifier: attributes)
+      post api_notifiers_path, default_params.merge(notifier: attributes)
       notifier = Notifier.last
       expect(notifier.name).to eq(attributes[:name])
       expect(notifier.kind).to eq(attributes[:kind])

@@ -8,14 +8,14 @@ RSpec.describe "Providers", :type => :request do
   describe "GET /providers" do
     it "returns providers" do
       provider = create(:provider)
-      get providers_path, default_params
+      get api_providers_path, default_params
       expect(response.body).to be_json_as([{
         'id' => provider.id,
         'name' => provider.name,
         'kind' => provider.kind,
         'details' => provider.details,
         'escalation_rule_id' => provider.escalation_rule.id,
-        'url' => provider_url(provider, format: :json),
+        'url' => api_provider_url(provider, format: :json),
       }])
       expect(response.status).to be(200)
     end
@@ -24,7 +24,7 @@ RSpec.describe "Providers", :type => :request do
   describe "GET /provider/1" do
     it "returns a provider" do
       provider = create(:provider)
-      get provider_path(provider), default_params
+      get api_provider_path(provider), default_params
       expect(response.body).to be_json_as({
         'id' => provider.id,
         'name' => provider.name,
@@ -42,7 +42,7 @@ RSpec.describe "Providers", :type => :request do
     it "creates a provider" do
       escalation_rule = create(:escalation_rule)
       attributes = attributes_for(:provider).merge(escalation_rule_id: escalation_rule.id)
-      post providers_path, default_params.merge(provider: attributes)
+      post api_providers_path, default_params.merge(provider: attributes)
       provider = Provider.last
       expect(provider.name).to eq attributes[:name]
       expect(provider.kind).to eq attributes[:kind]
