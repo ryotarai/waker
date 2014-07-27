@@ -8,17 +8,11 @@ class EscalationQueue < ActiveRecord::Base
   
   def self.process
     self.where('escalate_at < ?', Time.now).each do |job|
-      case job.escalation.escalate_to
-      when User
-        escalate_to = job.escalation.escalate_to
-      else
-        next
-      end
-
       if job.incident.opened?
-        # add job to notification queue
+        user = job.escalation.user_escalate_to
+        Rails.logger.info "Escalating #{job.incident.inspect} to #{user.inspect}."
         current_time = Time.now
-        escalate_to.notifiers.each do |notifier|
+        user.notifiers.each do |notifier|
           NotificationQueue.create!(
             notifier: notifier,
             incident: job.incident,
