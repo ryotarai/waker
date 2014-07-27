@@ -40,12 +40,16 @@ module Api
 
     def acknowledge
       @incident.acknowledge
-      respond_with(:api, @incident)
+      respond_to do |format|
+        format.json { render json: {'message' => 'The incident became acknowledged.'} }
+      end
     end
 
     def resolve
       @incident.resolve
-      respond_with(:api, @incident)
+      respond_to do |format|
+        format.json { render json: {'message' => 'The incident became resolved.'} }
+      end
     end
 
     def twilio
