@@ -3,6 +3,7 @@ module Api
     before_action :set_incident, only: [:show, :edit, :update, :destroy, :acknowledge, :resolve]
 
     rescue_from Incident::Error, with: :incident_error
+    http_basic_authenticate_with name: ENV['TWILIO_BASIC_AUTH_USER'], password: ENV['TWILIO_BASIC_AUTH_PASSWORD'], only: [:twilio]
 
     def index
       @incidents = Incident.all
