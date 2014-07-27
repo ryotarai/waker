@@ -40,6 +40,6 @@ while true
     logger.info "#{watcher} started"
   end
 
-  sleep 10
+  sleep 60
 end
 
