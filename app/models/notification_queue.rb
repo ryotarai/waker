@@ -9,7 +9,9 @@ class NotificationQueue < ActiveRecord::Base
   def self.process
     # fetch jobs from notification queue and notify it
     self.where('notify_at < ?', Time.now).each do |job|
-      job.notifier.notify(job.incident)
+      if job.incident.opened?
+        job.notifier.notify(job.incident)
+      end
       job.destroy
     end
   end

@@ -15,14 +15,16 @@ class EscalationQueue < ActiveRecord::Base
         next
       end
 
-      # add job to notification queue
-      current_time = Time.now
-      escalate_to.notifiers.each do |notifier|
-        NotificationQueue.create!(
-          notifier: notifier,
-          incident: job.incident,
-          notify_at: current_time + notifier.notify_after,
-        )
+      if job.incident.opened?
+        # add job to notification queue
+        current_time = Time.now
+        escalate_to.notifiers.each do |notifier|
+          NotificationQueue.create!(
+            notifier: notifier,
+            incident: job.incident,
+            notify_at: current_time + notifier.notify_after,
+          )
+        end
       end
 
       job.destroy

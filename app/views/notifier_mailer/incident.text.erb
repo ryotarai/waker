@@ -1,3 +1,15 @@
-New Incident Triggered!
-=======================
+You are assigned to this incident.
+==================================
 <%= @incident.description %>
+
+Actions
+-------
+- To acknowledge, visit <%= acknowledge_api_incident_url(@incident) %>
+- To resolve, visit <%= resolve_api_incident_url(@incident) %>
+
+Details
+-------
+<%- @incident.details.each_pair do |k, v| %>
+### <%= k %>
+<%= v %>
+<%- end %>

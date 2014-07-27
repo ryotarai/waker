@@ -1,15 +1,24 @@
 Rails.application.routes.draw do
-  resources :escalation_rules
+  scope :api, as: :api, defaults: {format: 'json'} do
+    scope :v1 do
+      resources :escalation_rules
 
-  resources :notifiers, only: [:index, :show, :create, :update, :destroy]
+      resources :notifiers, only: [:index, :show, :create, :update, :destroy]
 
-  resources :escalations
+      resources :escalations
 
-  resources :incidents, only: [:index, :show, :create]
+      resources(:incidents, only: [:index, :show, :create]) do
+        member do
+          get 'acknowledge'
+          get 'resolve'
+        end
+      end
 
-  resources :providers, only: [:index, :show, :create, :update, :destroy]
+      resources :providers, only: [:index, :show, :create, :update, :destroy]
 
-  resources :users, only: [:index, :show, :create, :update, :destroy]
+      resources :users, only: [:index, :show, :create, :update, :destroy]
+    end
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

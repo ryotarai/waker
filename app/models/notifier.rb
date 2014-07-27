@@ -43,7 +43,7 @@ class Notifier < ActiveRecord::Base
   require 'twilio-ruby'
   class PhoneNotifier < BaseNotifier
     def notify
-      call = client.account.calls.create(
+      client.account.calls.create(
         :from => from_number,
         :to => to_number,
         :url => 'http://demo.twilio.com/welcome/voice/',

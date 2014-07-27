@@ -12,6 +12,6 @@ class NotifierMailer < ActionMailer::Base
       raise Error, "notifier.details['to'] is not set"
     end
 
-    mail(to: to, subject: 'Waker Alert!')
+    mail(to: to, subject: "[Waker ALERT] #{@incident.description}")
   end
 end

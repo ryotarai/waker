@@ -1,8 +1,11 @@
 class Incident < ActiveRecord::Base
+  class Error < StandardError; end
+
   include JsonField
 
   json_field :details
 
+  enum status: %i!opened acknowledged resolved!
   belongs_to :provider
 
   validates :description, presence: true
@@ -13,6 +16,7 @@ class Incident < ActiveRecord::Base
 
   def set_defaults
     self.details ||= {}
+    self.status ||= :opened
   end
 
   def trigger_incident
@@ -25,5 +29,19 @@ class Incident < ActiveRecord::Base
         escalate_at: current_time + escalation.escalate_after,
       )
     end
+  end
+
+  def acknowledge
+    if self.acknowledged? || self.resolved?
+      raise Error, "The incident is already #{self.status}."
+    end
+    self.acknowledged!
+  end
+
+  def resolve
+    if self.resolved?
+      raise Error, "The incident is already #{self.status}."
+    end
+    self.resolved!
   end
 end

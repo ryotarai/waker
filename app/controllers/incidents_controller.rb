@@ -1,5 +1,7 @@
 class IncidentsController < ApplicationController
-  before_action :set_incident, only: [:show, :edit, :update, :destroy]
+  before_action :set_incident, only: [:show, :edit, :update, :destroy, :acknowledge, :resolve]
+
+  rescue_from Incident::Error, with: :incident_error
 
   def index
     @incidents = Incident.all
@@ -34,7 +36,23 @@ class IncidentsController < ApplicationController
 #    respond_with(@incident)
 #  end
 
+  def acknowledge
+    @incident.acknowledge
+    respond_with(@incident)
+  end
+
+  def resolve
+    @incident.resolve
+    respond_with(@incident)
+  end
+
   private
+    def incident_error(error)
+      respond_to do |format|
+        format.json { render json: {error: error.message} }
+      end
+    end
+
     def set_incident
       @incident = Incident.find(params[:id])
     end
