@@ -47,6 +47,31 @@ module Api
       respond_with(:api, @incident)
     end
 
+    def twilio
+      @incident = Incident.find(params_without_checking_method[:id])
+
+      if params_without_checking_method[:Digits]
+        case params_without_checking_method[:Digits]
+        when '1'
+          @incident.acknowledge
+        when '2'
+          @incident.resolve
+        end
+      end
+
+      resp = Twilio::TwiML::Response.new do |r|
+        #r.Say 'Waker', voice: 'alice', language: 'ja-JP'
+        r.gather timeout: 10, numDigits: 1 do |g|
+          g.Say "This is Waker alert.", voice: 'alice', language: 'en-US'
+          g.Say @incident.description, voice: 'alice', language: 'en-US'
+          g.Say "To acknowledge, press 1.", voice: 'alice', language: 'en-US'
+          g.Say "To resolve, press 2.", voice: 'alice', language: 'en-US'
+        end
+      end
+
+      render xml: resp.text
+    end
+
     private
       def incident_error(error)
         respond_to do |format|

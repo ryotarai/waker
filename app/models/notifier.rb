@@ -40,13 +40,13 @@ class Notifier < ActiveRecord::Base
     end
   end
 
-  require 'twilio-ruby'
   class PhoneNotifier < BaseNotifier
     def notify
+      url = Rails.application.routes.url_helpers.twilio_api_incident_url(@incident)
       client.account.calls.create(
         :from => from_number,
         :to => to_number,
-        :url => 'http://demo.twilio.com/welcome/voice/',
+        :url => url,
       )
     end
 

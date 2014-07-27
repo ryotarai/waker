@@ -12,6 +12,8 @@ Rails.application.routes.draw do
         member do
           get 'acknowledge'
           get 'resolve'
+          get 'twilio'
+          post 'twilio'
         end
       end
 
