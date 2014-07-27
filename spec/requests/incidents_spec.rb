@@ -5,7 +5,7 @@ RSpec.describe "Incidents", :type => :request do
     {format: :json}
   end
 
-  describe "GET /incidents" do
+  describe "GET /api/v1/incidents" do
     it "returns incidents" do
       incident = create(:incident)
       get api_incidents_path, default_params
@@ -29,7 +29,7 @@ RSpec.describe "Incidents", :type => :request do
     end
   end
 
-  describe "GET /incidents/1" do
+  describe "GET /api/v1/incidents/1" do
     it "returns an incident" do
       incident = create(:incident)
       get api_incident_path(incident), default_params
@@ -54,15 +54,15 @@ RSpec.describe "Incidents", :type => :request do
     end
   end
 
-  describe "POST /incidents" do
+  describe "POST /api/v1/incidents" do
     it "creates an incident" do
       provider = create(:provider)
       attributes = attributes_for(:incident).merge(provider_id: provider.id)
       post api_incidents_path, default_params.merge(incident: attributes)
-      incidnet = Incident.last
-      expect(incidnet.description).to eq(attributes[:description])
-      expect(incidnet.provider.id).to eq(attributes[:provider_id])
-      expect(incidnet.details).to eq(attributes[:details])
+      incident = Incident.last
+      expect(incident.description).to eq(attributes[:description])
+      expect(incident.provider.id).to eq(attributes[:provider_id])
+      expect(incident.details).to eq(attributes[:details])
       expect(response.status).to be(201)
     end
   end

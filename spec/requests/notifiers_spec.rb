@@ -5,7 +5,7 @@ RSpec.describe "Notifiers", :type => :request do
     {format: :json}
   end
 
-  describe "get /notifiers" do
+  describe "get /api/v1/notifiers" do
     it "returns notifiers" do
       notifier = create(:notifier)
       get api_notifiers_path, default_params
@@ -27,7 +27,7 @@ RSpec.describe "Notifiers", :type => :request do
     end
   end
 
-  describe "get /notifiers/1" do
+  describe "get /api/v1/notifiers/1" do
     it "returns a notifier" do
       notifier = create(:notifier)
       get api_notifier_path(notifier), default_params
@@ -50,7 +50,7 @@ RSpec.describe "Notifiers", :type => :request do
     end
   end
 
-  describe "POST /notifiers" do
+  describe "POST /api/v1/notifiers" do
     it "creates a notifier" do
       user = create(:user)
       attributes = attributes_for(:notifier).merge(user_id: user.id)

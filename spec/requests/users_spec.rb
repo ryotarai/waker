@@ -5,7 +5,7 @@ RSpec.describe "Users", :type => :request do
     {format: :json}
   end
 
-  describe "GET /users" do
+  describe "GET /api/v1/users" do
     it "returns users" do
       user = create(:user)
       get api_users_path, default_params
@@ -18,7 +18,7 @@ RSpec.describe "Users", :type => :request do
     end
   end
 
-  describe "GET /users/1" do
+  describe "GET /api/v1/users/1" do
     it "return a user" do
       user = create(:user)
       get api_user_path(user), default_params
@@ -32,7 +32,7 @@ RSpec.describe "Users", :type => :request do
     end
   end
 
-  describe "POST /users" do
+  describe "POST /api/v1/users" do
     it "creates a new user" do
       post api_users_path, default_params.merge(user: {name: 'Bob'})
       expect(User.last.attributes).to include(

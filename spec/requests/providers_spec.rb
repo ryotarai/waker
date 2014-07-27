@@ -5,7 +5,7 @@ RSpec.describe "Providers", :type => :request do
     {format: :json}
   end
 
-  describe "GET /providers" do
+  describe "GET /api/v1/providers" do
     it "returns providers" do
       provider = create(:provider)
       get api_providers_path, default_params
@@ -21,7 +21,7 @@ RSpec.describe "Providers", :type => :request do
     end
   end
 
-  describe "GET /provider/1" do
+  describe "GET /api/v1/provider/1" do
     it "returns a provider" do
       provider = create(:provider)
       get api_provider_path(provider), default_params
@@ -38,7 +38,7 @@ RSpec.describe "Providers", :type => :request do
     end
   end
 
-  describe "POST /providers" do
+  describe "POST /api/v1/providers" do
     it "creates a provider" do
       escalation_rule = create(:escalation_rule)
       attributes = attributes_for(:provider).merge(escalation_rule_id: escalation_rule.id)
