@@ -23,6 +23,7 @@ RSpec.describe "Shifts", :type => :request do
     it "returns a shift" do
       shift = create(:shift)
       get api_shift_path(shift), default_params
+      shift.reload
       expect(response.body).to be_json_as({
         'id' => shift.id,
         'name' => shift.name,

@@ -22,6 +22,7 @@ RSpec.describe "Users", :type => :request do
     it "return a user" do
       user = create(:user)
       get api_user_path(user), default_params
+      user.reload
       expect(response.body).to be_json_as({
         'id' => user.id,
         'name' => user.name,

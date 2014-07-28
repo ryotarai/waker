@@ -25,6 +25,7 @@ RSpec.describe "Providers", :type => :request do
     it "returns a provider" do
       provider = create(:provider)
       get api_provider_path(provider), default_params
+      provider.reload
       expect(response.body).to be_json_as({
         'id' => provider.id,
         'name' => provider.name,

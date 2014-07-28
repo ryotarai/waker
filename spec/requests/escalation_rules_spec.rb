@@ -33,6 +33,7 @@ RSpec.describe "EscalationRules", :type => :request do
     it "returns an escalation rule" do
       escalation_rule = create(:escalation_rule)
       get api_escalation_rule_path(escalation_rule), default_params
+      escalation_rule.reload
       expect(response.body).to be_json_as({
         'id' => escalation_rule.id,
         'name' => escalation_rule.name,

@@ -9,6 +9,7 @@ RSpec.describe "Incidents", :type => :request do
     it "returns incidents" do
       incident = create(:incident)
       get api_incidents_path, default_params
+      incident.reload
       expect(response.body).to be_json_as([{
         'id' => incident.id,
         'description' => incident.description,
@@ -33,6 +34,7 @@ RSpec.describe "Incidents", :type => :request do
     it "returns an incident" do
       incident = create(:incident)
       get api_incident_path(incident), default_params
+      incident.reload
       expect(response.body).to be_json_as({
         'id' => incident.id,
         'description' => incident.description,

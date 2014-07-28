@@ -9,6 +9,7 @@ RSpec.describe "Notifiers", :type => :request do
     it "returns notifiers" do
       notifier = create(:notifier)
       get api_notifiers_path, default_params
+      notifier.reload
       expect(response.body).to be_json_as([{
         'id' => notifier.id,
         'name' => notifier.name,
@@ -31,6 +32,7 @@ RSpec.describe "Notifiers", :type => :request do
     it "returns a notifier" do
       notifier = create(:notifier)
       get api_notifier_path(notifier), default_params
+      notifier.reload
       expect(response.body).to be_json_as({
         'id' => notifier.id,
         'name' => notifier.name,
