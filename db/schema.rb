@@ -21,8 +21,8 @@ ActiveRecord::Schema.define(version: 20140727060310) do
     t.datetime "updated_at"
   end
 
-  add_index "escalation_queues", ["escalation_id"], name: "index_escalation_queues_on_escalation_id"
-  add_index "escalation_queues", ["incident_id"], name: "index_escalation_queues_on_incident_id"
+  add_index "escalation_queues", ["escalation_id"], name: "index_escalation_queues_on_escalation_id", using: :btree
+  add_index "escalation_queues", ["incident_id"], name: "index_escalation_queues_on_incident_id", using: :btree
 
   create_table "escalation_rules", force: true do |t|
     t.string   "name"
@@ -39,8 +39,8 @@ ActiveRecord::Schema.define(version: 20140727060310) do
     t.datetime "updated_at"
   end
 
-  add_index "escalations", ["escalate_to_id", "escalate_to_type"], name: "index_escalations_on_escalate_to_id_and_escalate_to_type"
-  add_index "escalations", ["escalation_rule_id"], name: "index_escalations_on_escalation_rule_id"
+  add_index "escalations", ["escalate_to_id", "escalate_to_type"], name: "index_escalations_on_escalate_to_id_and_escalate_to_type", using: :btree
+  add_index "escalations", ["escalation_rule_id"], name: "index_escalations_on_escalation_rule_id", using: :btree
 
   create_table "incidents", force: true do |t|
     t.text     "description"
@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(version: 20140727060310) do
     t.integer  "status"
   end
 
-  add_index "incidents", ["provider_id"], name: "index_incidents_on_provider_id"
+  add_index "incidents", ["provider_id"], name: "index_incidents_on_provider_id", using: :btree
 
   create_table "notification_queues", force: true do |t|
     t.integer  "notifier_id"
@@ -61,8 +61,8 @@ ActiveRecord::Schema.define(version: 20140727060310) do
     t.datetime "updated_at"
   end
 
-  add_index "notification_queues", ["incident_id"], name: "index_notification_queues_on_incident_id"
-  add_index "notification_queues", ["notifier_id"], name: "index_notification_queues_on_notifier_id"
+  add_index "notification_queues", ["incident_id"], name: "index_notification_queues_on_incident_id", using: :btree
+  add_index "notification_queues", ["notifier_id"], name: "index_notification_queues_on_notifier_id", using: :btree
 
   create_table "notifiers", force: true do |t|
     t.string   "name"
@@ -74,7 +74,7 @@ ActiveRecord::Schema.define(version: 20140727060310) do
     t.datetime "updated_at"
   end
 
-  add_index "notifiers", ["user_id"], name: "index_notifiers_on_user_id"
+  add_index "notifiers", ["user_id"], name: "index_notifiers_on_user_id", using: :btree
 
   create_table "providers", force: true do |t|
     t.string   "name"
@@ -85,7 +85,7 @@ ActiveRecord::Schema.define(version: 20140727060310) do
     t.integer  "escalation_rule_id"
   end
 
-  add_index "providers", ["escalation_rule_id"], name: "index_providers_on_escalation_rule_id"
+  add_index "providers", ["escalation_rule_id"], name: "index_providers_on_escalation_rule_id", using: :btree
 
   create_table "samples", force: true do |t|
     t.string   "name"
