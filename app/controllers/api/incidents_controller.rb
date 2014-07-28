@@ -67,8 +67,7 @@ module Api
       end
 
       resp = Twilio::TwiML::Response.new do |r|
-        #r.Say 'Waker', voice: 'alice', language: 'ja-JP'
-        r.gather timeout: 10, numDigits: 1 do |g|
+        r.Gather timeout: 10, numDigits: 1 do |g|
           g.Say "This is Waker alert.", voice: 'alice', language: 'en-US'
           g.Say @incident.description, voice: 'alice', language: 'en-US'
           g.Say "To acknowledge, press 1.", voice: 'alice', language: 'en-US'
