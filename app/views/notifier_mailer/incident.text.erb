@@ -4,8 +4,8 @@ You are assigned to this incident.
 
 Actions
 -------
-- To acknowledge, visit <%= acknowledge_api_incident_url(@incident) %>
-- To resolve, visit <%= resolve_api_incident_url(@incident) %>
+- To acknowledge, visit <%= acknowledge_api_incident_url(@incident, hash: @incident.check_hash) %>
+- To resolve, visit <%= resolve_api_incident_url(@incident, hash: @incident.check_hash) %>
 
 Details
 -------

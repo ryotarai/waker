@@ -68,4 +68,44 @@ RSpec.describe "Incidents", :type => :request do
       expect(response.status).to be(201)
     end
   end
+
+  describe "GET /api/vi/incidents/1/acknowledge" do
+    context "with correct hash" do
+      it "makes the incident acknowledged" do
+        incident = create(:incident)
+        get acknowledge_api_incident_path(incident, hash: incident.check_hash), default_params
+        incident.reload
+        expect(incident).to be_acknowledged
+      end
+    end
+
+    context "with incorrect hash" do
+      it "doesn't make the incident acknowledged" do
+        incident = create(:incident)
+        get acknowledge_api_incident_path(incident, hash: "incorrecthash"), default_params
+        incident.reload
+        expect(incident).not_to be_acknowledged
+      end
+    end
+  end
+
+  describe "GET /api/vi/incidents/1/resolve" do
+    context "with correct hash" do
+      it "makes the incident resolved" do
+        incident = create(:incident)
+        get resolve_api_incident_path(incident, hash: incident.check_hash), default_params
+        incident.reload
+        expect(incident).to be_resolved
+      end
+    end
+
+    context "with incorrect hash" do
+      it "doesn't make the incident resolved" do
+        incident = create(:incident)
+        get resolve_api_incident_path(incident, hash: "incorrecthash"), default_params
+        incident.reload
+        expect(incident).not_to be_resolved
+      end
+    end
+  end
 end

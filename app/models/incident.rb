@@ -1,3 +1,5 @@
+require 'securerandom'
+
 class Incident < ActiveRecord::Base
   class Error < StandardError; end
 
@@ -17,6 +19,7 @@ class Incident < ActiveRecord::Base
   def set_defaults
     self.details ||= {}
     self.status ||= :opened
+    self.check_hash ||= SecureRandom.hex
   end
 
   def trigger_incident

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140727060310) do
+ActiveRecord::Schema.define(version: 20140728100308) do
 
   create_table "escalation_queues", force: true do |t|
     t.integer  "incident_id"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20140727060310) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "status"
+    t.string   "check_hash"
   end
 
   add_index "incidents", ["provider_id"], name: "index_incidents_on_provider_id", using: :btree

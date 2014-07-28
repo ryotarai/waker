@@ -1,6 +1,7 @@
 module Api
   class IncidentsController < ApplicationController
     before_action :set_incident, only: [:show, :edit, :update, :destroy, :acknowledge, :resolve]
+    before_action :check_hash, only: [:acknowledge, :resolve]
 
     rescue_from Incident::Error, with: :incident_error
     http_basic_authenticate_with name: ENV['TWILIO_BASIC_AUTH_USER'], password: ENV['TWILIO_BASIC_AUTH_PASSWORD'], only: [:twilio]
@@ -39,6 +40,7 @@ module Api
   #  end
 
     def acknowledge
+
       @incident.acknowledge
       respond_to do |format|
         format.json { render json: {'message' => 'The incident became acknowledged.'} }
@@ -86,6 +88,14 @@ module Api
 
       def set_incident
         @incident = Incident.find(params[:id])
+      end
+
+      def check_hash
+        unless params[:hash] == @incident.check_hash
+          respond_to do |format|
+            format.json { render json: {'message' => 'Check hash mismatch'} }
+          end
+        end
       end
 
       def incident_params
