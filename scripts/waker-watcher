@@ -7,6 +7,7 @@ Rails.logger = logger
 watchers = []
 
 while true
+  logger.debug "==== Loading providers ===="
   watchers.each do |watcher|
     begin
       watcher.provider.reload
@@ -15,7 +16,7 @@ while true
       logger.info "#{watcher} stopped"
     end
   end
-  
+
   # add new watchers
   Provider.all.each do |provider|
     watcher = watchers.find do |w|
@@ -25,6 +26,8 @@ while true
 
     watcher = provider.watcher
     next unless watcher
+
+    logger.debug "New provider: #{provider.inspect}"
     watchers << watcher
     Thread.start(watcher) do |w|
       begin
