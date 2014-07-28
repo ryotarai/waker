@@ -4,7 +4,14 @@ module Api
     before_action :check_hash, only: [:acknowledge, :resolve]
 
     rescue_from Incident::Error, with: :incident_error
-    http_basic_authenticate_with name: ENV['TWILIO_BASIC_AUTH_USER'], password: ENV['TWILIO_BASIC_AUTH_PASSWORD'], only: [:twilio]
+
+    unless Rails.env.test?
+      http_basic_authenticate_with(
+        name: ENV['TWILIO_BASIC_AUTH_USER'],
+        password: ENV['TWILIO_BASIC_AUTH_PASSWORD'],
+        only: [:twilio],
+      )
+    end
 
     def index
       @incidents = Incident.all
@@ -40,7 +47,6 @@ module Api
   #  end
 
     def acknowledge
-
       @incident.acknowledge
       respond_to do |format|
         format.json { render json: {'message' => 'The incident became acknowledged.'} }
@@ -56,22 +62,27 @@ module Api
 
     def twilio
       @incident = Incident.find(params_without_checking_method[:id])
+      resp = nil
 
       if params_without_checking_method[:Digits]
         case params_without_checking_method[:Digits]
         when '1'
-          @incident.acknowledge
+          @incident.acknowledge rescue nil
         when '2'
-          @incident.resolve
+          @incident.resolve rescue nil
         end
-      end
-
-      resp = Twilio::TwiML::Response.new do |r|
-        r.Gather timeout: 10, numDigits: 1 do |g|
-          g.Say "This is Waker alert.", voice: 'alice', language: 'en-US'
-          g.Say @incident.description, voice: 'alice', language: 'en-US'
-          g.Say "To acknowledge, press 1.", voice: 'alice', language: 'en-US'
-          g.Say "To resolve, press 2.", voice: 'alice', language: 'en-US'
+        resp = Twilio::TwiML::Response.new do |r|
+          r.Say @incident.status, voice: 'alice', language: 'en-US'
+          r.Hangup
+        end
+      else
+        resp = Twilio::TwiML::Response.new do |r|
+          r.Gather timeout: 10, numDigits: 1 do |g|
+            g.Say "This is Waker alert.", voice: 'alice', language: 'en-US'
+            g.Say @incident.description, voice: 'alice', language: 'en-US'
+            g.Say "To acknowledge, press 1.", voice: 'alice', language: 'en-US'
+            g.Say "To resolve, press 2.", voice: 'alice', language: 'en-US'
+          end
         end
       end
 

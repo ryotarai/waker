@@ -69,7 +69,7 @@ RSpec.describe "Incidents", :type => :request do
     end
   end
 
-  describe "GET /api/vi/incidents/1/acknowledge" do
+  describe "GET /api/v1/incidents/1/acknowledge" do
     context "with correct hash" do
       it "makes the incident acknowledged" do
         incident = create(:incident)
@@ -89,7 +89,7 @@ RSpec.describe "Incidents", :type => :request do
     end
   end
 
-  describe "GET /api/vi/incidents/1/resolve" do
+  describe "GET /api/v1/incidents/1/resolve" do
     context "with correct hash" do
       it "makes the incident resolved" do
         incident = create(:incident)
@@ -105,6 +105,36 @@ RSpec.describe "Incidents", :type => :request do
         get resolve_api_incident_path(incident, hash: "incorrecthash"), default_params
         incident.reload
         expect(incident).not_to be_resolved
+      end
+    end
+  end
+
+  describe "GET /api/v1/incidents/1/twilio" do
+    context "with Digits 1" do
+      it "makes the incident acknowledged" do
+        incident = create(:incident)
+        get twilio_api_incident_path(incident), default_params.merge(Digits: '1')
+        incident.reload
+        expect(incident).to be_acknowledged
+        expect(response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say voice=\"alice\" language=\"en-US\">acknowledged</Say><Hangup/></Response>")
+      end
+    end
+
+    context "with Digits 2" do
+      it "makes the incident resolved" do
+        incident = create(:incident)
+        get twilio_api_incident_path(incident), default_params.merge(Digits: '2')
+        incident.reload
+        expect(incident).to be_resolved
+        expect(response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say voice=\"alice\" language=\"en-US\">resolved</Say><Hangup/></Response>")
+      end
+    end
+
+    context "without Digits param" do
+      it "returns TwiML" do
+        incident = create(:incident)
+        get twilio_api_incident_path(incident), default_params
+        expect(response.body).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather timeout=\"10\" numDigits=\"1\"><Say voice=\"alice\" language=\"en-US\">This is Waker alert.</Say><Say voice=\"alice\" language=\"en-US\">content</Say><Say voice=\"alice\" language=\"en-US\">To acknowledge, press 1.</Say><Say voice=\"alice\" language=\"en-US\">To resolve, press 2.</Say></Gather></Response>")
       end
     end
   end
