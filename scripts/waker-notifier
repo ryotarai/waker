@@ -1,7 +1,16 @@
 #!/usr/bin/env ruby
+require 'optparse'
 require_relative '../config/environment'
 
-logger = Logger.new(STDOUT)
+log_out = STDOUT
+
+opt = OptionParser.new
+opt.on('-l LOGFILE') do |logfile|
+  log_out = logfile
+end
+opt.parse!(ARGV)
+
+logger = Logger.new(log_out)
 Rails.logger = logger
 
 while true
