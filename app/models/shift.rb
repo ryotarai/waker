@@ -14,25 +14,31 @@ class Shift < ActiveRecord::Base
     user = nil
 
     if calendars
-      calendars.each do |cal|
-        event = cal.events.find do |e|
+      events = calendars.map do |cal|
+        cal.events.select do |e|
           e.dtstart.to_datetime <= time &&
             time <= e.dtend.to_datetime
         end
-        next unless event
+      end.flatten
 
+      events.sort! do |a, b|
+        a.dtend.to_datetime - a.dtstart.to_datetime <=>
+        b.dtend.to_datetime - b.dtstart.to_datetime
+      end
+
+      event = events.first # shortest
+
+      if event
         summary = event.summary.to_s
         user_names = summary.split('->').map do |str|
           str.strip
         end
         user_name = user_names[self.index || 0]
-        next unless user_name
+        return nil unless user_name
 
         user = User.find_by(name: user_name)
-        break if user
+        return user if user
       end
-
-      return user if user
     end
 
     nil
