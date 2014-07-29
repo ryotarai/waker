@@ -19,6 +19,7 @@ class EscalationQueue < ActiveRecord::Base
             notify_at: current_time + notifier.notify_after,
           )
         end
+        EventNotifier.fire(:incident_escalated, incident: job.incident, escalate_to: user)
       end
 
       job.destroy

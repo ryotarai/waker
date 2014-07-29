@@ -1,0 +1,27 @@
+<h1>Listing event_notifiers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Kind</th>
+      <th>Details json</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @event_notifiers.each do |event_notifier| %>
+      <tr>
+        <td><%= event_notifier.kind %></td>
+        <td><%= event_notifier.details_json %></td>
+        <td><%= link_to 'Show', event_notifier %></td>
+        <td><%= link_to 'Edit', edit_event_notifier_path(event_notifier) %></td>
+        <td><%= link_to 'Destroy', event_notifier, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Event notifier', new_event_notifier_path %>

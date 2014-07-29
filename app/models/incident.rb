@@ -32,6 +32,8 @@ class Incident < ActiveRecord::Base
         escalate_at: current_time + escalation.escalate_after,
       )
     end
+
+    EventNotifier.fire(:incident_opened, incident: self)
   end
 
   def acknowledge
@@ -39,6 +41,8 @@ class Incident < ActiveRecord::Base
       raise Error, "The incident is already #{self.status}."
     end
     self.acknowledged!
+
+    EventNotifier.fire(:incident_acknowledged, incident: self)
   end
 
   def resolve
@@ -46,5 +50,7 @@ class Incident < ActiveRecord::Base
       raise Error, "The incident is already #{self.status}."
     end
     self.resolved!
+
+    EventNotifier.fire(:incident_resolved, incident: self)
   end
 end

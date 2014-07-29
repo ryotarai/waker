@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
-
   namespace :api, defaults: {format: 'json'} do
     scope :v1 do
+      resources :event_notifiers
+
       resources :escalation_rules
 
       resources :notifiers, only: [:index, :show, :create, :update, :destroy]
