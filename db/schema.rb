@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140729063401) do
+ActiveRecord::Schema.define(version: 20140729092205) do
 
   create_table "escalation_queues", force: true do |t|
     t.integer  "incident_id"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20140729063401) do
     t.integer  "notify_after"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "ignore_between"
   end
 
   add_index "notifiers", ["user_id"], name: "index_notifiers_on_user_id", using: :btree

@@ -18,9 +18,25 @@ class Notifier < ActiveRecord::Base
   end
 
   def notify(incident)
+    return if self.ignored?
     klass = Notifier.const_get("#{self.kind.capitalize}Notifier")
     notifier = klass.new(self, incident)
     notifier.notify
+  end
+
+  def ignored?
+    return false unless self.ignore_between
+    self.ignore_between.split(',').any? do |entry|
+      start_time, end_time = entry.split('-')
+      start_time = Time.parse(start_time)
+      end_time = Time.parse(end_time)
+
+      if end_time < start_time
+        end_time += 60 * 60 * 24
+      end
+
+      start_time <= Time.now && Time.now <= end_time
+    end
   end
 
   class BaseNotifier
