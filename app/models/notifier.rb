@@ -36,12 +36,13 @@ class Notifier < ActiveRecord::Base
       start_time = Time.parse(start_time)
       end_time = Time.parse(end_time)
 
+      today = Date.today
       if flags.include?('not_holiday_jp')
-        next false if HolidayJp.holiday?(Date.today)
+        next false if HolidayJp.holiday?(today) || today.saturday? || today.sunday?
       end
 
       if flags.include?('holiday_jp')
-        next false unless HolidayJp.holiday?(Date.today)
+        next false unless HolidayJp.holiday?(today) || today.saturday? || today.sunday?
       end
 
       start_time <= Time.now && Time.now <= end_time
