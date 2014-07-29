@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140728100308) do
+ActiveRecord::Schema.define(version: 20140729063401) do
 
   create_table "escalation_queues", force: true do |t|
     t.integer  "incident_id"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(version: 20140728100308) do
     t.string   "ical"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "index"
   end
 
   create_table "users", force: true do |t|

@@ -21,7 +21,14 @@ class Shift < ActiveRecord::Base
         end
         next unless event
 
-        user = User.find_by(name: event.summary.to_s)
+        summary = event.summary.to_s
+        user_names = summary.split('->').map do |str|
+          str.strip
+        end
+        user_name = user_names[self.index || 0]
+        next unless user_name
+
+        user = User.find_by(name: user_name)
         break if user
       end
 
