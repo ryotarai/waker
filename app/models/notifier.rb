@@ -26,13 +26,22 @@ class Notifier < ActiveRecord::Base
 
   def ignored?
     return false unless self.ignore_between
-    self.ignore_between.split(',').any? do |entry|
-      start_time, end_time = entry.split('-')
+
+    # "9:30-18:30,not_holiday_jp"
+    self.ignore_between.split('|').any? do |entry|
+      time, *flags = entry.split(',')
+      flags = [] unless flags
+
+      start_time, end_time = time.split('-')
       start_time = Time.parse(start_time)
       end_time = Time.parse(end_time)
 
-      if end_time < start_time
-        end_time += 60 * 60 * 24
+      if flags.include?('not_holiday_jp')
+        next false if HolidayJp.holiday?(Date.today)
+      end
+
+      if flags.include?('holiday_jp')
+        next false unless HolidayJp.holiday?(Date.today)
       end
 
       start_time <= Time.now && Time.now <= end_time

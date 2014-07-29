@@ -45,6 +45,7 @@ gem 'rspec-json_matcher'
 gem 'ruby-gmail'
 gem 'twilio-ruby'
 gem 'icalendar'
+gem 'holiday_jp'
 
 group :development do
   gem 'pry-rails'
