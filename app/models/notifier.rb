@@ -27,7 +27,7 @@ class Notifier < ActiveRecord::Base
   end
 
   def ignored?
-    self.ignore_periods.each do |period|
+    self.ignore_periods.any? do |period|
       # period = {'start' => '9:30', 'end' => '18:30', 'not_holiday_jp' => true}
       start_time = Time.parse(period['start'])
       end_time = Time.parse(period['end'])
