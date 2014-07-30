@@ -2,7 +2,7 @@ class Notifier < ActiveRecord::Base
   include JsonField
 
   json_field :details
-  json_field :ignore_period
+  json_field :ignore_periods
 
   belongs_to :user
 
