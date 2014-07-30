@@ -62,7 +62,7 @@ class EventNotifier < ActiveRecord::Base
     end
 
     def client
-      HipChat::Client.new(api_token, api_version: 'v2')
+      HipChat::Client.new(api_token)
     end
 
     def send_message(*args)
