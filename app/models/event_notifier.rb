@@ -36,7 +36,7 @@ class EventNotifier < ActiveRecord::Base
     end
   end
 
-  class HipchatNotifier
+  class HipchatNotifier < BaseNotifier
     def notify(type, details)
       send(type, details)
     end
