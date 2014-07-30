@@ -27,6 +27,8 @@ class EventNotifier < ActiveRecord::Base
   end
 
   class BaseNotifier
+    attr_reader :event_notifier
+
     def initialize(event_notifier)
       @event_notifier = event_notifier
     end
