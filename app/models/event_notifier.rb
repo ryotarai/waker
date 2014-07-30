@@ -34,6 +34,11 @@ class EventNotifier < ActiveRecord::Base
     def notify(type, details)
       raise NotImplementedError
     end
+
+    private
+    def url_helpers
+      Rails.application.routes.url_helpers
+    end
   end
 
   class HipchatNotifier < BaseNotifier
@@ -66,7 +71,7 @@ class EventNotifier < ActiveRecord::Base
     def incident_opened(details)
       incident = details[:incident]
       send_message(<<-EOC, color: :red)
-New incident opened: #{incident.description} (<a href="#{acknowledge_api_incident_url(incident, hash: incident.check_hash)}">Acknowledge</a>) (<a href="#{resolve_api_incident_url(incident, hash: incident.check_hash)}">Resolve</a>)
+New incident opened: #{incident.description} (<a href="#{url_helpers.acknowledge_api_incident_url(incident, hash: incident.check_hash)}">Acknowledge</a>) (<a href="#{url_helpers.resolve_api_incident_url(incident, hash: incident.check_hash)}">Resolve</a>)
       EOC
     end
 
