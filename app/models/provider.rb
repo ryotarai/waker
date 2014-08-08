@@ -59,28 +59,34 @@ class Provider < ActiveRecord::Base
         gmail.imap.noop
 
         # check new emails
-        labels.each do |label|
-          Rails.logger.debug "Checking emails with a label '#{label}'"
+        begin
+          labels.each do |label|
+            Rails.logger.debug "Checking emails with a label '#{label}'"
 
-          uids = []
-          encoded_label = Net::IMAP.encode_utf7(label)
-          gmail.mailbox(encoded_label).emails(:unread).each do |message|
-            uid = message.uid
-            uids << uid
+            uids = []
+            encoded_label = Net::IMAP.encode_utf7(label)
+            gmail.mailbox(encoded_label).emails(:unread).each do |message|
+              uid = message.uid
+              uids << uid
 
-            if last_uids[label] && !last_uids[label].include?(uid)
-              # new mail
-              Rails.logger.debug "New message found: #{message.subject}"
-              body = message.body.to_s.force_encoding('UTF-8')
-              Incident.create!(
-                description: message.subject,
-                provider: provider,
-                details: {'body' => body},
-              )
-              Rails.logger.debug "New incident created"
+              if last_uids[label] && !last_uids[label].include?(uid)
+                # new mail
+                Rails.logger.debug "New message found: #{message.subject}"
+                body = message.body.to_s.force_encoding('UTF-8')
+                Incident.create!(
+                  description: message.subject,
+                  provider: provider,
+                  details: {'body' => body},
+                )
+                Rails.logger.debug "New incident created"
+              end
             end
+            last_uids[label] = uids
           end
-          last_uids[label] = uids
+        rescue => err
+          backtrace = err.backtrace.join("\n")
+          Rails.logger.warn "An error is raised during checking new emails."
+          Rails.logger.warn "#{err}\n#{backtrace}"
         end
 
         sleep CHECK_INTERVAL_SEC
