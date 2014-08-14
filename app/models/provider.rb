@@ -56,10 +56,10 @@ class Provider < ActiveRecord::Base
       gmail.peek = true
 
       until @stopped
-        gmail.imap.noop
-
-        # check new emails
         begin
+          gmail.imap.noop
+
+          # check new emails
           labels.each do |label|
             Rails.logger.debug "Checking emails with a label '#{label}'"
 
