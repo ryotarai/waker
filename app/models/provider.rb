@@ -68,17 +68,19 @@ class Provider < ActiveRecord::Base
             uid = message.uid
             uids << uid
 
-            if last_uids[label] && !last_uids[label].include?(uid)
-              # new mail
-              Rails.logger.debug "New message found: #{message.subject}"
-              body = message.body.to_s.force_encoding('UTF-8')
-              Incident.create!(
-                description: message.subject,
-                provider: provider,
-                details: {'body' => body},
-              )
-              Rails.logger.debug "New incident created"
-            end
+            next unless last_uids[label] && !last_uids[label].include?(uid)
+            next if excludes.any? {|word| message.subject.include?(word) }
+            next if excludes.any? {|word| message.body.include?(word) }
+
+            # new mail
+            Rails.logger.debug "New message found: #{message.subject}"
+            body = message.body.to_s.force_encoding('UTF-8')
+            Incident.create!(
+              description: message.subject,
+              provider: provider,
+              details: {'body' => body},
+            )
+            Rails.logger.debug "New incident created"
           end
           last_uids[label] = uids
         end
@@ -94,6 +96,10 @@ class Provider < ActiveRecord::Base
     end
 
     private
+    def excludes
+      [@provider.details['excludes']].flatten.compact
+    end
+
     def labels
       @provider.details['labels']
     end
