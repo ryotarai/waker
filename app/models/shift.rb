@@ -1,15 +1,21 @@
 require 'icalendar'
 require 'open-uri'
+require 'json'
 
 class Shift < ActiveRecord::Base
   validates :name, presence: true
 
-  def fetch_calendars
-    return nil unless self.ical
-    Icalendar.parse(open(self.ical))
+  def current_user
+    if self.ical
+      current_user_from_ical
+    elsif self.json_file
+      current_user_from_json_file
+    end
   end
 
-  def user_at(time)
+  private
+  def current_user_from_ical
+    time = Time.now
     calendars = fetch_calendars
     user = nil
 
@@ -44,7 +50,14 @@ class Shift < ActiveRecord::Base
     nil
   end
 
-  def current_user
-    user_at(Time.now)
+  def current_user_from_json_file
+    names = JSON.parse(File.read(self.json_file))
+    User.find_by(name: names[self.index])
   end
+
+  def fetch_calendars
+    return nil unless self.ical
+    Icalendar.parse(open(self.ical))
+  end
+
 end
