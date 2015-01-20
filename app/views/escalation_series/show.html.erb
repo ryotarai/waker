@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @escalation_series.name %>
+</p>
+
+<table class="table">
+  <% @escalation_series.escalations.order("escalate_after_sec").each do |escalation| %>
+    <tr>
+      <td><%= escalation.escalate_to.name %></td>
+      <td>escalate after <%= escalation.escalate_after_sec %> sec</td>
+    </tr>
+  <% end %>
+</table>
+<ul>
+</ul>
+
+<%= link_to 'Edit', edit_escalation_series_path(@escalation_series) %> |
+<%= link_to 'Back', escalation_series_index_path %>

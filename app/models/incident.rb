@@ -1,56 +1,47 @@
-require 'securerandom'
-
 class Incident < ActiveRecord::Base
-  class Error < StandardError; end
+  STATUSES = [:opened, :acknowledged, :resolved]
 
-  include JsonField
-
-  json_field :details
-
-  enum status: %i!opened acknowledged resolved!
-  belongs_to :provider
-
+  belongs_to :topic
+  has_many :events, class: IncidentEvent
+  enum status: STATUSES
+  
+  validates :topic, presence: true
+  validates :subject, presence: true
   validates :description, presence: true
-  validates :provider, presence: true
+  validates :occured_at, presence: true
 
-  after_initialize :set_defaults
-  after_create :trigger_incident
+  before_save :set_defaults
+  after_create :enqueue
 
-  def set_defaults
-    self.details ||= {}
-    self.status ||= :opened
-    self.check_hash ||= SecureRandom.hex
-  end
+  def acknowledge!
+    return if self.acknowledged? || self.resolved?
 
-  def trigger_incident
-    escalation_rule = self.provider.escalation_rule
-    current_time = Time.now
-    escalation_rule.escalations.each do |escalation|
-      EscalationQueue.create!(
-        incident: self,
-        escalation: escalation,
-        escalate_at: current_time + escalation.escalate_after,
-      )
-    end
-
-    EventNotifier.fire(:incident_opened, incident: self)
-  end
-
-  def acknowledge
-    if self.acknowledged? || self.resolved?
-      raise Error, "The incident is already #{self.status}."
-    end
     self.acknowledged!
+    self.save!
 
-    EventNotifier.fire(:incident_acknowledged, incident: self)
+    events.create(kind: :acknowledge)
   end
 
-  def resolve
-    if self.resolved?
-      raise Error, "The incident is already #{self.status}."
-    end
-    self.resolved!
+  def resolve!
+    return if self.resolved?
 
-    EventNotifier.fire(:incident_resolved, incident: self)
+    self.resolved!
+    self.save!
+
+    events.create(kind: :resolve)
+  end
+
+  private
+  def set_defaults
+    self.status ||= :opened
+  end
+
+  def enqueue
+    topic.escalation_series.escalations.each do |escalation|
+      EscalationWorker.enqueue(self, escalation)
+    end
+
+    events.create(kind: :open)
   end
 end
+

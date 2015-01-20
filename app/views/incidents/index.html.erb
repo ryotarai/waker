@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Incidents</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Subject</th>
+      <th>Topic</th>
+      <th>Occured at</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @incidents.each do |incident| %>
+      <tr>
+        <td>
+          <% if incident.opened? %>
+            <span class="label label-danger">Opened</span>
+          <% elsif incident.acknowledged? %>
+            <span class="label label-warning">Acknowledged</span>
+          <% elsif incident.resolved? %>
+            <span class="label label-success">Resolved</span>
+          <% end %>
+        </td>
+        <td><%= incident.subject %></td>
+        <td><%= incident.topic.name %></td>
+        <td><%= incident.occured_at %></td>
+        <td><%= link_to 'Show', incident %></td>
+        <td><%= link_to 'Ack', acknowledge_incident_path(incident) %></td>
+        <td><%= link_to 'Resolve', resolve_incident_path(incident) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Incident', new_incident_path %>

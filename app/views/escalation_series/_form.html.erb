@@ -1,0 +1,21 @@
+<%= form_for(@escalation_series) do |f| %>
+  <% if @escalation_series.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@escalation_series.errors.count, "error") %> prohibited this escalation_series from being saved:</h2>
+
+      <ul>
+      <% @escalation_series.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,2 @@
+module EscalationSeriesHelper
+end

@@ -1,0 +1,2 @@
+module EscalationsHelper
+end

@@ -1,30 +1,29 @@
 Rails.application.routes.draw do
-  namespace :api, defaults: {format: 'json'} do
-    scope :v1 do
-      resources :event_notifiers
+  resources :notifier_providers
 
-      resources :escalation_rules
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
 
-      resources :notifiers, only: [:index, :show, :create, :update, :destroy]
+  root 'home#index'
 
-      resources :escalations
-
-      resources(:incidents, only: [:index, :show, :create]) do
-        member do
-          get 'acknowledge'
-          get 'resolve'
-          get 'twilio'
-          post 'twilio'
-        end
-      end
-
-      resources :providers, only: [:index, :show, :create, :update, :destroy]
-
-      resources :shifts, only: [:index, :show, :create, :update, :destroy]
-
-      resources :users, only: [:index, :show, :create, :update, :destroy]
+  resources :incidents do
+    member do
+      get 'acknowledge'
+      get 'resolve'
     end
   end
+
+  resources :escalation_series
+
+  resources :escalations
+
+  resources :shifts
+
+  resources :notifiers
+
+  resources :users
+
+  resources :topics
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

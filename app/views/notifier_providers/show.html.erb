@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @notifier_provider.name %>
+</p>
+
+<p>
+  <strong>Kind:</strong>
+  <%= @notifier_provider.kind %>
+</p>
+
+<p>
+  <strong>Settings:</strong>
+  <%= @notifier_provider.settings %>
+</p>
+
+<%= link_to 'Edit', edit_notifier_provider_path(@notifier_provider) %> |
+<%= link_to 'Back', notifier_providers_path %>

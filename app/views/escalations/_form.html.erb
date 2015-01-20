@@ -1,0 +1,29 @@
+<%= form_for(@escalation) do |f| %>
+  <% if @escalation.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@escalation.errors.count, "error") %> prohibited this escalation from being saved:</h2>
+
+      <ul>
+      <% @escalation.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :escalate_to_id %><br>
+    <%= f.collection_select(:escalate_to_id, User.all, :id, :name) %>
+  </div>
+  <div class="field">
+    <%= f.label :escalate_after_sec %><br>
+    <%= f.number_field :escalate_after_sec %>
+  </div>
+  <div class="field">
+    <%= f.label :escalation_series_id %><br>
+    <%= f.collection_select(:escalation_series_id, EscalationSeries.all, :id, :name) %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

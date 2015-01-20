@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @topic.name %>
+</p>
+
+<p>
+  <strong>Kind:</strong>
+  <%= @topic.kind %>
+</p>
+
+<p>
+  <strong>Escalation Series:</strong>
+  <%= @topic.escalation_series.name %>
+</p>
+
+<%= link_to 'Edit', edit_topic_path(@topic) %> |
+<%= link_to 'Back', topics_path %>

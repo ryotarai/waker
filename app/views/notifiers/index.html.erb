@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Notifiers</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Kind</th>
+      <th>Settings</th>
+      <th>Notify after sec</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @notifiers.each do |notifier| %>
+      <tr>
+        <td><%= notifier.user.name %></td>
+        <td><%= notifier.provider.name %></td>
+        <td><%= notifier.settings %></td>
+        <td><%= notifier.notify_after_sec %></td>
+        <td><%= link_to 'Show', notifier %></td>
+        <td><%= link_to 'Edit', edit_notifier_path(notifier) %></td>
+        <td><%= link_to 'Destroy', notifier, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Notifier', new_notifier_path %>

@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Escalate to:</strong>
+  <%= @escalation.escalate_to.name %>
+</p>
+
+<p>
+  <strong>Escalate after sec:</strong>
+  <%= @escalation.escalate_after_sec %>
+</p>
+
+<%= link_to 'Edit', edit_escalation_path(@escalation) %> |
+<%= link_to 'Back', escalations_path %>

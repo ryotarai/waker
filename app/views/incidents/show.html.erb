@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Subject:</strong>
+  <%= @incident.subject %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @incident.description %>
+</p>
+
+<p>
+  <strong>Topic:</strong>
+  <%= @incident.topic.name %>
+</p>
+
+<p>
+  <strong>Occured at:</strong>
+  <%= @incident.occured_at %>
+</p>
+
+<%= link_to 'Edit', edit_incident_path(@incident) %> |
+<%= link_to 'Destroy', @incident, method: :delete, data: { confirm: 'Are you sure?' } %>
+<%= link_to 'Back', incidents_path %>
