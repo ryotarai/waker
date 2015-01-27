@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150125101901) do
+ActiveRecord::Schema.define(version: 20150127152127) do
 
   create_table "escalation_series", force: :cascade do |t|
     t.string   "name"
@@ -34,13 +34,12 @@ ActiveRecord::Schema.define(version: 20150125101901) do
     t.integer  "incident_id"
     t.integer  "kind"
     t.text     "text"
-    t.integer  "user_by_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.text     "info"
   end
 
   add_index "incident_events", ["incident_id"], name: "index_incident_events_on_incident_id"
-  add_index "incident_events", ["user_by_id"], name: "index_incident_events_on_user_by_id"
 
   create_table "incidents", force: :cascade do |t|
     t.string   "subject"

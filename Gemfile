@@ -5,18 +5,7 @@ require 'uri'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
 
-if database_adapter = ENV['DATABASE_ADAPTER']
-  case database_adapter
-  when /postgres/
-    gem 'pg'
-  when /sqlite/
-    gem 'sqlite3'
-  when /mysql/
-    gem 'mysql2'
-  end
-else
-  gem 'sqlite3'
-end
+gem 'sqlite3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -48,6 +37,11 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'sidekiq', '~> 3.3.0'
 gem 'sinatra', '~> 1.4.5'
 
+gem 'faraday'
+gem 'holiday_jp'
+gem 'hipchat'
+gem 'kaminari'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
@@ -63,5 +57,7 @@ group :development, :test do
   gem 'foreman'
 
   gem 'database_rewinder'
+
+  gem 'pry-byebug'
 end
 

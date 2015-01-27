@@ -1,16 +1,17 @@
 class NotificationWorker
   include Sidekiq::Worker
 
-  def self.enqueue(incident, notifier, event)
+  def self.enqueue(event:, notifier:)
     Rails.logger.info "Enqueue NotificationWorker job"
-    self.perform_in(notifier.notify_after_sec, incident.id, notifier.id, event)
+
+    self.perform_in(notifier.notify_after_sec, event.id, notifier.id)
   end
 
-  def perform(incident_id, notifier_id, event)
-    incident = Incident.find(incident_id)
+  def perform(event_id, notifier_id)
+    event = IncidentEvent.find(event_id)
     notifier = Notifier.find(notifier_id)
 
-    notifier.notify_immediately(incident, event)
+    notifier.notify_immediately(event)
   end
 end
 

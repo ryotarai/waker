@@ -2,6 +2,11 @@
 
 <h1>Listing Incidents</h1>
 
+<a href="?status=all">All</a> | 
+<a href="?status=opened">Opened</a> | 
+<a href="?status=acknowledged">Acknowledged</a> | 
+<a href="?status=resolved">Resolved</a>
+
 <table class="table">
   <thead>
     <tr>
@@ -35,6 +40,8 @@
     <% end %>
   </tbody>
 </table>
+
+<%= paginate @incidents %>
 
 <br>
 

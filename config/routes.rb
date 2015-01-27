@@ -1,9 +1,4 @@
 Rails.application.routes.draw do
-  resources :notifier_providers
-
-  require 'sidekiq/web'
-  mount Sidekiq::Web => '/sidekiq'
-
   root 'home#index'
 
   resources :incidents do
@@ -21,9 +16,18 @@ Rails.application.routes.draw do
 
   resources :notifiers
 
+  resources :notifier_providers
+
   resources :users
 
-  resources :topics
+  resources :topics do
+    member do
+      post 'mailgun'
+    end
+  end
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

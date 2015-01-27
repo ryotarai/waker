@@ -4,7 +4,19 @@ class IncidentsController < ApplicationController
   # GET /incidents
   # GET /incidents.json
   def index
-    @incidents = Incident.all
+    case params[:status]
+    when 'opened'
+      @incidents = Incident.opened
+    when 'acknowledged'
+      @incidents = Incident.acknowledged
+    when 'resolved'
+      @incidents = Incident.resolved
+    else
+      @incidents = Incident.all
+    end
+
+    @page = (params[:page] || 1).to_i
+    @incidents = @incidents.order('id DESC').page(@page).per(25)
   end
 
   # GET /incidents/1

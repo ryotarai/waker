@@ -10,13 +10,13 @@ class EscalationWorker
     incident = Incident.find(incident_id)
     escalation = Escalation.find(escalation_id)
 
-    escalation.escalate_to.notifiers.each do |notifier|
-      notifier.notify(incident, :escalated_to_me)
-    end
-
-    Notifier.all.each do |notifier|
-      notifier.notify(incident, :escalated)
-    end
+    incident.events.create(
+      kind: :escalated,
+      info: {
+        escalation: escalation,
+        escalated_to: escalation.escalate_to,
+      },
+    )
   end
 end
 

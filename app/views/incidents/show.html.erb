@@ -20,6 +20,25 @@
   <%= @incident.occured_at %>
 </p>
 
+<table class="table">
+  <tr>
+    <th>Time</th>
+    <th>Event</th>
+    <th>Description</th>
+  </tr>
+  <% @incident.events.each do |event| %>
+    <tr>
+      <td><%= event.created_at %></td>
+      <td><%= event.kind %></td>
+      <% if event.escalated? %>
+        <td>Escalated to <%= event.escalated_to.name %></td>
+      <% else %>
+        <td></td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+
 <%= link_to 'Edit', edit_incident_path(@incident) %> |
 <%= link_to 'Destroy', @incident, method: :delete, data: { confirm: 'Are you sure?' } %>
 <%= link_to 'Back', incidents_path %>

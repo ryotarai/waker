@@ -1,5 +1,6 @@
 class TopicsController < ApplicationController
-  before_action :set_topic, only: [:show, :edit, :update, :destroy]
+  before_action :set_topic, only: [:show, :edit, :update, :destroy, :mailgun]
+  skip_before_action :verify_authenticity_token, only: [:mailgun]
 
   # GET /topics
   # GET /topics.json
@@ -59,6 +60,17 @@ class TopicsController < ApplicationController
       format.html { redirect_to topics_url, notice: 'Topic was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  # POST /topics/1/mailgun
+  def mailgun
+    # http://documentation.mailgun.com/user_manual.html#routes
+    @topic.incidents.create!(
+      subject: params[:subject],
+      description: params['body-plain'],
+    )
+
+    render json: {}, status: 200
   end
 
   private

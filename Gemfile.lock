@@ -46,6 +46,7 @@ GEM
       slop (~> 3.6)
     celluloid (0.16.0)
       timers (~> 4.0.0)
+    coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -62,13 +63,21 @@ GEM
     dotenv (1.0.2)
     erubis (2.7.0)
     execjs (2.2.2)
+    faraday (0.9.1)
+      multipart-post (>= 1.2, < 3)
     foreman (0.77.0)
       dotenv (~> 1.0.2)
       thor (~> 0.19.1)
     globalid (0.3.0)
       activesupport (>= 4.1.0)
     hike (1.2.3)
+    hipchat (1.4.0)
+      httparty
     hitimes (1.2.2)
+    holiday_jp (0.4.2)
+    httparty (0.13.3)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     i18n (0.7.0)
     jbuilder (2.2.6)
       activesupport (>= 3.0.0, < 5)
@@ -78,16 +87,29 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (1.8.2)
+    kaminari (0.16.2)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     loofah (2.0.1)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    method_source (0.8.2)
     mime-types (2.4.3)
     mini_portile (0.6.2)
     minitest (5.5.1)
     multi_json (1.10.1)
+    multi_xml (0.5.5)
+    multipart-post (2.0.0)
     nokogiri (1.6.5)
       mini_portile (~> 0.6.0)
+    pry (0.10.1)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    pry-byebug (2.0.0)
+      byebug (~> 3.4)
+      pry (~> 0.10)
     rack (1.6.0)
     rack-protection (1.5.3)
       rack
@@ -196,9 +218,14 @@ DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
   database_rewinder
+  faraday
   foreman
+  hipchat
+  holiday_jp
   jbuilder (~> 2.0)
   jquery-rails
+  kaminari
+  pry-byebug
   rails (= 4.2.0)
   rspec-rails
   sass-rails (~> 5.0)

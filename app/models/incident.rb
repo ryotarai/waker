@@ -19,7 +19,7 @@ class Incident < ActiveRecord::Base
     self.acknowledged!
     self.save!
 
-    events.create(kind: :acknowledge)
+    events.create(kind: :acknowledged)
   end
 
   def resolve!
@@ -28,12 +28,13 @@ class Incident < ActiveRecord::Base
     self.resolved!
     self.save!
 
-    events.create(kind: :resolve)
+    events.create(kind: :resolved)
   end
 
   private
   def set_defaults
     self.status ||= :opened
+    self.occured_at ||= Time.now
   end
 
   def enqueue
@@ -41,7 +42,7 @@ class Incident < ActiveRecord::Base
       EscalationWorker.enqueue(self, escalation)
     end
 
-    events.create(kind: :open)
+    events.create(kind: :opened)
   end
 end
 
