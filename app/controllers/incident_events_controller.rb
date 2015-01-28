@@ -10,6 +10,8 @@ class IncidentEventsController < ApplicationController
     only: [:twilio],
   )
 
+  skip_before_action :login_required
+
   def twilio
     @event = IncidentEvent.find(params[:id])
     resp = nil
