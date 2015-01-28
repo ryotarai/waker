@@ -6,6 +6,6 @@ class CreateEscalations < ActiveRecord::Migration
 
       t.timestamps null: false
     end
-    add_foreign_key :escalations, :escalate_tos
+    add_foreign_key :escalations, :users, column: 'escalate_to_id'
   end
 end

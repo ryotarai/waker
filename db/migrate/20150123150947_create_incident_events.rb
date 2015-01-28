@@ -9,6 +9,6 @@ class CreateIncidentEvents < ActiveRecord::Migration
       t.timestamps null: false
     end
     add_foreign_key :incident_events, :incidents
-    add_foreign_key :incident_events, :user_bies
+    add_foreign_key :incident_events, :users, column: 'user_by_id'
   end
 end
