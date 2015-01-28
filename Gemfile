@@ -41,6 +41,7 @@ gem 'hipchat'
 gem 'kaminari'
 
 gem 'puma'
+gem 'rack-health'
 
 group :production do
   gem 'mysql2'
