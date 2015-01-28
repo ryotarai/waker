@@ -54,6 +54,10 @@ Rails.application.configure do
   # Use a different logger for distributed setups.
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
+  if log_dir = ENV['LOG_DIR']
+    config.logger = ::Logger.new(File.expand_path('production.log', log_dir))
+  end
+
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
