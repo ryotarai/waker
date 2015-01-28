@@ -41,6 +41,7 @@ gem 'kaminari'
 gem 'puma'
 gem 'rack-health'
 gem 'omniauth-google-oauth2'
+gem 'twilio-ruby'
 
 gem 'mysql2'
 

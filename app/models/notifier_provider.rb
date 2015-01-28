@@ -1,5 +1,5 @@
 class NotifierProvider < ActiveRecord::Base
-  KINDS = [:mailgun, :file, :rails_logger, :hipchat]
+  KINDS = [:mailgun, :file, :rails_logger, :hipchat, :twilio]
   serialize :settings, JSON
   enum kind: KINDS
 
@@ -179,6 +179,42 @@ class NotifierProvider < ActiveRecord::Base
     end
 
     def to
+      settings.fetch('to')
+    end
+
+    def target_events
+      super || [:escalated_to_me]
+    end
+  end
+
+  class TwilioConcreteProvider < ConcreteProvider
+    def _notify
+      url = Rails.application.routes.url_helpers.twilio_incident_event_url(
+        @event,
+        user:     IncidentEventsController::BASIC_AUTH_USER,
+        password: IncidentEventsController::BASIC_AUTH_PASSWORD,
+      )
+
+      Twilio::REST::Client.new(account_sid, auth_token).account.calls.create(
+        from: from,
+        to: to,
+        url: url,
+      )
+    end
+
+    def account_sid
+      settings.fetch('account_sid')
+    end
+
+    def auth_token
+      settings.fetch('auth_token')
+    end
+
+    def from
+      settings.fetch('from')
+    end
+
+    def from
       settings.fetch('to')
     end
 

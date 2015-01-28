@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   get '/auth/:provider/callback', to: 'sessions#create'
 
-  root 'home#index'
+  resources :incident_events, only: [] do
+    member do
+      post 'twilio'
+    end
+  end
 
   resources :incidents do
     member do
@@ -30,6 +34,8 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
+
+  root 'home#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
