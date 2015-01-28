@@ -1,7 +1,5 @@
 source 'https://rubygems.org'
 
-require 'uri'
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
 
@@ -43,6 +41,10 @@ gem 'hipchat'
 gem 'kaminari'
 
 gem 'puma'
+
+group :production do
+  gem 'mysql2'
+end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
