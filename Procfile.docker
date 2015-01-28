@@ -1,0 +1,2 @@
+web: bundle exec puma -C docker/puma.rb
+worker: bundle exec sidekiq
