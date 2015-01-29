@@ -16,7 +16,7 @@
   <tbody>
     <% @notifiers.each do |notifier| %>
       <tr>
-        <td><%= notifier.user.name %></td>
+        <td><%= notifier.user && notifier.user.name %></td>
         <td><%= notifier.provider.name %></td>
         <td><%= notifier.settings %></td>
         <td><%= notifier.notify_after_sec %></td>
