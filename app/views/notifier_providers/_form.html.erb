@@ -18,9 +18,11 @@
   <div class="field">
     <%= f.label :kind %><br>
     <%= f.select :kind do %>
-      <% NotifierProvider::KINDS.each_with_index do |kind, index| %>
-        <%= content_tag(:option, kind.to_s.split('_').map {|s| s.capitalize }.join(' '), value: kind) %>
-      <% end %>
+      <%= options_for_select(
+        NotifierProvider::KINDS.map do |kind|
+          [kind.to_s.camelize, kind, {}]
+        end, @notifier_provider.kind
+      ) %>
     <% end %>
   </div>
   <div class="field">
