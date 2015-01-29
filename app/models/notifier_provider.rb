@@ -114,7 +114,7 @@ class NotifierProvider < ActiveRecord::Base
 
   class HipchatConcreteProvider < ConcreteProvider
     def _notify
-      case event
+      case kind_of_event
       when :opened
         color = 'red'
       when :acknowledged, :escalated
