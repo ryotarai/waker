@@ -1,15 +1,6 @@
 require 'securerandom'
 
 class IncidentEventsController < ApplicationController
-  BASIC_AUTH_USER = 'waker'
-  BASIC_AUTH_PASSWORD = SecureRandom.hex(8)
-
-  http_basic_authenticate_with(
-    name: BASIC_AUTH_USER,
-    password: BASIC_AUTH_PASSWORD,
-    only: [:twilio],
-  )
-
   skip_before_action :login_required
 
   def twilio

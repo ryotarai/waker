@@ -189,10 +189,12 @@ class NotifierProvider < ActiveRecord::Base
 
   class TwilioConcreteProvider < ConcreteProvider
     def _notify
+      options = {}
+      options[:user] =     basic_auth_user if basic_auth_user
+      options[:password] = basic_auth_password if basic_auth_password
+
       url = Rails.application.routes.url_helpers.twilio_incident_event_url(
-        @event,
-        user:     IncidentEventsController::BASIC_AUTH_USER,
-        password: IncidentEventsController::BASIC_AUTH_PASSWORD,
+        @event, options
       )
 
       Twilio::REST::Client.new(account_sid, auth_token).account.calls.create(
@@ -220,6 +222,14 @@ class NotifierProvider < ActiveRecord::Base
 
     def target_events
       super || [:escalated_to_me]
+    end
+
+    def basic_auth_user
+      ENV['BASIC_AUTH_USER']
+    end
+
+    def basic_auth_password
+      ENV['BASIC_AUTH_PASSWORD']
     end
   end
 end
