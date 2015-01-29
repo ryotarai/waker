@@ -12,7 +12,7 @@ class Incident < ActiveRecord::Base
   validates :description, presence: true
   validates :occured_at, presence: true
 
-  before_save :set_defaults
+  after_initialize :set_defaults
   after_create :enqueue
 
   def acknowledge!
@@ -38,6 +38,7 @@ class Incident < ActiveRecord::Base
   end
 
   private
+
   def set_defaults
     self.status ||= :opened
     self.occured_at ||= Time.now
