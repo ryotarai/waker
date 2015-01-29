@@ -7,6 +7,6 @@ Waker
 
 Actions:
 
-- To ack: <%= Rails.application.routes.url_helpers.acknowledge_incident_url(incident) %>
-- To resolve: <%= Rails.application.routes.url_helpers.resolve_incident_url(incident) %>
+- To ack: <%= Rails.application.routes.url_helpers.acknowledge_incident_url(incident, hash: incident.confirmation_hash) %>
+- To resolve: <%= Rails.application.routes.url_helpers.resolve_incident_url(incident, hash: incident.confirmation_hash) %>
 

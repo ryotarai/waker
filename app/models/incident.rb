@@ -1,3 +1,5 @@
+require 'digest/sha1'
+
 class Incident < ActiveRecord::Base
   STATUSES = [:opened, :acknowledged, :resolved]
 
@@ -29,6 +31,10 @@ class Incident < ActiveRecord::Base
     self.save!
 
     events.create(kind: :resolved)
+  end
+
+  def confirmation_hash
+    Digest::SHA1.hexdigest("#{Rails.application.secrets.secret_key_base}#{self.id}")
   end
 
   private

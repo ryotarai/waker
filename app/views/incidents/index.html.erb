@@ -34,8 +34,8 @@
         <td><%= incident.topic.name %></td>
         <td><%= incident.occured_at %></td>
         <td><%= link_to 'Show', incident %></td>
-        <td><%= link_to 'Ack', acknowledge_incident_path(incident) %></td>
-        <td><%= link_to 'Resolve', resolve_incident_path(incident) %></td>
+        <td><%= link_to 'Ack', acknowledge_incident_path(incident, hash: incident.confirmation_hash) %></td>
+        <td><%= link_to 'Resolve', resolve_incident_path(incident, hash: incident.confirmation_hash) %></td>
       </tr>
     <% end %>
   </tbody>
