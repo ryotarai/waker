@@ -11,3 +11,5 @@ Sidekiq.configure_client do |config|
   config.redis = {url: "redis://#{host}:#{port}", namespace: namespace}
 end
 
+Sidekiq::Logging.logger = Rails.logger
+
