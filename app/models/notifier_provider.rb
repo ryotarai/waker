@@ -81,7 +81,7 @@ class NotifierProvider < ActiveRecord::Base
             locals: {event: @event},
           )
 
-          return rendered
+          return rendered.strip
         rescue ActionView::MissingTemplate
           raise if template_names.size - 1 == i
         end
@@ -125,8 +125,8 @@ class NotifierProvider < ActiveRecord::Base
         return
       end
 
-      client = HipChat::Client.new(api_token)
-      client[room].send('Waker', body, color: color)
+      client = HipChat::Client.new(api_token, api_version: api_version)
+      client[room].send('Waker', body, color: color, notify: notify?)
     end
 
     private
@@ -137,6 +137,19 @@ class NotifierProvider < ActiveRecord::Base
 
     def room
       settings.fetch('room')
+    end
+
+    def api_version
+      case settings.fetch('api_version')
+      when '2', 'v2'
+        'v2'
+      else
+        'v1'
+      end
+    end
+
+    def notify?
+      !!settings['notify']
     end
 
     def target_events
