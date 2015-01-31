@@ -143,8 +143,10 @@ class NotifierProvider < ActiveRecord::Base
       case settings.fetch('api_version')
       when '2', 'v2'
         'v2'
-      else
+      when '1', 'v1'
         'v1'
+      else
+        'v2'
       end
     end
 
