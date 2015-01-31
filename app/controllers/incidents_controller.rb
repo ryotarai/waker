@@ -5,15 +5,18 @@ class IncidentsController < ApplicationController
   # GET /incidents
   # GET /incidents.json
   def index
-    case params[:status]
-    when 'opened'
-      @incidents = Incident.opened
-    when 'acknowledged'
-      @incidents = Incident.acknowledged
-    when 'resolved'
-      @incidents = Incident.resolved
-    else
+    if params[:status]
+      session[:incidents_statuses] = params[:status].split(',').map do |status|
+        Incident.statuses[status]
+      end.compact
+    end
+
+    statuses = session[:incidents_statuses] || []
+
+    if statuses.empty?
       @incidents = Incident.all
+    else
+      @incidents = Incident.where(status: statuses)
     end
 
     @page = (params[:page] || 1).to_i

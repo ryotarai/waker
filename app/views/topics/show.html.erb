@@ -15,5 +15,10 @@
   <%= @topic.escalation_series.name %>
 </p>
 
+<p>
+  <strong>Enabled:</strong>
+  <%= @topic.enabled ? 'Yes' : 'No' %>
+</p>
+
 <%= link_to 'Edit', edit_topic_path(@topic) %> |
 <%= link_to 'Back', topics_path %>

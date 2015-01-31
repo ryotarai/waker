@@ -65,6 +65,12 @@ class TopicsController < ApplicationController
 
   # POST /topics/1/mailgun
   def mailgun
+    unless @topic.enabled
+      Rails.logger.info "Incident creation is skipped because the topic is disabled."
+      render json: {}, status: 200
+      return
+    end
+
     # http://documentation.mailgun.com/user_manual.html#routes
     @topic.incidents.create!(
       subject: params[:subject],
@@ -82,6 +88,6 @@ class TopicsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def topic_params
-      params.require(:topic).permit(:name, :kind, :escalation_series_id)
+      params.require(:topic).permit(:name, :kind, :escalation_series_id, :enabled)
     end
 end

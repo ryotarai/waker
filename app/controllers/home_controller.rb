@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
   def index
-    redirect_to incidents_path(status: :opened)
+    redirect_to incidents_path
   end
 end
