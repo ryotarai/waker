@@ -4,7 +4,7 @@ class Incident < ActiveRecord::Base
   STATUSES = [:opened, :acknowledged, :resolved]
 
   belongs_to :topic
-  has_many :events, class: IncidentEvent
+  has_many :events, class: IncidentEvent, dependent: :destroy
   enum status: STATUSES
   
   validates :topic, presence: true
