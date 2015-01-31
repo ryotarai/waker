@@ -4,5 +4,5 @@ class Escalation < ActiveRecord::Base
 
   validates :escalation_series, presence: true
   validates :escalate_to, presence: true
-  validates :escalate_after_sec, numericality: {greater_than_or_equal_to: 0}
+  validates :escalate_after_sec, numericality: {greater_than_or_equal_to: 5}
 end
