@@ -5,7 +5,7 @@ class EscalationsController < ApplicationController
   # GET /escalations
   # GET /escalations.json
   def index
-    @escalations = Escalation.all
+    @escalations = Escalation.all.order('escalate_after_sec')
   end
 
   # GET /escalations/1
