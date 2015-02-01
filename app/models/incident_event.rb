@@ -1,5 +1,5 @@
 class IncidentEvent < ActiveRecord::Base
-  KINDS = [:opened, :acknowledged, :resolved, :escalated, :commented]
+  KINDS = [:opened, :acknowledged, :resolved, :escalated, :commented, :notified]
 
   belongs_to :incident
 
@@ -17,6 +17,8 @@ class IncidentEvent < ActiveRecord::Base
   end
 
   def notify
+    return if self.notified?
+
     Notifier.all.each do |notifier|
       notifier.notify(self)
     end
@@ -28,5 +30,9 @@ class IncidentEvent < ActiveRecord::Base
 
   def escalation
     self.info['escalation'] && Escalation.find(self.info['escalation']['id'])
+  end
+
+  def notifier
+    self.info['notifier'] && Notifer.find(self.info['notifier']['id'])
   end
 end
