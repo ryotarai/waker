@@ -3,7 +3,10 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   helper_method :current_user
-  before_action :login_required if Rails.env.production?
+
+  if Rails.env.production? || ENV['ENABLE_LOGIN']
+    before_action :login_required
+  end
 
   private
 
@@ -20,6 +23,8 @@ class ApplicationController < ActionController::Base
   def current_user
     if user_id = session[:user_id]
       User.find(user_id)
+    elsif login_token = request.headers['X-Login-Token']
+      User.find_by(login_token: login_token)
     end
   end
 end
