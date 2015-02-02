@@ -173,8 +173,12 @@ end.sort_by do |escalation|
   escalation.escalate_after_sec
 end
 
+users = client.users
+
 persons.each_with_index do |name, i|
-  user = client.users.find {|u| u.name == name }
+  user = users.find {|u| u.name == name }
+  raise "#{name} user is not found." unless user
   escalation = escalations[i]
   client.update_escalation(escalation, escalate_to: user)
 end
+
