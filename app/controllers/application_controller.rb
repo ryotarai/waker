@@ -4,9 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   helper_method :current_user
 
-  if Rails.env.production? || ENV['ENABLE_LOGIN']
-    before_action :login_required
-  end
+  before_action :login_required
 
   private
 

@@ -16,6 +16,12 @@ class SessionsController < ApplicationController
       return
     end
 
+    @user.update!(
+      token: auth_hash.credentials.token,
+      refresh_token: auth_hash.credentials.refresh_token,
+      token_expires_at: Time.at(auth_hash.credentials.expires_at),
+    )
+
     self.current_user = @user
     redirect_to '/'
   end

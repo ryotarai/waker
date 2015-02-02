@@ -64,5 +64,6 @@ group :development, :test do
   gem 'database_rewinder'
 
   gem 'pry-byebug'
+  gem 'dotenv-rails'
 end
 

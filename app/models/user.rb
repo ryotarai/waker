@@ -12,6 +12,10 @@ class User < ActiveRecord::Base
     self.find_by(email: auth_hash[:info][:email])
   end
 
+  def token_expired?
+    Time.now < self.token_expires_at
+  end
+
   private
 
   def set_defaults
