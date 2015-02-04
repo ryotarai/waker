@@ -14,7 +14,7 @@ class EscalationSeries < ActiveRecord::Base
                     when 'google_calendar'
                       GoogleCalendarEscalationUpdater
                     else
-                      # do nothing
+                      nil
                     end
     if updater_class
       updater = updater_class.new(self)
