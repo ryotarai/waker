@@ -1,6 +1,6 @@
 class EscalationSeries < ActiveRecord::Base
   has_many :escalations, dependent: :destroy
-  has_many :topics, dependent: :nullify
+  has_many :topics, dependent: :destroy
 
   serialize :settings, JSON
   after_initialize :set_defaults
