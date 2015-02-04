@@ -15,6 +15,10 @@
     <%= f.label :name %><br>
     <%= f.text_field :name %>
   </div>
+  <div class="field">
+    <%= f.label :settings %><br>
+    <%= f.text_area :settings, value: @escalation_series.settings.to_yaml %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

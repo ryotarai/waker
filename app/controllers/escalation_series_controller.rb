@@ -1,5 +1,5 @@
 class EscalationSeriesController < ApplicationController
-  before_action :set_escalation_series, only: [:show, :edit, :update, :destroy]
+  before_action :set_escalation_series, only: [:show, :edit, :update, :destroy, :update_escalations]
 
   # GET /escalation_series
   # GET /escalation_series.json
@@ -61,6 +61,10 @@ class EscalationSeriesController < ApplicationController
     end
   end
 
+  def update_escalations
+    @escalation_series.update_escalations!
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_escalation_series
@@ -69,6 +73,8 @@ class EscalationSeriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def escalation_series_params
-      params.require(:escalation_series).permit(:name)
+      params.require(:escalation_series).permit(:name, :settings).tap do |v|
+        v[:settings] = YAML.load(v[:settings])
+      end
     end
 end

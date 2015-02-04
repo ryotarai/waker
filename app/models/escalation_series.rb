@@ -9,67 +9,105 @@ class EscalationSeries < ActiveRecord::Base
     self.settings ||= {}
   end
 
-  def update_by
-    self.settings['update_by']
-  end
-
-  def user_as
-    if user_as_id = self.settings['user_as_id']
-      User.find(user_as_id)
+  def update_escalations!
+    updater_class = case self['update_by']
+                    when 'google_calendar'
+                      GoogleCalendarEscalationUpdater
+                    else
+                      # do nothing
+                    end
+    if updater_class
+      updater = updater_class.new(self)
+      updater.update!
     end
   end
 
-  def update_escalations
-    case update_by
-    when 'google_calendar'
-      update_by_google_calendar
+  class EscalationUpdater
+    def initialize(series)
+      @series = series
+    end
+
+    def update!
+      raise NotImplementedError
+    end
+
+    private
+
+    def settings
+      @series.settings
     end
   end
 
-  def update_by_google_calendar
-    client = Google::APIClient.new
-    client.authorization.access_token = user_as.token
+  class GoogleCalendarEscalationUpdater < EscalationUpdater
+    def update!
+      client = Google::APIClient.new
 
-    calendar_api = client.discovered_api('calendar', 'v3')
+      if user_as.token_expired?
+        client.authorization.refresh_token = user_as.refresh_token
+        client.authorization.refresh!
 
-    calendar = client.execute(
-      api_method: calendar_api.calendar_list.list,
-      parameters: {},
-    ).data.items.find do |cal|
-      cal['summary'] == self.settings.fetch('calendar')
-    end
+        user_as.update!(token: client.authorization.access_token)
+      else
+        client.authorization.access_token = user_as.token
+      end
 
-    events = client.execute(
-      api_method: calendar_api.events.list,
-      parameters: {
-        'calendarId' => calendar['id'],
-        'timeMax' => (Time.now + 1).strftime('%FT%T%:z'),
-        'timeMin' => (Time.now).strftime('%FT%T%:z'),
-        'singleEvents' => true,
-      },
-    ).data.items
+      calendar_api = client.discovered_api('calendar', 'v3')
 
-    events.each do |event|
-      unless event['end']['dateTime'] && event['start']['dateTime']
-        raise "dateTime field is not found (The event may be all-day event)\n#{event}"
+      calendar = client.execute(
+        api_method: calendar_api.calendar_list.list,
+        parameters: {},
+      ).data.items.find do |cal|
+        cal['summary'] == calendar_name
+      end
+
+      events = client.execute(
+        api_method: calendar_api.events.list,
+        parameters: {
+          'calendarId' => calendar['id'],
+          'timeMax' => (Time.now + 1).iso8601,
+          'timeMin' => (Time.now).iso8601,
+          'singleEvents' => true,
+        },
+      ).data.items
+
+      events.each do |event|
+        unless event['end']['dateTime'] && event['start']['dateTime']
+          raise "dateTime field is not found (The event may be all-day event)\n#{event}"
+        end
+      end
+
+      events.sort! do |a, b|
+        a['end']['dateTime'] - a['start']['dateTime'] <=>
+          b['end']['dateTime'] - b['start']['dateTime']
+      end
+
+      # shortest event
+      event = events.first
+
+      persons = event['summary'].split(event_delimiter).map(&:strip)
+      escalations = @series.escalations.order('escalate_after_sec')
+
+      persons.each_with_index do |name, i|
+        user = User.find_by(name: name)
+        raise "User '#{name}' is not found." unless user
+        escalation = escalations[i]
+        escalation.update!(escalate_to: user)
       end
     end
+    
+    private
 
-    events.sort! do |a, b|
-      a['end']['dateTime'] - a['start']['dateTime'] <=>
-        b['end']['dateTime'] - b['start']['dateTime']
+    def user_as
+      User.find(settings.fetch('user_as_id'))
     end
 
-    # shortest event
-    event = events.first
+    def calendar_name
+      settings.fetch('calendar')
+    end
 
-    persons = event['summary'].split(settings.fetch('delimiter')).map(&:strip)
-    escalations = self.escalations.order('escalate_after_sec')
-
-    persons.each_with_index do |name, i|
-      user = self.users.find_by(name: name)
-      escalation = escalations[i]
-      escalation.update!(escalate_to: user)
+    def event_delimiter
+      settings.fetch('event_delimiter')
     end
   end
 end
+

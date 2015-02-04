@@ -14,7 +14,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :escalation_series
+  resources :escalation_series do
+    member do
+      get 'update_escalations'
+    end
+  end
 
   resources :escalations
 

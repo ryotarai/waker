@@ -31,6 +31,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'capistrano-rails', group: :development
 
 gem 'sidekiq', '~> 3.3.0'
+
 gem 'sinatra', '~> 1.4.5'
 
 gem 'faraday'
