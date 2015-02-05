@@ -3,7 +3,7 @@ class Notifier < ActiveRecord::Base
   belongs_to :user
 
   validates :provider, presence: true
-  validates :notify_after_sec, numericality: {greater_than_or_equal_to: 0}
+  validates :notify_after_sec, numericality: {greater_than_or_equal_to: 5}
 
   serialize :settings, JSON
   after_initialize :set_defaults
