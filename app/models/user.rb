@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   end
 
   def token_expired?
-    Time.now < self.token_expires_at
+    self.token_expires_at < Time.now
   end
 
   private

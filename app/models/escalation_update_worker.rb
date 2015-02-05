@@ -5,6 +5,8 @@ class EscalationUpdateWorker
     EscalationSeries.all.each do |series|
       handle_series(series)
     end
+  rescue => err
+    Rails.logger.error "#{err.class}: #{err}\n#{err.backtrace.join("\n")}"
   end
 
   private
