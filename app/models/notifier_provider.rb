@@ -10,7 +10,7 @@ class NotifierProvider < ActiveRecord::Base
   end
 
   def concrete_class
-    self.class.const_get("#{kind.to_s.split('_').map(&:capitalize).join}ConcreteProvider")
+    self.class.const_get("#{kind.to_s.camelize}ConcreteProvider")
   end
 
   def notify(event:, notifier:)
