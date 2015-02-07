@@ -20,6 +20,7 @@ class IncidentEvent < ActiveRecord::Base
     return if self.notified?
 
     Notifier.all.each do |notifier|
+      next if notifier.topic && self.incident.topic != notifier.topic
       notifier.notify(self)
     end
   end

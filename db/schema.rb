@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150203010417) do
+ActiveRecord::Schema.define(version: 20150207164010) do
 
   create_table "escalation_series", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -69,9 +69,11 @@ ActiveRecord::Schema.define(version: 20150203010417) do
     t.datetime "updated_at",                     null: false
     t.integer  "user_id",          limit: 4
     t.integer  "provider_id",      limit: 4
+    t.integer  "topic_id",         limit: 4
   end
 
   add_index "notifiers", ["provider_id"], name: "index_notifiers_on_provider_id", using: :btree
+  add_index "notifiers", ["topic_id"], name: "index_notifiers_on_topic_id", using: :btree
   add_index "notifiers", ["user_id"], name: "index_notifiers_on_user_id", using: :btree
 
   create_table "topics", force: :cascade do |t|
@@ -101,6 +103,7 @@ ActiveRecord::Schema.define(version: 20150203010417) do
   add_foreign_key "incident_events", "incidents"
   add_foreign_key "incidents", "topics"
   add_foreign_key "notifiers", "notifier_providers", column: "provider_id"
+  add_foreign_key "notifiers", "topics"
   add_foreign_key "notifiers", "users"
   add_foreign_key "topics", "escalation_series"
 end

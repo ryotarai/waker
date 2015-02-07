@@ -16,6 +16,10 @@
     <%= f.collection_select(:user_id, User.all, :id, :name, include_blank: true) %>
   </div>
   <div class="field">
+    <%= f.label :topic_id %><br>
+    <%= f.collection_select(:topic_id, Topic.all, :id, :name, include_blank: true) %>
+  </div>
+  <div class="field">
     <%= f.label :provider_id %><br>
     <%= f.collection_select(:provider_id, NotifierProvider.all, :id, :name) %>
   </div>

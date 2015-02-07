@@ -1,6 +1,7 @@
 class Notifier < ActiveRecord::Base
   belongs_to :provider, class: NotifierProvider
   belongs_to :user
+  belongs_to :topic
 
   validates :provider, presence: true
   validates :notify_after_sec, numericality: {greater_than_or_equal_to: 5}
