@@ -45,11 +45,16 @@ class NotifierProvider < ActiveRecord::Base
     end
 
     def skip_reason
-      if settings['only_japanese_weekday']
-        if HolidayJp.holiday?(Date.today) || Time.now.saturday? || Time.now.sunday?
-          return 'only_japanese_weekday'
-        end
+      holiday = HolidayJp.holiday?(Date.today) || Time.now.saturday? || Time.now.sunday?
+      
+      if holiday && settings['only_japanese_weekday']
+        return 'only_japanese_weekday'
       end
+      
+      if !holiday && settings['not_japanese_weekday']
+        return 'not_japanese_weekday'
+      end
+
 
       %w!between not_between!.each do |k|
         if s = settings[k]
