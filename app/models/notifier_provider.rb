@@ -231,7 +231,7 @@ class NotifierProvider < ActiveRecord::Base
       settings.fetch('from')
     end
 
-    def from
+    def to
       settings.fetch('to')
     end
 
