@@ -51,12 +51,17 @@ class NotifierProvider < ActiveRecord::Base
         end
       end
 
-      if between = settings['between']
-        start_time, end_time = between.split('-')
-        start_time = Time.parse(start_time)
-        end_time   = Time.parse(end_time)
-        unless start_time < Time.now && Time.now < end_time
-          return 'between'
+      %w!between not_between!.each do |k|
+        if s = settings[k]
+          start_time, end_time = s.split('-')
+          start_time = Time.parse(start_time)
+          end_time   = Time.parse(end_time)
+          between = start_time < Time.now && Time.now < end_time
+          if between && k == 'not_between'
+            return k
+          elsif !between && k == 'between'
+            return k
+          end
         end
       end
 
