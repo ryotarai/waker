@@ -30,6 +30,10 @@ class NotifierProvider < ActiveRecord::Base
       else
         if target_events.include?(kind_of_event)
           _notify
+          @event.incident.events.create(
+            kind: :notified,
+            info: {notifier: @notifier, event: @event}
+          )
         else
           Rails.logger.info "Notification skipped due to target events (#{target_events} doesn't include #{kind_of_event})"
         end

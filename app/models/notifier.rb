@@ -19,7 +19,6 @@ class Notifier < ActiveRecord::Base
 
   def notify_immediately(event)
     provider.notify(event: event, notifier: self)
-    event.incident.events.create(kind: :notified, info: {notifier: self})
   end
 end
 
