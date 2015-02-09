@@ -11,9 +11,9 @@ class IncidentEventsController < ApplicationController
     if params[:Digits]
       case params[:Digits]
       when '1'
-        @event.incident.acknowledged! rescue nil
+        @event.incident.acknowledge! rescue nil
       when '2'
-        @event.incident.resolved! rescue nil
+        @event.incident.resolve! rescue nil
       end
       resp = Twilio::TwiML::Response.new do |r|
         r.Say @event.incident.status, voice: 'alice', language: 'en-US'
