@@ -172,7 +172,7 @@ class NotifierProvider < ActiveRecord::Base
       response = conn.post "/v2/#{domain}/messages", {
         from: from,
         to: to,
-        subject: "[Waker] #{incident.subject}",
+        subject: "[Waker] #{@event.incident.subject}",
         text: body,
       }
 
