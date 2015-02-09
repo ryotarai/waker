@@ -29,11 +29,13 @@
     <tr>
       <td><%= event.created_at %></td>
       <td><%= event.kind %></td>
-      <% if event.escalated? %>
-        <td>Escalated to <%= event.escalated_to.name %></td>
-      <% else %>
-        <td></td>
-      <% end %>
+      <td>
+        <% if event.escalated? %>
+          to <%= link_to(event.escalated_to.name, event.escalated_to) %>
+        <% elsif event.notified? %>
+          by <%= link_to('Notifier', event.notifier) %>
+        <% end %>
+      </td>
     </tr>
   <% end %>
 </table>

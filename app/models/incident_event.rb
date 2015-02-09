@@ -34,6 +34,6 @@ class IncidentEvent < ActiveRecord::Base
   end
 
   def notifier
-    self.info['notifier'] && Notifer.find(self.info['notifier']['id'])
+    self.info['notifier'] && Notifier.find(self.info['notifier']['id'])
   end
 end
