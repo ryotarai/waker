@@ -1,1 +1,1 @@
-Incident escalated to <%= event.escalated_to.name %>: <%= event.incident.subject %>
+Incident escalated to <%= event.escalated_to.name %>: <%= event.incident.subject %> (<a href="<%= Rails.application.routes.url_helpers.acknowledge_incident_url(event.incident, hash: event.incident.confirmation_hash) %>">Acknowledge</a>) (<a href="<%= Rails.application.routes.url_helpers.resolve_incident_url(event.incident, hash: event.incident.confirmation_hash) %>">Resolve</a>)
