@@ -25,8 +25,8 @@ class NotifierProvider < ActiveRecord::Base
     end
 
     def notify
-      if reason = skip_reason
-        Rails.logger.info "Notification skipped due to '#{reason}'"
+      if skip?
+        Rails.logger.info "Notification skipped."
       else
         if target_events.include?(kind_of_event)
           _notify
@@ -48,33 +48,56 @@ class NotifierProvider < ActiveRecord::Base
       @provider.settings.merge(@notifier.settings)
     end
 
-    def skip_reason
-      holiday = HolidayJp.holiday?(Date.today) || Time.now.saturday? || Time.now.sunday?
-      
-      if holiday && settings['only_japanese_weekday']
-        return 'only_japanese_weekday'
-      end
-      
-      if !holiday && settings['not_japanese_weekday']
-        return 'not_japanese_weekday'
-      end
+    def skip?
+      # or_conditions = [
+      #   {
+      #     'only_japanese_weekday' => true,
+      #     'not_between' => '9:30-18:30',
+      #   },
+      #   {
+      #     'not_japanese_weekday' => true,
+      #   }
+      # ]
+      return skip_due_to_or_conditions?
+    end
 
+    def skip_due_to_or_conditions?
+      or_conditions = settings['or_conditions']
+      return false unless or_conditions
 
-      %w!between not_between!.each do |k|
-        if s = settings[k]
-          start_time, end_time = s.split('-')
-          start_time = Time.parse(start_time)
-          end_time   = Time.parse(end_time)
-          between = start_time < Time.now && Time.now < end_time
-          if between && k == 'not_between'
-            return k
-          elsif !between && k == 'between'
-            return k
-          end
+      matched = or_conditions.any? do |condition|
+        # japanese_weekday
+        holiday = HolidayJp.holiday?(Date.today) || Time.now.saturday? || Time.now.sunday?
+        
+        if holiday && condition['japanese_weekday']
+          next false
         end
+        
+        if !holiday && condition['not_japanese_weekday']
+          next false
+        end
+
+        # between
+        skip_due_to_between_condition = %w!between not_between!.any? do |k|
+          if s = condition[k]
+            start_time, end_time = s.split('-')
+            start_time = Time.parse(start_time)
+            end_time   = Time.parse(end_time)
+            between = start_time < Time.now && Time.now < end_time
+            if (between && k == 'not_between') || (!between && k == 'between')
+              next true
+            end
+          end
+
+          false
+        end
+
+        next false if skip_due_to_between_condition
+
+        true
       end
 
-      return nil
+      return !matched
     end
 
     def all_events
