@@ -1,56 +1,55 @@
-require 'securerandom'
+require 'digest/sha1'
 
 class Incident < ActiveRecord::Base
-  class Error < StandardError; end
+  STATUSES = [:opened, :acknowledged, :resolved]
 
-  include JsonField
-
-  json_field :details
-
-  enum status: %i!opened acknowledged resolved!
-  belongs_to :provider
-
+  belongs_to :topic
+  has_many :events, class: IncidentEvent, dependent: :destroy
+  enum status: STATUSES
+  
+  validates :topic, presence: true
+  validates :subject, presence: true
   validates :description, presence: true
-  validates :provider, presence: true
+  validates :occured_at, presence: true
 
   after_initialize :set_defaults
-  after_create :trigger_incident
+  after_create :enqueue
+
+  def acknowledge!
+    return if self.acknowledged? || self.resolved?
+
+    self.acknowledged!
+    self.save!
+
+    events.create(kind: :acknowledged)
+  end
+
+  def resolve!
+    return if self.resolved?
+
+    self.resolved!
+    self.save!
+
+    events.create(kind: :resolved)
+  end
+
+  def confirmation_hash
+    Digest::SHA1.hexdigest("#{Rails.application.secrets.secret_key_base}#{self.id}")
+  end
+
+  private
 
   def set_defaults
-    self.details ||= {}
     self.status ||= :opened
-    self.check_hash ||= SecureRandom.hex
+    self.occured_at ||= Time.now
   end
 
-  def trigger_incident
-    escalation_rule = self.provider.escalation_rule
-    current_time = Time.now
-    escalation_rule.escalations.each do |escalation|
-      EscalationQueue.create!(
-        incident: self,
-        escalation: escalation,
-        escalate_at: current_time + escalation.escalate_after,
-      )
+  def enqueue
+    topic.escalation_series.escalations.each do |escalation|
+      EscalationWorker.enqueue(self, escalation)
     end
 
-    EventNotifier.fire(:incident_opened, incident: self)
-  end
-
-  def acknowledge
-    if self.acknowledged? || self.resolved?
-      raise Error, "The incident is already #{self.status}."
-    end
-    self.acknowledged!
-
-    EventNotifier.fire(:incident_acknowledged, incident: self)
-  end
-
-  def resolve
-    if self.resolved?
-      raise Error, "The incident is already #{self.status}."
-    end
-    self.resolved!
-
-    EventNotifier.fire(:incident_resolved, incident: self)
+    events.create(kind: :opened)
   end
 end
+

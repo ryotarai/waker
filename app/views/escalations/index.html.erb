@@ -1,0 +1,30 @@
+
+<h1>Listing Escalations</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Escalation Series</th>
+      <th>Escalate to</th>
+      <th>Escalate after sec</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @escalations.each do |escalation| %>
+      <tr>
+        <td><%= escalation.escalation_series.name %></td>
+        <td><%= escalation.escalate_to.name %></td>
+        <td><%= escalation.escalate_after_sec %></td>
+        <td><%= link_to 'Show', escalation %></td>
+        <td><%= link_to 'Edit', edit_escalation_path(escalation) %></td>
+        <td><%= link_to 'Destroy', escalation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Escalation', new_escalation_path %>

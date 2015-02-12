@@ -1,0 +1,35 @@
+<%= form_for(@notifier_provider) do |f| %>
+  <% if @notifier_provider.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@notifier_provider.errors.count, "error") %> prohibited this notifier_provider from being saved:</h2>
+
+      <ul>
+      <% @notifier_provider.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :kind %><br>
+    <%= f.select :kind do %>
+      <%= options_for_select(
+        NotifierProvider::KINDS.map do |kind|
+          [kind.to_s.camelize, kind, {}]
+        end, @notifier_provider.kind
+      ) %>
+    <% end %>
+  </div>
+  <div class="field">
+    <%= f.label :settings %><br>
+    <%= f.text_area :settings, value: @notifier_provider.settings.to_yaml %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

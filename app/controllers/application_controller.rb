@@ -2,26 +2,27 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  skip_before_action :verify_authenticity_token, if: :json_request?
+  helper_method :current_user
 
-  respond_to :json
+  before_action :login_required
 
-  protected
-  def json_request?
-    request.format.json?
-  end
+  private
 
-  def json_params
-    json = JSON.parse(env['rack.request.form_vars'])
-    ActionController::Parameters.new(json)
-  end
-  
-  def params_with_checking_method
-    if request.get? || Rails.env.test?
-      params_without_checking_method
-    else
-      params_without_checking_method.merge(json_params)
+  def login_required
+    unless current_user
+      redirect_to '/auth/google_oauth2'
     end
   end
-  alias_method_chain :params, :checking_method
+
+  def current_user=(user)
+    session[:user_id] = user.id
+  end
+
+  def current_user
+    if user_id = session[:user_id]
+      User.find(user_id)
+    elsif login_token = request.headers['X-Login-Token']
+      User.find_by(login_token: login_token)
+    end
+  end
 end

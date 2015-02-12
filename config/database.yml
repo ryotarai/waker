@@ -1,0 +1,9 @@
+development:
+  adapter: mysql2
+  database: waker_development
+  encoding: utf8mb4
+
+test:
+  adapter: mysql2
+  database: waker_test
+  encoding: utf8mb4

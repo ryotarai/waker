@@ -1,0 +1,184 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'json'
+require 'faraday'
+require 'google/api_client'
+require 'google/api_client/client_secrets'
+require 'google/api_client/auth/file_storage'
+require 'google/api_client/auth/installed_app'
+
+class Configuration < Struct.new(:client_secret_file, :credential_store_file, :calendar_name, :delimiter, :url, :escalation_series, :login_token)
+  def self.from_command_line_options
+    self.new.tap do |config|
+      opt = OptionParser.new
+      opt.on('--client-secret-file VAL') {|v| config.client_secret_file = v }
+      opt.on('--credential-store-file VAL') {|v| config.credential_store_file = v }
+      opt.on('--calendar-name VAL') {|v| config.calendar_name = v }
+      opt.on('--delimiter VAL') {|v| config.delimiter = v }
+      opt.on('--url VAL') {|v| config.url = v }
+      opt.on('--escalation-series VAL') {|v| config.escalation_series = v }
+      opt.on('--login-token VAL') {|v| config.login_token = v }
+      opt.parse!(ARGV)
+
+      config.validate!
+    end
+  end
+
+  def validate!
+    members.each do |member|
+      unless self[member]
+        raise "#{member} is required."
+      end
+    end
+  end
+end
+
+class WakerClient
+  InvalidResponseError = Class.new(StandardError)
+
+  def initialize(url:, token:)
+    @url = url
+    @token = token
+  end
+
+  def users
+    get('/users.json')
+  end
+
+  def escalation_series
+    get('/escalation_series.json')
+  end
+
+  def escalations
+    get('/escalations.json')
+  end
+
+  def update_escalation(escalation, escalate_to: nil)
+    params = {}
+    params['escalation[escalate_to_id]'] = escalate_to.id if escalate_to
+    update("/escalations/#{escalation.id}.json", params)
+  end
+
+  private
+
+  def conn
+    @conn ||= Faraday.new(url: @url) do |faraday|
+      faraday.request  :url_encoded
+      faraday.response :logger if ENV['DEBUG']
+      faraday.adapter  Faraday.default_adapter
+    end
+  end
+
+  def get(path)
+    res = conn.get do |req|
+      req.url path
+      req.headers['X-Login-Token'] = @token
+    end
+
+    parse_response(res)
+  end
+
+  def update(path, params = {})
+    res = conn.put do |req|
+      req.url path
+      req.params = params
+      req.headers['X-Login-Token'] = @token
+    end
+
+    parse_response(res)
+  end
+
+  def parse_response(res)
+    unless 200 <= res.status && res.status < 300
+      raise InvalidResponseError, "status #{res.status}\nbody: #{res.body}"
+    end
+
+    body = JSON.parse(res.body)
+    if body.is_a?(Array)
+      body.map {|v| OpenStruct.new(v) }
+    elsif body.is_a?(Hash)
+      OpenStruct.new(body)
+    end
+  end
+end
+
+def setup_google_client
+  client = Google::APIClient.new(:application_name => 'Waker',
+                                 :application_version => '1.0.0')
+
+  file_storage = Google::APIClient::FileStorage.new($config.credential_store_file)
+  if file_storage.authorization.nil?
+    client_secrets = Google::APIClient::ClientSecrets.load($config.client_secret_file)
+    flow = Google::APIClient::InstalledAppFlow.new(
+      :client_id => client_secrets.client_id,
+      :client_secret => client_secrets.client_secret,
+      :scope => ['https://www.googleapis.com/auth/calendar.readonly']
+    )
+    client.authorization = flow.authorize(file_storage)
+  else
+    client.authorization = file_storage.authorization
+  end
+
+  return client
+end
+
+$config = Configuration.from_command_line_options
+
+client = setup_google_client
+calendar_api = client.discovered_api('calendar', 'v3')
+
+calendar = client.execute(
+  api_method: calendar_api.calendar_list.list,
+  parameters: {},
+).data.items.find do |cal|
+  cal['summary'] == $config.calendar_name
+end
+
+events = client.execute(
+  api_method: calendar_api.events.list,
+  parameters: {
+    'calendarId' => calendar['id'],
+    'timeMax' => (Time.now + 1).strftime('%FT%T%:z'),
+    'timeMin' => (Time.now).strftime('%FT%T%:z'),
+    'singleEvents' => true,
+  },
+).data.items
+
+events.each do |event|
+  unless event['end']['dateTime'] && event['start']['dateTime']
+    raise "dateTime field is not found (The event may be all-day event)\n#{event}"
+  end
+end
+
+events.sort! do |a, b|
+  a['end']['dateTime'] - a['start']['dateTime'] <=>
+    b['end']['dateTime'] - b['start']['dateTime']
+end
+
+# shortest event
+event = events.first
+
+persons = event['summary'].split($config.delimiter).map(&:strip)
+
+client = WakerClient.new(url: $config.url, token: $config.login_token)
+
+escalation_series = client.escalation_series.find do |series|
+  [series.id, series.name].include?($config.escalation_series)
+end
+
+escalations = client.escalations.select do |escalation|
+  escalation.escalation_series_id == escalation_series.id
+end.sort_by do |escalation|
+  escalation.escalate_after_sec
+end
+
+users = client.users
+
+persons.each_with_index do |name, i|
+  user = users.find {|u| u.name == name }
+  raise "#{name} user is not found." unless user
+  escalation = escalations[i]
+  client.update_escalation(escalation, escalate_to: user)
+end
+

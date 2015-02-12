@@ -1,0 +1,45 @@
+
+<p>
+  <strong>Subject:</strong>
+  <%= @incident.subject %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @incident.description %>
+</p>
+
+<p>
+  <strong>Topic:</strong>
+  <%= @incident.topic.name %>
+</p>
+
+<p>
+  <strong>Occured at:</strong>
+  <%= @incident.occured_at %>
+</p>
+
+<table class="table">
+  <tr>
+    <th>Time</th>
+    <th>Event</th>
+    <th>Description</th>
+  </tr>
+  <% @incident.events.each do |event| %>
+    <tr>
+      <td><%= event.created_at %></td>
+      <td><%= event.kind %></td>
+      <td>
+        <% if event.escalated? %>
+          to <%= link_to(event.escalated_to.name, event.escalated_to) %>
+        <% elsif event.notified? %>
+          <%= event.event.kind %> by <%= link_to('Notifier', event.notifier) %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to 'Edit', edit_incident_path(@incident) %> |
+<%= link_to 'Destroy', @incident, method: :delete, data: { confirm: 'Are you sure?' } %>
+<%= link_to 'Back', incidents_path %>

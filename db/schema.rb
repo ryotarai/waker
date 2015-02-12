@@ -11,102 +11,99 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140729120942) do
+ActiveRecord::Schema.define(version: 20150207164010) do
 
-  create_table "escalation_queues", force: true do |t|
-    t.integer  "incident_id"
-    t.integer  "escalation_id"
-    t.datetime "escalate_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "escalation_series", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.text     "settings",   limit: 65535
   end
 
-  add_index "escalation_queues", ["escalation_id"], name: "index_escalation_queues_on_escalation_id", using: :btree
-  add_index "escalation_queues", ["incident_id"], name: "index_escalation_queues_on_incident_id", using: :btree
-
-  create_table "escalation_rules", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "escalations", force: :cascade do |t|
+    t.integer  "escalate_to_id",       limit: 4
+    t.integer  "escalate_after_sec",   limit: 4
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.integer  "escalation_series_id", limit: 4
   end
 
-  create_table "escalations", force: true do |t|
-    t.integer  "escalate_to_id"
-    t.string   "escalate_to_type"
-    t.integer  "escalate_after"
-    t.integer  "escalation_rule_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  add_index "escalations", ["escalate_to_id"], name: "index_escalations_on_escalate_to_id", using: :btree
+  add_index "escalations", ["escalation_series_id"], name: "index_escalations_on_escalation_series_id", using: :btree
+
+  create_table "incident_events", force: :cascade do |t|
+    t.integer  "incident_id", limit: 4
+    t.integer  "kind",        limit: 4
+    t.text     "text",        limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.text     "info",        limit: 65535
   end
 
-  add_index "escalations", ["escalate_to_id", "escalate_to_type"], name: "index_escalations_on_escalate_to_id_and_escalate_to_type", using: :btree
-  add_index "escalations", ["escalation_rule_id"], name: "index_escalations_on_escalation_rule_id", using: :btree
+  add_index "incident_events", ["incident_id"], name: "index_incident_events_on_incident_id", using: :btree
 
-  create_table "incidents", force: true do |t|
-    t.text     "description"
-    t.text     "details_json"
-    t.integer  "provider_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "status"
-    t.string   "check_hash"
+  create_table "incidents", force: :cascade do |t|
+    t.string   "subject",     limit: 255
+    t.text     "description", limit: 65535
+    t.integer  "topic_id",    limit: 4
+    t.datetime "occured_at"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "status",      limit: 4
   end
 
-  add_index "incidents", ["provider_id"], name: "index_incidents_on_provider_id", using: :btree
+  add_index "incidents", ["topic_id"], name: "index_incidents_on_topic_id", using: :btree
 
-  create_table "notification_queues", force: true do |t|
-    t.integer  "notifier_id"
-    t.integer  "incident_id"
-    t.datetime "notify_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "notifier_providers", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.integer  "kind",       limit: 4
+    t.text     "settings",   limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
-  add_index "notification_queues", ["incident_id"], name: "index_notification_queues_on_incident_id", using: :btree
-  add_index "notification_queues", ["notifier_id"], name: "index_notification_queues_on_notifier_id", using: :btree
-
-  create_table "notifiers", force: true do |t|
-    t.string   "name"
-    t.string   "kind"
-    t.text     "details_json"
-    t.integer  "user_id"
-    t.integer  "notify_after"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "ignore_periods_json"
+  create_table "notifiers", force: :cascade do |t|
+    t.text     "settings",         limit: 65535
+    t.integer  "notify_after_sec", limit: 4
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.integer  "user_id",          limit: 4
+    t.integer  "provider_id",      limit: 4
+    t.integer  "topic_id",         limit: 4
   end
 
+  add_index "notifiers", ["provider_id"], name: "index_notifiers_on_provider_id", using: :btree
+  add_index "notifiers", ["topic_id"], name: "index_notifiers_on_topic_id", using: :btree
   add_index "notifiers", ["user_id"], name: "index_notifiers_on_user_id", using: :btree
 
-  create_table "providers", force: true do |t|
-    t.string   "name"
-    t.string   "kind"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "details_json"
-    t.integer  "escalation_rule_id"
+  create_table "topics", force: :cascade do |t|
+    t.string   "name",                 limit: 255
+    t.integer  "kind",                 limit: 4
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+    t.integer  "escalation_series_id", limit: 4
+    t.boolean  "enabled",              limit: 1,   default: true
   end
 
-  add_index "providers", ["escalation_rule_id"], name: "index_providers_on_escalation_rule_id", using: :btree
+  add_index "topics", ["escalation_series_id"], name: "index_topics_on_escalation_series_id", using: :btree
 
-  create_table "samples", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "users", force: :cascade do |t|
+    t.string   "name",             limit: 255
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.string   "email",            limit: 255
+    t.string   "login_token",      limit: 255
+    t.string   "token",            limit: 255
+    t.string   "refresh_token",    limit: 255
+    t.datetime "token_expires_at"
   end
 
-  create_table "shifts", force: true do |t|
-    t.string   "name"
-    t.string   "ical"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "index"
-  end
-
-  create_table "users", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
+  add_foreign_key "escalations", "escalation_series"
+  add_foreign_key "escalations", "users", column: "escalate_to_id"
+  add_foreign_key "incident_events", "incidents"
+  add_foreign_key "incidents", "topics"
+  add_foreign_key "notifiers", "notifier_providers", column: "provider_id"
+  add_foreign_key "notifiers", "topics"
+  add_foreign_key "notifiers", "users"
+  add_foreign_key "topics", "escalation_series"
 end

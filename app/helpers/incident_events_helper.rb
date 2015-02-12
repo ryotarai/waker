@@ -1,0 +1,2 @@
+module IncidentEventsHelper
+end

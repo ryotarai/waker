@@ -1,0 +1,28 @@
+
+<p>
+  <strong>Provider:</strong>
+  <%= @notifier.provider.name %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @notifier.user && @notifier.user.name %>
+</p>
+
+<p>
+  <strong>Topic:</strong>
+  <%= @notifier.topic && @notifier.topic.name %>
+</p>
+
+<p>
+  <strong>Settings:</strong>
+  <%= @notifier.settings %>
+</p>
+
+<p>
+  <strong>Notify after sec:</strong>
+  <%= @notifier.notify_after_sec %>
+</p>
+
+<%= link_to 'Edit', edit_notifier_path(@notifier) %> |
+<%= link_to 'Back', notifiers_path %>

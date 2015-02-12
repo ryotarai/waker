@@ -12,8 +12,8 @@
 /db/*.sqlite3-journal
 
 # Ignore all logfiles and tempfiles.
-/log/*.log
+/log/*
+!/log/.keep
 /tmp
-
+*.rdb
 .env
-/config/database.yml
