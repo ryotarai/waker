@@ -33,7 +33,7 @@
         <% if event.escalated? %>
           to <%= link_to(event.escalated_to.name, event.escalated_to) %>
         <% elsif event.notified? %>
-          by <%= link_to('Notifier', event.notifier) %>
+          <%= event.event.kind %> by <%= link_to('Notifier', event.notifier) %>
         <% end %>
       </td>
     </tr>

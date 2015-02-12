@@ -58,7 +58,18 @@ class NotifierProvider < ActiveRecord::Base
       #     'not_japanese_weekday' => true,
       #   }
       # ]
-      return skip_due_to_or_conditions?
+      return skip_due_to_or_conditions? ||
+        skip_due_to_status_of_incident?
+    end
+
+    def skip_due_to_status_of_incident?
+      unless @event.incident.opened?
+        unless [:acknowledged, :resolved].include?(kind_of_event)
+          return true
+        end
+      end
+
+      false
     end
 
     def skip_due_to_or_conditions?
