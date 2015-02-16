@@ -13,10 +13,20 @@ class IncidentsController < ApplicationController
 
     statuses = session[:incidents_statuses] || []
 
-    if statuses.empty?
-      @incidents = Incident.all
-    else
-      @incidents = Incident.where(status: statuses)
+    if params[:topic]
+      session[:incidents_topic] = params[:topic]
+    end
+
+    topic = (Topic.find(session[:incidents_topic]) rescue nil)
+
+    @incidents = Incident.all
+
+    unless statuses.empty?
+      @incidents = @incidents.where(status: statuses)
+    end
+
+    if topic
+      @incidents = @incidents.where(topic: topic)
     end
 
     @page = (params[:page] || 1).to_i
