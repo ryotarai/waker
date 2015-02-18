@@ -24,5 +24,10 @@
   <%= @notifier.notify_after_sec %>
 </p>
 
+<p>
+  <strong>Enabled:</strong>
+  <%= @notifier.enabled %>
+</p>
+
 <%= link_to 'Edit', edit_notifier_path(@notifier) %> |
 <%= link_to 'Back', notifiers_path %>

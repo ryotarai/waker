@@ -11,7 +11,9 @@ class NotificationWorker
     event = IncidentEvent.find(event_id)
     notifier = Notifier.find(notifier_id)
 
-    notifier.notify_immediately(event)
+    if notifier.enabled
+      notifier.notify_immediately(event)
+    end
   end
 end
 

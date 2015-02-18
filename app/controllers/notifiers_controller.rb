@@ -69,7 +69,7 @@ class NotifiersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def notifier_params
-      params.require(:notifier).permit(:user_id, :kind, :settings, :notify_after_sec, :provider_id, :topic_id).tap do |v|
+      params.require(:notifier).permit(:user_id, :kind, :settings, :notify_after_sec, :provider_id, :topic_id, :enabled).tap do |v|
         v[:settings] = YAML.load(v[:settings])
       end
     end

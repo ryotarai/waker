@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150207164010) do
+ActiveRecord::Schema.define(version: 20150218071007) do
 
   create_table "escalation_series", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -65,11 +65,12 @@ ActiveRecord::Schema.define(version: 20150207164010) do
   create_table "notifiers", force: :cascade do |t|
     t.text     "settings",         limit: 65535
     t.integer  "notify_after_sec", limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.integer  "user_id",          limit: 4
     t.integer  "provider_id",      limit: 4
     t.integer  "topic_id",         limit: 4
+    t.boolean  "enabled",          limit: 1,     default: true
   end
 
   add_index "notifiers", ["provider_id"], name: "index_notifiers_on_provider_id", using: :btree
