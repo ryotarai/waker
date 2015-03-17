@@ -11,5 +11,4 @@ ADD . /app
 WORKDIR /app
 RUN cp -a /tmp/vendor/bundle /app/vendor/bundle && \
     bundle exec rake assets:precompile
-CMD bundle exec foreman start -f Procfile.docker
-
+CMD ["bundle", "exec", "foreman", "start", "-f", "Procfile.docker"]
