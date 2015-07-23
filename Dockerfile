@@ -1,4 +1,4 @@
-FROM ruby:2.2.0
+FROM ruby:2.2.2
 
 RUN apt-get update && apt-get -y install nodejs
 
