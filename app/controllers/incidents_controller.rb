@@ -1,34 +1,11 @@
 class IncidentsController < ApplicationController
+  before_action :set_incidents, only: [:index, :bulk_acknowledge, :bulk_resolve]
   before_action :set_incident, only: [:show, :edit, :update, :destroy, :acknowledge, :resolve]
   before_action :ensure_hash, only: [:acknowledge, :resolve]
 
   # GET /incidents
   # GET /incidents.json
   def index
-    if params[:status]
-      session[:incidents_statuses] = params[:status].split(',').map do |status|
-        Incident.statuses[status]
-      end.compact
-    end
-
-    statuses = session[:incidents_statuses] || []
-
-    if params[:topic]
-      session[:incidents_topic] = params[:topic]
-    end
-
-    topic = (Topic.find(session[:incidents_topic]) rescue nil)
-
-    @incidents = Incident.all
-
-    unless statuses.empty?
-      @incidents = @incidents.where(status: statuses)
-    end
-
-    if topic
-      @incidents = @incidents.where(topic: topic)
-    end
-
     @page = (params[:page] || 1).to_i
     @incidents = @incidents.order('id DESC').page(@page).per(25)
   end
@@ -77,6 +54,22 @@ class IncidentsController < ApplicationController
     end
   end
 
+  def bulk_acknowledge
+    @incidents.update_all(status: Incident.statuses[:acknowledged])
+    respond_to do |format|
+      format.html { redirect_to incidents_url, notice: 'Incidents were successfully acknowledged.' }
+      format.json { head :no_content }
+    end
+  end
+
+  def bulk_resolve
+    @incidents.update_all(status: Incident.statuses[:resolved])
+    respond_to do |format|
+      format.html { redirect_to incidents_url, notice: 'Incidents were successfully resolved.' }
+      format.json { head :no_content }
+    end
+  end
+
   # DELETE /incidents/1
   # DELETE /incidents/1.json
   def destroy
@@ -107,6 +100,32 @@ class IncidentsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_incident
       @incident = Incident.find(params[:id])
+    end
+
+    def set_incidents
+      if params[:status]
+        session[:incidents_statuses] = params[:status].split(',').map do |status|
+          Incident.statuses[status]
+        end.compact
+      end
+
+      statuses = session[:incidents_statuses] || []
+
+      if params[:topic]
+        session[:incidents_topic] = params[:topic]
+      end
+
+      topic = (Topic.find(session[:incidents_topic]) rescue nil)
+
+      @incidents = Incident.all
+
+      unless statuses.empty?
+        @incidents = @incidents.where(status: statuses)
+      end
+
+      if topic
+        @incidents = @incidents.where(topic: topic)
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -12,6 +12,11 @@ Rails.application.routes.draw do
       get 'acknowledge'
       get 'resolve'
     end
+
+    collection do
+      patch 'acknowledge', to: "incidents#bulk_acknowledge"
+      patch 'resolve', to: "incidents#bulk_resolve"
+    end
   end
 
   resources :escalation_series do

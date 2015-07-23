@@ -61,4 +61,5 @@
 
 <br>
 
-<%= link_to 'New Incident', new_incident_path %>
+<%= link_to 'Ack All', acknowledge_incidents_path, class: "btn btn-default", method: :patch, data: { confirm: "#{@incidents.count} incidents will be marked as acked. Are you sure?" } %>
+<%= link_to 'Resolve All', resolve_incidents_path, class: "btn btn-success", method: :patch, data: { confirm: "#{@incidents.count} incidents will be marked as resolved. Are you sure?" } %>

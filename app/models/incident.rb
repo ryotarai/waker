@@ -19,7 +19,6 @@ class Incident < ActiveRecord::Base
     return if self.acknowledged? || self.resolved?
 
     self.acknowledged!
-    self.save!
 
     events.create(kind: :acknowledged)
   end
@@ -28,7 +27,6 @@ class Incident < ActiveRecord::Base
     return if self.resolved?
 
     self.resolved!
-    self.save!
 
     events.create(kind: :resolved)
   end
