@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>[Waker] <%= event.incident.subject %></title>
+  </head>
+  <body>
+    <%
+      ack_url = Rails.application.routes.url_helpers.acknowledge_incident_url(event.incident, hash: event.incident.confirmation_hash)
+      resolve_url = Rails.application.routes.url_helpers.resolve_incident_url(event.incident, hash: event.incident.confirmation_hash)
+
+      email_markup = {
+        "@context" => "http://schema.org",
+        "@type" => "EmailMessage",
+        "potentialAction" => {
+          "@type" => "ConfirmAction",
+          "name" => "Acknowledge incident",
+          "handler" => {
+            "@type" => "HttpActionHandler",
+            "url" => ack_url,
+          },
+        },
+        "description" => "Acknowledge incident: #{event.incident.subject}",
+      }
+
+    %>
+
+    <script type="application/ld+json"><%= email_markup.to_json.html_safe %></script>
+
+    <h1><%= event.incident.subject %></h1>
+
+    <div>
+      <%
+        btn_style = 'border-radius: 4px;' \
+          'text-decoration: none;' \
+          'display: inline-block;' \
+          'font-size: 1.3em;' \
+          'padding: 5px 8px;' \
+          'margin-right: 12px;' \
+      %>
+      <a href="<%= ack_url %>"><div style="<%= btn_style %>; border: 1px solid #ccc; color: black;">Acknowledge</div></a> <a href="<%= resolve_url %>"><div style="<%= btn_style %>; background-color: #5cb85c; color: white;">Resolve</div></a>
+    </div>
+
+    <div style="margin-top: 12px;">
+      <%= event.incident.description %>
+    </div>
+  </body>
+</body>
