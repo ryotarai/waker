@@ -120,12 +120,14 @@ class NotifierProvider < ActiveRecord::Base
         settings['events'].map {|v| v.to_sym }
     end
 
-    def body
+    def body(formats: [:text])
       template_names = [kind_of_event, 'default']
       template_names.each_with_index do |template_name, i|
         begin
           rendered = ApplicationController.new.render_to_string(
             template: "notifier_providers/#{@provider.kind}/#{template_name}",
+            formats: formats,
+            layout: nil,
             locals: {event: @event},
           )
 
@@ -222,6 +224,7 @@ class NotifierProvider < ActiveRecord::Base
         to: to,
         subject: "[Waker] #{@event.incident.subject}",
         text: body,
+        html: body(formats: [:html]),
       }
 
       Rails.logger.info "response status: #{response.status}"
