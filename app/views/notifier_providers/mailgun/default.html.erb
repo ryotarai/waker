@@ -8,6 +8,7 @@
   <body>
     <%
       ack_url = Rails.application.routes.url_helpers.acknowledge_incident_url(event.incident, hash: event.incident.confirmation_hash)
+      ack_url_json = Rails.application.routes.url_helpers.acknowledge_incident_url(event.incident, hash: event.incident.confirmation_hash, format: :json)
       resolve_url = Rails.application.routes.url_helpers.resolve_incident_url(event.incident, hash: event.incident.confirmation_hash)
 
       email_markup = {
@@ -18,7 +19,7 @@
           "name" => "Acknowledge incident",
           "handler" => {
             "@type" => "HttpActionHandler",
-            "url" => ack_url,
+            "url" => ack_url_json,
           },
         },
         "description" => "Acknowledge incident: #{event.incident.subject}",
