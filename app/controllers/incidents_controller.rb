@@ -84,7 +84,7 @@ class IncidentsController < ApplicationController
     @incident.acknowledge!
     respond_to do |format|
       format.html { redirect_to incidents_url, notice: 'Incident was successfully acknowledged.' }
-      format.json { head :no_content }
+      format.json { render json: {status: 'ok'} }
     end
   end
 
@@ -92,7 +92,7 @@ class IncidentsController < ApplicationController
     @incident.resolve!
     respond_to do |format|
       format.html { redirect_to incidents_url, notice: 'Incident was successfully resolved.' }
-      format.json { head :no_content }
+      format.json { render json: {status: 'ok'} }
     end
   end
 
