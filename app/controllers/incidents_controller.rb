@@ -2,6 +2,7 @@ class IncidentsController < ApplicationController
   before_action :set_incidents, only: [:index, :bulk_acknowledge, :bulk_resolve]
   before_action :set_incident, only: [:show, :edit, :update, :destroy, :acknowledge, :resolve]
   before_action :ensure_hash, only: [:acknowledge, :resolve]
+  skip_before_action :login_required, only: [:acknowledge, :resolve]
 
   # GET /incidents
   # GET /incidents.json
