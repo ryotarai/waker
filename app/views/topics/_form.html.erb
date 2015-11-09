@@ -11,27 +11,27 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group">
     <%= f.label :name %><br>
-    <%= f.text_field :name %>
+    <%= f.text_field :name, class: 'form-control' %>
   </div>
-  <div class="field">
+  <div class="form-group">
     <%= f.label :kind %><br>
-    <%= f.select :kind do %>
+    <%= f.select :kind, nil, {}, class: 'form-control' do %>
       <% Topic::KINDS.each_with_index do |kind, index| %>
         <%= content_tag(:option, kind.to_s.split('_').map {|s| s.capitalize }.join(' '), value: kind) %>
       <% end %>
     <% end %>
   </div>
-  <div class="field">
+  <div class="form-group">
     <%= f.label :escalation_series_id %><br>
-    <%= f.collection_select(:escalation_series_id, EscalationSeries.all, :id, :name) %>
+    <%= f.collection_select(:escalation_series_id, EscalationSeries.all, :id, :name, {}, class: 'form-control') %>
   </div>
-  <div class="field">
-    <%= f.label :enabled %><br>
-    <%= f.check_box :enabled %>
+  <div class="checkbox">
+    <%= f.label :enabled do %>
+      <%= f.check_box :enabled %>
+      Enabled
+    <% end %>
   </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+  <%= f.submit(class: 'btn btn-default') %>
 <% end %>
