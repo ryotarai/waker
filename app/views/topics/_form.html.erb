@@ -12,11 +12,11 @@
   <% end %>
 
   <div class="form-group">
-    <%= f.label :name %><br>
+    <%= f.label :name %>
     <%= f.text_field :name, class: 'form-control' %>
   </div>
   <div class="form-group">
-    <%= f.label :kind %><br>
+    <%= f.label :kind %>
     <%= f.select :kind, nil, {}, class: 'form-control' do %>
       <% Topic::KINDS.each_with_index do |kind, index| %>
         <%= content_tag(:option, kind.to_s.split('_').map {|s| s.capitalize }.join(' '), value: kind) %>
@@ -24,7 +24,7 @@
     <% end %>
   </div>
   <div class="form-group">
-    <%= f.label :escalation_series_id %><br>
+    <%= f.label :escalation_series_id %>
     <%= f.collection_select(:escalation_series_id, EscalationSeries.all, :id, :name, {}, class: 'form-control') %>
   </div>
   <div class="checkbox">
