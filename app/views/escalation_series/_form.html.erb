@@ -1,6 +1,6 @@
 <%= form_for(@escalation_series) do |f| %>
   <% if @escalation_series.errors.any? %>
-    <div id="error_explanation">
+    <div class="alert alert-danger">
       <h2><%= pluralize(@escalation_series.errors.count, "error") %> prohibited this escalation_series from being saved:</h2>
 
       <ul>
@@ -11,15 +11,13 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, required: true, class: 'form-control' %>
   </div>
-  <div class="field">
-    <%= f.label :settings %><br>
-    <%= f.text_area :settings, value: @escalation_series.settings.to_yaml %>
+  <div class="form-group">
+    <%= f.label :settings %>
+    <%= f.text_area :settings, value: @escalation_series.settings.to_yaml, class: 'form-control', rows: 8 %>
   </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+  <%= f.submit(class: 'btn btn-default') %>
 <% end %>

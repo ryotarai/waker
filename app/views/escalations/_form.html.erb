@@ -1,6 +1,6 @@
 <%= form_for(@escalation) do |f| %>
   <% if @escalation.errors.any? %>
-    <div id="error_explanation">
+    <div class="alert alert-danger">
       <h2><%= pluralize(@escalation.errors.count, "error") %> prohibited this escalation from being saved:</h2>
 
       <ul>
@@ -11,19 +11,17 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :escalate_to_id %><br>
-    <%= f.collection_select(:escalate_to_id, User.all, :id, :name) %>
+  <div class="form-group">
+    <%= f.label :escalate_to_id %>
+    <%= f.collection_select(:escalate_to_id, User.all, :id, :name, {}, class: 'form-control') %>
   </div>
-  <div class="field">
-    <%= f.label :escalate_after_sec %><br>
-    <%= f.number_field :escalate_after_sec %>
+  <div class="form-group">
+    <%= f.label :escalate_after_sec %>
+    <%= f.number_field :escalate_after_sec, min: 5, class: 'form-control' %>
   </div>
-  <div class="field">
-    <%= f.label :escalation_series_id %><br>
-    <%= f.collection_select(:escalation_series_id, EscalationSeries.all, :id, :name) %>
+  <div class="form-group">
+    <%= f.label :escalation_series_id %>
+    <%= f.collection_select(:escalation_series_id, EscalationSeries.all, :id, :name, {}, class: 'form-control') %>
   </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+  <%= f.submit(class: 'btn btn-default') %>
 <% end %>

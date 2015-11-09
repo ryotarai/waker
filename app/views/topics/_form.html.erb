@@ -1,6 +1,6 @@
 <%= form_for(@topic) do |f| %>
   <% if @topic.errors.any? %>
-    <div id="error_explanation">
+    <div class="alert alert-danger">
       <h2><%= pluralize(@topic.errors.count, "error") %> prohibited this topic from being saved:</h2>
 
       <ul>
@@ -11,27 +11,27 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, required: true, class: 'form-control' %>
   </div>
-  <div class="field">
-    <%= f.label :kind %><br>
-    <%= f.select :kind do %>
+  <div class="form-group">
+    <%= f.label :kind %>
+    <%= f.select :kind, nil, {}, class: 'form-control' do %>
       <% Topic::KINDS.each_with_index do |kind, index| %>
         <%= content_tag(:option, kind.to_s.split('_').map {|s| s.capitalize }.join(' '), value: kind) %>
       <% end %>
     <% end %>
   </div>
-  <div class="field">
-    <%= f.label :escalation_series_id %><br>
-    <%= f.collection_select(:escalation_series_id, EscalationSeries.all, :id, :name) %>
+  <div class="form-group">
+    <%= f.label :escalation_series_id %>
+    <%= f.collection_select(:escalation_series_id, EscalationSeries.all, :id, :name, {}, class: 'form-control') %>
   </div>
-  <div class="field">
-    <%= f.label :enabled %><br>
-    <%= f.check_box :enabled %>
+  <div class="checkbox">
+    <%= f.label :enabled do %>
+      <%= f.check_box :enabled %>
+      Enabled
+    <% end %>
   </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+  <%= f.submit(class: 'btn btn-default') %>
 <% end %>
