@@ -29,7 +29,7 @@
   </div>
   <div class="form-group">
     <%= f.label :notify_after_sec %>
-    <%= f.number_field :notify_after_sec, class: 'form-control' %>
+    <%= f.number_field :notify_after_sec, min: 5, class: 'form-control' %>
   </div>
   <div class="form-group">
     <%= f.label :enabled do %>
