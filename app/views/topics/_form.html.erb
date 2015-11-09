@@ -1,6 +1,6 @@
 <%= form_for(@topic) do |f| %>
   <% if @topic.errors.any? %>
-    <div id="error_explanation">
+    <div class="alert alert-danger">
       <h2><%= pluralize(@topic.errors.count, "error") %> prohibited this topic from being saved:</h2>
 
       <ul>

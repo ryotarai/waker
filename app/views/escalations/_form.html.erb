@@ -1,6 +1,6 @@
 <%= form_for(@escalation) do |f| %>
   <% if @escalation.errors.any? %>
-    <div id="error_explanation">
+    <div class="alert alert-danger">
       <h2><%= pluralize(@escalation.errors.count, "error") %> prohibited this escalation from being saved:</h2>
 
       <ul>
