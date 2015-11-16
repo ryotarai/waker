@@ -5,9 +5,3 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-
-user = User.find_or_create_by(name: 'Philip Sparke')
-user.notifiers.find_or_create_by(kind: :rails_logger, notify_after_sec: 10)
-series = EscalationSeries.find_or_create_by(name: 'Default')
-series.escalations.find_or_create_by(escalate_to: user, escalate_after_sec: 10)
-series.topics.find_or_create_by(name: 'Default', kind: :api)
