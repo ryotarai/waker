@@ -56,7 +56,7 @@ class IncidentsController < ApplicationController
   end
 
   def bulk_acknowledge
-    @incidents.update_all(status: Incident.statuses[:acknowledged])
+    @incidents.opened.update_all(status: Incident.statuses[:acknowledged])
     respond_to do |format|
       format.html { redirect_to incidents_url, notice: 'Incidents were successfully acknowledged.' }
       format.json { head :no_content }
