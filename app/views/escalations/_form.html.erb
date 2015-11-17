@@ -13,7 +13,7 @@
 
   <div class="form-group">
     <%= f.label :escalate_to_id %>
-    <%= f.collection_select(:escalate_to_id, User.all, :id, :name, {include_blank: true}, class: 'form-control') %>
+    <%= f.collection_select(:escalate_to_id, User.all, :id, :name, {}, class: 'form-control') %>
   </div>
   <div class="form-group">
     <%= f.label :escalate_after_sec %>
