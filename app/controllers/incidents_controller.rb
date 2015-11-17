@@ -84,7 +84,11 @@ class IncidentsController < ApplicationController
   def acknowledge
     @incident.acknowledge!
     respond_to do |format|
-      format.html { redirect_to incidents_url, notice: 'Incident was successfully acknowledged.' }
+      if current_user
+        format.html { redirect_to incidents_url, notice: 'Incident was successfully acknowledged.' }
+      else
+        format.html { render text: "Acknowledged" }
+      end
       format.json { render json: {status: 'ok'} }
     end
   end
@@ -92,7 +96,11 @@ class IncidentsController < ApplicationController
   def resolve
     @incident.resolve!
     respond_to do |format|
-      format.html { redirect_to incidents_url, notice: 'Incident was successfully resolved.' }
+      if current_user
+        format.html { redirect_to incidents_url, notice: 'Incident was successfully resolved.' }
+      else
+        format.html { render text: "Resolved" }
+      end
       format.json { render json: {status: 'ok'} }
     end
   end
