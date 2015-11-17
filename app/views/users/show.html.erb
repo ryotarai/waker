@@ -5,8 +5,13 @@
 </p>
 
 <p>
-  <strong>Email:</strong>
-  <%= @user.email %>
+  <strong>Provider:</strong>
+  <%= @user.provider %>
+</p>
+
+<p>
+  <strong>UID:</strong>
+  <%= @user.uid %>
 </p>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
