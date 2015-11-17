@@ -64,10 +64,8 @@ class NotifierProvider < ActiveRecord::Base
     end
 
     def skip_due_to_status_of_incident?
-      unless @event.incident.opened?
-        unless [:acknowledged, :resolved].include?(kind_of_event)
-          return true
-        end
+      if !@event.incident.opened? && !([:acknowledged, :resolved].include?(kind_of_event))
+        return true
       end
 
       false
