@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :activation, :deactivation]
 
   # GET /users
   # GET /users.json
@@ -58,6 +58,22 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  # PATCH/PUT /users/1/activation
+  def activation
+    @user.update!(active: true)
+    respond_to do |format|
+      format.html { redirect_to users_url, notice: 'User was successfully activated.' }
+    end
+  end
+
+  # PATCH/PUT /users/1/deactivation
+  def deactivation
+    @user.update!(active: false)
+    respond_to do |format|
+      format.html { redirect_to users_url, notice: 'User was successfully deactivated.' }
     end
   end
 

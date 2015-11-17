@@ -33,7 +33,12 @@ Rails.application.routes.draw do
 
   resources :notifier_providers
 
-  resources :users
+  resources :users do
+    member do
+      patch 'activation'
+      patch 'deactivation'
+    end
+  end
 
   resources :topics do
     member do

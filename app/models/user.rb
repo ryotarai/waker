@@ -1,7 +1,7 @@
 require 'securerandom'
 
 class User < ActiveRecord::Base
-  scope(:active) { where(active: true) }
+  scope :active, -> { where(active: true) }
 
   has_many :notifiers
 
