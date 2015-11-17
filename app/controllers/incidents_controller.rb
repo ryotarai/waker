@@ -129,7 +129,7 @@ class IncidentsController < ApplicationController
       @visible_statuses = session[:incidents_statuses]
 
       # for transition from rev 0a2dd42 or earlier
-      @visible_statuses = nil if @visible_statuses.empty?
+      @visible_statuses = nil if @visible_statuses.try(:empty?)
 
       if params[:statuses]
         if params[:statuses] == ''
