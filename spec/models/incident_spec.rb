@@ -4,6 +4,8 @@ require 'tmpdir'
 RSpec.describe Incident, :type => :model do
   describe "after_create enqueue" do
     it "create escalation workers" do
+      pending
+      
       Dir.mktmpdir do |dir|
         Dir.chdir(dir) do
           user = User.create!(name: 'user')

@@ -110,7 +110,7 @@ class EscalationSeries < ActiveRecord::Base
         escalation.update!(escalate_to: user)
       end
     end
-    
+
     private
 
     def user_as
@@ -126,4 +126,3 @@ class EscalationSeries < ActiveRecord::Base
     end
   end
 end
-
