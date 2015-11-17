@@ -104,28 +104,48 @@ class IncidentsController < ApplicationController
     end
 
     def set_incidents
-      if params[:status]
-        session[:incidents_statuses] = params[:status].split(',').map do |status|
-          Incident.statuses[status]
-        end.compact
-      end
-
-      statuses = session[:incidents_statuses] || []
-
-      if params[:topic]
-        session[:incidents_topic] = params[:topic]
-      end
-
-      topic = (Topic.find(session[:incidents_topic]) rescue nil)
+      set_visible_statuses
+      set_visible_topic
 
       @incidents = Incident.all
 
-      unless statuses.empty?
-        @incidents = @incidents.where(status: statuses)
+      if @visible_statuses
+        @incidents = @incidents.where(status: @visible_statuses)
       end
+      if @visible_topic
+        @incidents = @incidents.where(topic: @visible_topic)
+      end
+    end
 
-      if topic
-        @incidents = @incidents.where(topic: topic)
+    def set_visible_statuses
+      @visible_statuses = session[:incidents_statuses]
+
+      # for transition from rev 0a2dd42 or earlier
+      @visible_statuses = nil if @visible_statuses.empty?
+
+      if params[:statuses]
+        if params[:statuses] == ''
+          @visible_statuses = nil # all
+        else
+          @visible_statuses = params[:statuses].split(',').map(&:to_i)
+        end
+        session[:incidents_statuses] = @visible_statuses
+      end
+    end
+
+    def set_visible_topic
+      @visible_topic = session[:incidents_topic]
+
+      # for transition from rev 0a2dd42 or earlier
+      @visible_topic = nil if @visible_topic == 'all'
+
+      if params[:topic]
+        if params[:topic] == 'all'
+          @visible_topic = nil # all
+        else
+          @visible_topic = params[:topic].to_i
+        end
+        session[:incidents_topic] = @visible_topic
       end
     end
 

@@ -1,13 +1,19 @@
 
 <h1>Listing Incidents</h1>
 
-<div class="btn-toolbar" role="toolbar">
+<div class="btn-toolbar" role="toolbar" style="margin-bottom: 15px">
   <div class="btn-group" role="group">
-    <a class="btn btn-default" href="?status=all">All</a>
-    <a class="btn btn-default" href="?status=opened,acknowledged">Opened or Acked</a>
-    <a class="btn btn-default" href="?status=opened">Opened</a>
-    <a class="btn btn-default" href="?status=acknowledged">Acked</a>
-    <a class="btn btn-default" href="?status=resolved">Resolved</a>
+    <%-
+    {
+      [] => 'All',
+      %w!opened acknowledged! => 'Opened or Acked',
+      %w!opened! => 'Opened',
+      %w!acknowledged! => 'Acked',
+      %w!resolved! => 'Resolved',
+    }.each do |statuses, desc| -%>
+      <%- status_ids = Incident.statuses.values_at(*statuses) -%>
+      <%= link_to desc, "?statuses=#{status_ids.join(',')}", class: "btn btn-default" %>
+    <%- end -%>
   </div>
   <div class="btn-group" role="group">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -22,6 +28,20 @@
     </ul>
   </div>
 </div>
+
+<%- if @visible_statuses -%>
+  <p>
+    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    Status: <%= @visible_statuses.map {|s| Incident.statuses.invert[s] }.join(', ') %>
+  </p>
+<%- end -%>
+
+<%- if @visible_topic -%>
+  <p>
+    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+    Topic: <%= Topic.find(@visible_topic).name %>
+  </p>
+<%- end -%>
 
 <table class="table">
   <thead>
