@@ -11,7 +11,12 @@ class NotifierProvider < ActiveRecord::Base
   end
 
   def concrete_class
-    self.class.const_get("#{kind.to_s.camelize}ConcreteProvider")
+    @concrete_class ||= self.class.const_get("#{kind.to_s.camelize}ConcreteProvider")
+  end
+
+  # for testing
+  def concrete_class=(klass)
+    @concrete_class = klass
   end
 
   def notify(event:, notifier:)

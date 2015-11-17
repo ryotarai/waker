@@ -34,5 +34,9 @@ module Waker
     config.active_record.raise_in_transactional_callbacks = true
 
     config.middleware.use Rack::Health
+
+    config.generators do |g|
+      g.test_framework :rspec, view_specs: false, helper_specs: false, fixture: true
+    end
   end
 end
