@@ -16,6 +16,11 @@ class SessionsController < ApplicationController
       return
     end
 
+    unless @user.active
+      render text: "You are suspended user. Please ask administrator to activate you"
+      return
+    end
+
     @user.update!(
       token: auth_hash.credentials.token,
       refresh_token: auth_hash.credentials.refresh_token,
