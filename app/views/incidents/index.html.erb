@@ -5,43 +5,44 @@
   <div class="btn-group" role="group">
     <%-
     {
-      [] => 'All',
-      %w!opened acknowledged! => 'Opened or Acked',
-      %w!opened! => 'Opened',
-      %w!acknowledged! => 'Acked',
-      %w!resolved! => 'Resolved',
+      nil => 'All',
+      Incident.statuses.values_at(*%w!opened acknowledged!) => 'Opened or Acked',
+      Incident.statuses.values_at(*%w!opened!) => 'Opened',
+      Incident.statuses.values_at(*%w!acknowledged!) => 'Acked',
+      Incident.statuses.values_at(*%w!resolved!) => 'Resolved',
     }.each do |statuses, desc| -%>
-      <%- status_ids = Incident.statuses.values_at(*statuses) -%>
-      <%= link_to desc, "?statuses=#{status_ids.join(',')}", class: "btn btn-default" %>
+      <a href="<%= "?statuses=#{statuses && statuses.join(',')}" %>" class="btn btn-default">
+        <%- if statuses == @visible_statuses %>
+          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        <%- end -%>
+        <%= desc %>
+      </a>
     <%- end -%>
   </div>
+
   <div class="btn-group" role="group">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
       Topic
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
-      <li><a href="?topic=all">All</a></li>
+      <li><a href="?topic=all">
+        <%- if @visible_topic.nil? -%>
+          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        <%- end -%>
+        All
+      </a></li>
       <% Topic.all.each do |topic| %>
-        <li><a href="?topic=<%= topic.id %>"><%= topic.name %></a></li>
+        <li><a href="?topic=<%= topic.id %>">
+          <%- if @visible_topic == topic.id -%>
+            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+          <%- end -%>
+          <%= topic.name %>
+        </a></li>
       <% end %>
     </ul>
   </div>
 </div>
-
-<%- if @visible_statuses -%>
-  <p>
-    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-    Status: <%= @visible_statuses.map {|s| Incident.statuses.invert[s] }.join(', ') %>
-  </p>
-<%- end -%>
-
-<%- if @visible_topic -%>
-  <p>
-    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-    Topic: <%= Topic.find(@visible_topic).name %>
-  </p>
-<%- end -%>
 
 <table class="table">
   <thead>
