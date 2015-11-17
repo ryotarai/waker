@@ -1,6 +1,6 @@
 <%= form_for(@notifier) do |f| %>
   <% if @notifier.errors.any? %>
-    <div id="error_explanation">
+    <div class="alert alert-danger">
       <h2><%= pluralize(@notifier.errors.count, "error") %> prohibited this notifier from being saved:</h2>
 
       <ul>
@@ -11,31 +11,31 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :user_id %><br>
-    <%= f.collection_select(:user_id, User.all, :id, :name, include_blank: true) %>
+  <div class="form-group">
+    <%= f.label :user_id %>
+    <%= f.collection_select(:user_id, User.all, :id, :name, { include_blank: true }, class: 'form-control') %>
   </div>
-  <div class="field">
-    <%= f.label :topic_id %><br>
-    <%= f.collection_select(:topic_id, Topic.all, :id, :name, include_blank: true) %>
+  <div class="form-group">
+    <%= f.label :topic_id %>
+    <%= f.collection_select(:topic_id, Topic.all, :id, :name, { include_blank: true }, class: 'form-control') %>
   </div>
-  <div class="field">
-    <%= f.label :provider_id %><br>
-    <%= f.collection_select(:provider_id, NotifierProvider.all, :id, :name) %>
+  <div class="form-group">
+    <%= f.label :provider_id %>
+    <%= f.collection_select(:provider_id, NotifierProvider.all, :id, :name, {}, class: 'form-control') %>
   </div>
-  <div class="field">
-    <%= f.label :settings %><br>
-    <%= f.text_area :settings, value: @notifier.settings.to_yaml %>
+  <div class="form-group">
+    <%= f.label :settings %>
+    <%= f.text_area :settings, value: @notifier.settings.to_yaml, class: 'form-control', rows: 8 %>
   </div>
-  <div class="field">
-    <%= f.label :notify_after_sec %><br>
-    <%= f.number_field :notify_after_sec %>
+  <div class="form-group">
+    <%= f.label :notify_after_sec %>
+    <%= f.number_field :notify_after_sec, min: 5, class: 'form-control' %>
   </div>
-  <div class="field">
-    <%= f.label :enabled %><br>
-    <%= f.check_box :enabled %>
+  <div class="form-group">
+    <%= f.label :enabled do %>
+      <%= f.check_box :enabled %>
+      Enabled
+    <% end %>
   </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+  <%= f.submit(class: 'btn btn-default') %>
 <% end %>
