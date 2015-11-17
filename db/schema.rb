@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151117011141) do
+ActiveRecord::Schema.define(version: 20151117013824) do
 
   create_table "escalation_series", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -98,6 +98,8 @@ ActiveRecord::Schema.define(version: 20151117011141) do
     t.string   "refresh_token",    limit: 255
     t.datetime "token_expires_at"
     t.boolean  "active",           limit: 1,   default: false
+    t.string   "provider",         limit: 255
+    t.string   "uid",              limit: 255
   end
 
   add_foreign_key "escalations", "escalation_series"
