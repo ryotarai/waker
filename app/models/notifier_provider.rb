@@ -1,7 +1,8 @@
 class NotifierProvider < ActiveRecord::Base
-  KINDS = [:mailgun, :file, :rails_logger, :hipchat, :twilio]
   serialize :settings, JSON
-  enum kind: KINDS
+  enum kind: [:mailgun, :file, :rails_logger, :hipchat, :twilio]
+
+  validates :name, presence: true
 
   after_initialize :set_defaults
 
@@ -79,11 +80,11 @@ class NotifierProvider < ActiveRecord::Base
       matched = or_conditions.any? do |condition|
         # japanese_weekday
         holiday = HolidayJp.holiday?(Date.today) || Time.now.saturday? || Time.now.sunday?
-        
+
         if holiday && condition['japanese_weekday']
           next false
         end
-        
+
         if !holiday && condition['not_japanese_weekday']
           next false
         end
@@ -180,7 +181,7 @@ class NotifierProvider < ActiveRecord::Base
     end
 
     private
-    
+
     def api_token
       settings.fetch('api_token')
     end
@@ -299,5 +300,3 @@ class NotifierProvider < ActiveRecord::Base
     end
   end
 end
-
-

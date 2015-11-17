@@ -1,9 +1,7 @@
 class IncidentEvent < ActiveRecord::Base
-  KINDS = [:opened, :acknowledged, :resolved, :escalated, :commented, :notified]
-
   belongs_to :incident
 
-  enum kind: KINDS
+  enum kind: [:opened, :acknowledged, :resolved, :escalated, :commented, :notified]
 
   validates :incident, presence: true
   validates :kind, presence: true

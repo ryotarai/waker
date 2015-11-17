@@ -1,7 +1,5 @@
 class Topic < ActiveRecord::Base
-  KINDS = [:api]
-
-  enum kind: KINDS
+  enum kind: [:api]
   belongs_to :escalation_series
   has_many :incidents
 

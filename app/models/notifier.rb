@@ -21,4 +21,3 @@ class Notifier < ActiveRecord::Base
     provider.notify(event: event, notifier: self)
   end
 end
-

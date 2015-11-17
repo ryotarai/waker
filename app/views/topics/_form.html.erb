@@ -18,7 +18,7 @@
   <div class="form-group">
     <%= f.label :kind %>
     <%= f.select :kind, nil, {}, class: 'form-control' do %>
-      <% Topic::KINDS.each_with_index do |kind, index| %>
+      <% Topic.kinds.each do |kind, _| %>
         <%= content_tag(:option, kind.to_s.split('_').map {|s| s.capitalize }.join(' '), value: kind) %>
       <% end %>
     <% end %>

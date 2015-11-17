@@ -19,8 +19,8 @@
     <%= f.label :kind %>
     <%= f.select :kind, nil, {}, class: 'form-control' do %>
       <%= options_for_select(
-        NotifierProvider::KINDS.map do |kind|
-          [kind.to_s.camelize, kind, {}]
+        NotifierProvider.kinds.map do |kind, _|
+          [kind.camelize, kind, {}]
         end, @notifier_provider.kind
       ) %>
     <% end %>
