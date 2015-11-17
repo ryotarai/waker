@@ -10,7 +10,7 @@ class EscalationWorker
     incident = Incident.find(incident_id)
     escalation = Escalation.find(escalation_id)
 
-    if incident.opened?
+    if incident.opened? && escalation.escalate_to
       incident.events.create(
         kind: :escalated,
         info: {
@@ -21,4 +21,3 @@ class EscalationWorker
     end
   end
 end
-
