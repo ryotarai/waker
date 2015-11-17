@@ -1,6 +1,5 @@
 class TopicsController < ApplicationController
   before_action :set_topic, only: [:show, :edit, :update, :destroy, :mailgun]
-  skip_before_action :verify_authenticity_token, only: [:mailgun]
   skip_before_action :login_required, only: [:mailgun]
 
   # GET /topics

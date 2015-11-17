@@ -1,6 +1,5 @@
 class EscalationsController < ApplicationController
   before_action :set_escalation, only: [:show, :edit, :update, :destroy]
-  skip_before_action :verify_authenticity_token, only: [:update]
 
   # GET /escalations
   # GET /escalations.json
