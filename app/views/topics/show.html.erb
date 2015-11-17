@@ -19,5 +19,10 @@
   <%= @topic.enabled ? 'Yes' : 'No' %>
 </p>
 
+<p>
+  <strong>Mailgun Endpoint:</strong>
+  <pre><%= mailgun_topic_url(@topic) %></pre>
+</p>
+
 <%= link_to 'Edit', edit_topic_path(@topic) %> |
 <%= link_to 'Back', topics_path %>
