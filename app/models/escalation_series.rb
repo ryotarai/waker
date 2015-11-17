@@ -4,6 +4,8 @@ class EscalationSeries < ActiveRecord::Base
   has_many :escalations, dependent: :destroy
   has_many :topics, dependent: :destroy
 
+  validates :name, presence: true
+
   serialize :settings, JSON
   after_initialize :set_defaults
 
