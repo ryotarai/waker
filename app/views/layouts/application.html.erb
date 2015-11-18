@@ -38,7 +38,9 @@ body {
         <li><%= link_to 'Notifier Providers', notifier_providers_path %></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <p class="navbar-text">Logged in as <%= current_user.name %></p>
+        <%- if current_user -%>
+          <p class="navbar-text">Logged in as <%= current_user.name %></p>
+        <%- end -%>
       </ul>
     </div><!--/.nav-collapse -->
   </div>
