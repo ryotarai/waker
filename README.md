@@ -6,7 +6,9 @@ Alert Escalation System
 
 ## Tutorial
 
-### 1. Configure auth provider
+### 1. (Optional) Configure auth provider
+
+You can use external auth provider **optionally**. Currently, Google Auth is only supported (Patches are welcome :) )
 
 ```
 $ echo 'GOOGLE_CLIENT_ID=...' >> .env
@@ -23,7 +25,7 @@ $ foreman start
 
 It starts an application server and a Sidekiq worker.
 
-### 3. Log in
+### 3. (If you uses auth provider) Log in
 
 Visit [http://localhost:3000](http://localhost:3000) and log in with your credentials.
 A new user account is automatically created and suspended by default. You can activate a user from [http://localhost:3000/users](http://localhost:3000/users) but you have to activate it from `rails console` because you are the first user:
@@ -33,32 +35,36 @@ $ bundle exec rails c
 > User.first.update!(active: true)
 ```
 
-### 4. Create a notifier provider
+### 4. Create users
+
+Visit [http://localhost:3000/users/new](http://localhost:3000/users/new) and create new users.
+
+### 5. Create a notifier provider
 
 Visit [http://localhost:3000/notifier_providers/new](http://localhost:3000/notifier_providers/new) and create a notifier provider. See [Notifier Providers](https://github.com/ryotarai/waker#notifier-providers) section for detailed information.
 
-### 5. Create a notifier
+### 6. Create a notifier
 
 Visit [http://localhost:3000/notifiers/new](http://localhost:3000/notifiers/new) and create a notifier. See [Notifier](https://github.com/ryotarai/waker#notifiers) section for detailed information.
 
-### 6. Create an escalation series
+### 7. Create an escalation series
 
 Visit [http://localhost:3000/escalation_series/new](http://localhost:3000/escalation_series/new) and create a escalation series. Escalation series is a series of escalations.
 
-### 7. Create escalations
+### 8. Create escalations
 
 Visit [http://localhost:3000/escalations/new](http://localhost:3000/escalations/new) and create escalations.
 
 - `Escalate to`: Who gets escalated incidents
 - `Escalate after sec`: Seconds to escalate incidents since the incidents created
 
-### 8. Create a topic
+### 9. Create a topic
 
 Visit [http://localhost:3000/topics/new](http://localhost:3000/topics/new) and create topics.
 
-### 9. Send alerts to the topic
+### 10. Send alerts to the topic
 
-Currently, only Mailgun is supported to receive mails. You can configure Mailgun route setting with Mailgun endpoint you can see in [http://localhost:3000/topics/1](http://localhost:3000/topics/1)
+Currently, only Mailgun is supported to receive mails (Patches are welcome :) ) You can configure Mailgun route setting with Mailgun endpoint you can see in [http://localhost:3000/topics/1](http://localhost:3000/topics/1)
 
 ## Configuration
 
