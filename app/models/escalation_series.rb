@@ -1,5 +1,3 @@
-require 'google/api_client'
-
 class EscalationSeries < ActiveRecord::Base
   has_many :escalations, dependent: :destroy
   has_many :topics, dependent: :destroy
@@ -43,28 +41,38 @@ class EscalationSeries < ActiveRecord::Base
   end
 
   class GoogleCalendarEscalationUpdater < EscalationUpdater
+    def initialize
+      require 'google/api_client'
+    end
+
     def update!
       Rails.logger.info "Update #{@series.inspect} by Google Calendar"
+
+      if user_as.provider && user_as.provider != 'google_oauth2_with_calendar'
+        raise "User ##{user_as.id} is not authenticated by 'google_oauth2_with_calendar' provider"
+      end
 
       client = Google::APIClient.new(application_name: "Waker", application_version: "2.0.0")
       auth = client.authorization
 
-      if user_as.token_expired?
-        Rails.logger.info "Token expired at #{user_as.token_expires_at}"
+      expired = Time.at(user_as.credentials.fetch('expires_at')) < Time.now
+      if user_as.credentials.fetch('expires') && expired
         Rails.logger.info "Refreshing access token..."
 
         auth.client_id = ENV["GOOGLE_CLIENT_ID"]
         auth.client_secret = ENV["GOOGLE_CLIENT_SECRET"]
-        auth.refresh_token = user_as.refresh_token
+        auth.refresh_token = user_as.credentials.fetch('refresh_token')
         auth.grant_type = "refresh_token"
         auth.refresh!
 
         user_as.update!(
-          token: auth.access_token,
-          token_expires_at: auth.expires_at,
+          credentials: user_as.credentials.merge(
+            'token' => auth.access_token,
+            'expires_at' => auth.expires_at,
+          )
         )
       else
-        auth.access_token = user_as.token
+        auth.access_token = user_as.credentials.fetch('token')
       end
 
       calendar_api = client.discovered_api('calendar', 'v3')

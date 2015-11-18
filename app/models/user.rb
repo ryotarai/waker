@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
 
   has_many :notifiers
 
+  serialize :credentials, JSON
+
   validates :name, presence: true
 
   before_save :set_defaults
@@ -23,8 +25,8 @@ class User < ActiveRecord::Base
     self.create!(provider: auth_hash[:provider], uid: auth_hash[:uid], name: auth_hash[:info][:name])
   end
 
-  def token_expired?
-    self.token_expires_at < Time.now
+  def update_credentials_from_auth_hash(auth_hash)
+    self.update!(credentials: auth_hash.fetch(:credentials))
   end
 
   private
