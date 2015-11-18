@@ -35,11 +35,11 @@ $ bundle exec rails c
 
 ### 4. Create a notifier provider
 
-Visit [http://localhost:3000/notifier_providers/new](http://localhost:3000/notifier_providers/new) and create a notifier provider. See [Notifier Providers]() section for detailed information.
+Visit [http://localhost:3000/notifier_providers/new](http://localhost:3000/notifier_providers/new) and create a notifier provider. See [Notifier Providers](https://github.com/ryotarai/waker#notifier-providers) section for detailed information.
 
 ### 5. Create a notifier
 
-Visit [http://localhost:3000/notifiers/new](http://localhost:3000/notifiers/new) and create a notifier. See [Notifier]() section for detailed information.
+Visit [http://localhost:3000/notifiers/new](http://localhost:3000/notifiers/new) and create a notifier. See [Notifier](https://github.com/ryotarai/waker#notifiers) section for detailed information.
 
 ### 6. Create an escalation series
 
@@ -55,3 +55,52 @@ Visit [http://localhost:3000/escalations/new](http://localhost:3000/escalations/
 ### 8. Create a topic
 
 Visit [http://localhost:3000/topics/new](http://localhost:3000/topics/new) and create topics.
+
+### 9. Send alerts to the topic
+
+Currently, only Mailgun is supported to receive mails. You can configure Mailgun route setting with Mailgun endpoint you can see in [http://localhost:3000/topics/1](http://localhost:3000/topics/1)
+
+## Configuration
+
+### Notifier Providers
+
+#### HipChat
+
+- `api_token`
+- `api_version`: `v1` or `v2`
+
+#### Twilio
+
+- `account_sid`
+- `auth_token`
+- `from`: Phone number
+
+#### Mailgun
+
+- `api_key`
+- `from`: Email address
+
+### Notifiers
+
+#### Common fields
+
+These are supported by all notifier provider
+
+```
+or_conditions:
+- japanese_weekday: true
+  not_between: 9:30+0900-18:30+0900
+- not_japanese_weekday: true
+```
+
+#### HipChat
+
+- `room`: Room name or ID
+
+#### Twilio
+
+- `to`: Phone number
+
+#### Mailgun
+
+- `to`: Email address
