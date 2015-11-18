@@ -4,7 +4,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
   helper_method :current_user
 
-  before_action :login_required
+  if ENV["GOOGLE_CLIENT_ID"]
+    before_action :login_required
+  end
 
   private
 
