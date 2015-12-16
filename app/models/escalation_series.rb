@@ -41,7 +41,8 @@ class EscalationSeries < ActiveRecord::Base
   end
 
   class GoogleCalendarEscalationUpdater < EscalationUpdater
-    def initialize
+    def initialize(*)
+      super
       require 'google/api_client'
     end
 
