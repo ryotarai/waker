@@ -69,7 +69,7 @@ class EscalationSeries < ActiveRecord::Base
         user_as.update!(
           credentials: user_as.credentials.merge(
             'token' => auth.access_token,
-            'expires_at' => auth.expires_at,
+            'expires_at' => auth.expires_at.to_i,
           )
         )
       else
