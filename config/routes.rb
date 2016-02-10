@@ -33,6 +33,8 @@ Rails.application.routes.draw do
 
   resources :notifier_providers
 
+  resources :maintenances
+
   resources :users, only: [:index, :show, :destroy] do
     member do
       patch 'activation'
