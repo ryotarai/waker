@@ -1,0 +1,27 @@
+<%= form_for(@maintenance) do |f| %>
+  <% if @maintenance.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(@maintenance.errors.count, "error") %> prohibited this maintenance from being saved:</h2>
+
+      <ul>
+      <% @maintenance.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :topic_id %><br>
+    <%= f.collection_select(:topic_id, Topic.all, :id, :name, {}, class: 'form-control') %>
+  </div>
+  <div class="form-group">
+    <%= f.label :start_time %><br>
+    <%= f.datetime_select :start_time, class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :end_time %><br>
+    <%= f.datetime_select :end_time, class: 'form-control' %>
+  </div>
+  <%= f.submit(class: 'btn btn-default') %>
+<% end %>

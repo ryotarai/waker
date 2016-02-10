@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Topic:</strong>
+  <%= @maintenance.topic.name %>
+</p>
+
+<p>
+  <strong>Start time:</strong>
+  <%= @maintenance.start_time %>
+</p>
+
+<p>
+  <strong>End time:</strong>
+  <%= @maintenance.end_time %>
+</p>
+
+<%= link_to 'Edit', edit_maintenance_path(@maintenance) %> |
+<%= link_to 'Back', maintenances_path %>

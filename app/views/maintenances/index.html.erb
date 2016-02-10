@@ -1,0 +1,32 @@
+
+<h1>Listing Maintenances</h1>
+
+<p>Expired maintanances are not shown</p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Topic</th>
+      <th>Start time</th>
+      <th>End time</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @maintenances.each do |maintenance| %>
+      <tr>
+        <td><%= maintenance.topic.name %></td>
+        <td><%= maintenance.start_time %></td>
+        <td><%= maintenance.end_time %></td>
+        <td><%= link_to 'Show', maintenance %></td>
+        <td><%= link_to 'Edit', edit_maintenance_path(maintenance) %></td>
+        <td><%= link_to 'Destroy', maintenance, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Maintenance', new_maintenance_path %>
