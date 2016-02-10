@@ -6,4 +6,8 @@ class Topic < ActiveRecord::Base
   validates :name, presence: true
   validates :kind, presence: true
   validates :escalation_series, presence: true
+
+  def in_maintenance?
+    !(Maintenance.active.where(topic: self).empty?)
+  end
 end

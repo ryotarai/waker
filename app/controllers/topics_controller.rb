@@ -70,6 +70,12 @@ class TopicsController < ApplicationController
       return
     end
 
+    if @topic.in_maintenance?
+      Rails.logger.info "Incident creation is skipped because the topic is in maintenance."
+      render json: {}, status: 200
+      return
+    end
+
     # http://documentation.mailgun.com/user_manual.html#routes
     @topic.incidents.create!(
       subject: params[:subject],
