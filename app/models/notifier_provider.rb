@@ -309,42 +309,31 @@ class NotifierProvider < ActiveRecord::Base
       when :opened
         color = 'danger'
         title = 'New incident opened'
-        fields << {
-          "title" => "Actions",
-          "value" => "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve>",
-          "short" => true,
-        }
+        action_links = "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve>"
       when :acknowledged
-        color = 'good'
+        color = 'warning'
         title = 'Incident acknowledged'
-        fields << {
-          "title" => "Actions",
-          "value" => "<#{resolve_url}|Resolve>",
-          "short" => true,
-        }
+        action_links = "<#{resolve_url}|Resolve>"
       when :escalated
         color = 'warning'
-        title = 'Incident escalated'
-        fields << {
-          "title" => "Actions",
-          "value" => "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve>",
-          "short" => true,
-        }
-        fields << {
-          "title" => "Escalated to",
-          "value" => @event.escalated_to.name,
-          "short" => true
-        }
+        title = "Incident escalated to #{@event.escalated_to.name}"
+        action_links = "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve>"
       when :resolved
         color = 'good'
         title = 'Incident resolved'
+        action_links = nil
+      end
+
+      text = @event.incident.subject
+      if action_links
+        text += " (#{action_links})"
       end
 
       attachments = [{
-        "fallback" => @event.incident.subject,
+        "fallback" => "[#{kind_of_event.to_s.capitalize}] #{@event.incident.subject}",
         "color" => color,
         "title" => title,
-        "text" => @event.incident.subject,
+        "text" => text,
         "fields" => fields,
       }]
 
