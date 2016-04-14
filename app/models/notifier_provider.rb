@@ -1,6 +1,6 @@
 class NotifierProvider < ActiveRecord::Base
   serialize :settings, JSON
-  enum kind: [:mailgun, :file, :rails_logger, :hipchat, :twilio]
+  enum kind: [:mailgun, :file, :rails_logger, :hipchat, :twilio, :slack]
 
   validates :name, presence: true
 
@@ -295,6 +295,88 @@ class NotifierProvider < ActiveRecord::Base
 
     def basic_auth_password
       ENV['BASIC_AUTH_PASSWORD']
+    end
+  end
+
+  class SlackConcreteProvider < ConcreteProvider
+    def _notify
+      fields = []
+
+      acknowledge_url = Rails.application.routes.url_helpers.acknowledge_incident_url(@event.incident, hash: @event.incident.confirmation_hash)
+      resolve_url = Rails.application.routes.url_helpers.resolve_incident_url(@event.incident, hash: @event.incident.confirmation_hash)
+
+      case kind_of_event
+      when :opened
+        color = 'danger'
+        title = 'New incident opened'
+        fields << {
+          "title" => "Actions",
+          "value" => "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve>",
+          "short" => true,
+        }
+      when :acknowledged
+        color = 'good'
+        title = 'Incident acknowledged'
+        fields << {
+          "title" => "Actions",
+          "value" => "<#{resolve_url}|Resolve>",
+          "short" => true,
+        }
+      when :escalated
+        color = 'warning'
+        title = 'Incident escalated'
+        fields << {
+          "title" => "Actions",
+          "value" => "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve>",
+          "short" => true,
+        }
+        fields << {
+          "title" => "Escalated to",
+          "value" => @event.escalated_to.name,
+          "short" => true
+        }
+      when :resolved
+        color = 'good'
+        title = 'Incident resolved'
+      end
+
+      attachments = [{
+        "fallback" => @event.incident.subject,
+        "color" => color,
+        "title" => title,
+        "text" => @event.incident.subject,
+        "fields" => fields,
+      }]
+
+      payload = {'attachments' => attachments}
+      if channel
+        payload['channel'] = channel
+      end
+
+      url = URI.parse(webhook_url)
+      conn = Faraday.new(:url => "#{url.scheme}://#{url.host}") do |faraday|
+        faraday.adapter Faraday.default_adapter
+      end
+
+      conn.post do |req|
+        req.url url.path
+        req.headers['Content-Type'] = 'application/json'
+        req.body = payload.to_json
+      end
+    end
+
+    private
+
+    def webhook_url
+      settings.fetch('webhook_url')
+    end
+
+    def channel
+      settings['channel']
+    end
+
+    def target_events
+      [:escalated, :opened, :acknowledged, :resolved]
     end
   end
 end
