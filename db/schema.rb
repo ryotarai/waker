@@ -80,7 +80,7 @@ ActiveRecord::Schema.define(version: 20160210010310) do
     t.integer  "user_id",          limit: 4
     t.integer  "provider_id",      limit: 4
     t.integer  "topic_id",         limit: 4
-    t.boolean  "enabled",          limit: 1,     default: true
+    t.boolean  "enabled",                        default: true
   end
 
   add_index "notifiers", ["provider_id"], name: "index_notifiers_on_provider_id", using: :btree
@@ -93,7 +93,7 @@ ActiveRecord::Schema.define(version: 20160210010310) do
     t.datetime "created_at",                                      null: false
     t.datetime "updated_at",                                      null: false
     t.integer  "escalation_series_id", limit: 4
-    t.boolean  "enabled",              limit: 1,   default: true
+    t.boolean  "enabled",                          default: true
   end
 
   add_index "topics", ["escalation_series_id"], name: "index_topics_on_escalation_series_id", using: :btree
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 20160210010310) do
     t.datetime "updated_at",                                null: false
     t.string   "email",       limit: 255
     t.string   "login_token", limit: 255
-    t.boolean  "active",      limit: 1,     default: false
+    t.boolean  "active",                    default: false
     t.string   "provider",    limit: 255
     t.string   "uid",         limit: 255
     t.text     "credentials", limit: 65535
