@@ -1,8 +1,5 @@
 require 'fileutils'
 
-FileUtils.mkdir_p('/log')
-stdout_redirect '/log/puma-stdout.log', '/log/puma-stdout.log'
-
 listen_unix = ENV['LISTEN_UNIX']
 
 if listen_unix
