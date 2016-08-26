@@ -1,5 +1,5 @@
 class Notifier < ActiveRecord::Base
-  belongs_to :provider, class: NotifierProvider
+  belongs_to :provider, class_name: 'NotifierProvider'
   belongs_to :user
   belongs_to :topic
 

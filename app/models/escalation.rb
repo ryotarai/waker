@@ -1,6 +1,6 @@
 class Escalation < ActiveRecord::Base
   belongs_to :escalation_series
-  belongs_to :escalate_to, class: User
+  belongs_to :escalate_to, class_name: 'User'
 
   validates :escalation_series, presence: true
   validates :escalate_to, presence: true
