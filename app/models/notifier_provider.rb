@@ -1,6 +1,6 @@
 class NotifierProvider < ActiveRecord::Base
   serialize :settings, JSON
-  enum kind: [:mailgun, :file, :rails_logger, :hipchat, :twilio, :slack]
+  enum kind: [:mailgun, :file, :rails_logger, :hipchat, :twilio, :slack, :datadog]
 
   validates :name, presence: true
 
@@ -366,6 +366,49 @@ class NotifierProvider < ActiveRecord::Base
 
     def target_events
       [:escalated, :opened, :acknowledged, :resolved]
+    end
+  end
+
+  class DatadogConcreteProvider < ConcreteProvider
+    def _notify
+      dog = Dogapi::Client.new(api_key, app_key)
+
+      res = dog.emit_event(Dogapi::Event.new(
+              @event.incident.description, {
+                msg_title: @event.incident.subject,
+                alert_type: alert_type,
+                tags: tags,
+                source_type_name: source_type_name,
+              }
+            ))
+
+      Rails.logger.info res
+    end
+
+    private
+
+    def api_key
+      settings.fetch('api_key')
+    end
+
+    def app_key
+      settings.fetch('app_key')
+    end
+
+    def alert_type
+      settings['alert_type'] || 'error'
+    end
+
+    def tags
+      settings['tags'] || 'waker'
+    end
+
+    def source_type_name
+      settings['source_type_name'] || 'waker'
+    end
+
+    def target_events
+      [:opened]
     end
   end
 end
