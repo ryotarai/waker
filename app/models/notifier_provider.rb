@@ -1,6 +1,6 @@
 class NotifierProvider < ActiveRecord::Base
   serialize :settings, JSON
-  enum kind: [:mailgun, :file, :rails_logger, :hipchat, :twilio, :slack, :datadog]
+  enum kind: [:mailgun, :file, :rails_logger, :hipchat, :twilio, :slack, :datadog, :sns]
 
   validates :name, presence: true
 
@@ -409,6 +409,53 @@ class NotifierProvider < ActiveRecord::Base
 
     def target_events
       [:opened]
+    end
+  end
+
+  class SnsConcreteProvider < ConcreteProvider
+    def _notify
+      aws_config = {}
+      aws_config[:region] = region if region
+      aws_config[:access_key_id] = access_key_id if access_key_id
+      aws_config[:secret_access_key] = secret_access_key if secret_access_key
+
+      sns = Aws::SNS::Client.new(aws_config)
+
+      res = sns.publish(
+        topic_arn: topic_arn,
+        message: @event.incident.description,
+        subject: @event.incident.subject,
+        message_attributes: {
+          'kind_of_event' => {
+            data_type: 'String',
+            string_value: kind_of_event.to_s,
+          }
+        }
+      )
+
+      Rails.logger.info res
+    end
+
+    private
+
+    def topic_arn
+      settings.fetch('topic_arn')
+    end
+
+    def region
+      settings['region']
+    end
+
+    def access_key_id
+      settings['access_key_id']
+    end
+
+    def secret_access_key
+      settings['secret_access_key']
+    end
+
+    def target_events
+      all_events
     end
   end
 end

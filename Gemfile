@@ -68,3 +68,4 @@ group :development, :test do
 end
 
 gem 'dogapi'
+gem 'aws-sdk'
