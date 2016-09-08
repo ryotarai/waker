@@ -1,0 +1,18 @@
+
+<p>
+  <strong>Incident:</strong>
+  <pre><%= @incident.subject %></pre>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <pre style=><%= auto_link(@comment.comment, :html => { :target => '_blank' }) %>)</pre>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <pre><%= @comment.user.name %></pre>
+</p>
+
+<%= link_to 'Edit', edit_incident_comment_path(@incident, @comment) %> |
+<%= link_to 'Back', incident_comments_path %>

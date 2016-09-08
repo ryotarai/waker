@@ -6,7 +6,8 @@ class Incident < ActiveRecord::Base
   belongs_to :topic
   has_many :events, class_name: 'IncidentEvent', dependent: :destroy
   enum status: STATUSES
-  
+  has_many :comments
+
   validates :topic, presence: true
   validates :subject, presence: true
   validates :description, presence: true
