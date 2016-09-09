@@ -14,11 +14,11 @@
 ActiveRecord::Schema.define(version: 20160907123728) do
 
   create_table "comments", force: :cascade do |t|
-    t.integer  "incident_id", limit: 4,                null: false
-    t.string   "comment",     limit: 255, default: "", null: false
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
-    t.integer  "user_id",     limit: 4,                null: false
+    t.integer  "incident_id", limit: 4,     null: false
+    t.integer  "user_id",     limit: 4,     null: false
+    t.text     "comment",     limit: 65535, null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "escalation_series", force: :cascade do |t|
