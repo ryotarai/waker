@@ -51,14 +51,14 @@
       <th>Subject</th>
       <th>Topic</th>
       <th>Occured at</th>
-      <th colspan="3"></th>
+      <th colspan="4"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @incidents.each do |incident| %>
       <tr>
-        <td>
+        <td rowspan="<%= incident.comments.present? ? 2 : 1 %>">
           <% if incident.opened? %>
             <span class="label label-danger">Opened</span>
           <% elsif incident.acknowledged? %>
@@ -73,7 +73,17 @@
         <td><%= link_to 'Show', incident %></td>
         <td><%= link_to 'Ack', acknowledge_incident_path(incident, hash: incident.confirmation_hash) %></td>
         <td><%= link_to 'Resolve', resolve_incident_path(incident, hash: incident.confirmation_hash) %></td>
+        <td><%= link_to 'Comment', new_incident_comment_path(incident) %></td>
       </tr>
+      <% if incident.comments.present? %>
+        <tr>
+          <td colspan="7">
+            <% incident.comments.each_with_index do |comment, i| %>
+              <pre style="font-size: xx-small;"><%= auto_link(comment.comment, :html => { :target => '_blank' }) %><br>(<%= comment.user.name %>)</pre>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

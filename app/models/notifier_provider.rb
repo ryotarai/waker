@@ -304,24 +304,25 @@ class NotifierProvider < ActiveRecord::Base
 
       acknowledge_url = Rails.application.routes.url_helpers.acknowledge_incident_url(@event.incident, hash: @event.incident.confirmation_hash)
       resolve_url = Rails.application.routes.url_helpers.resolve_incident_url(@event.incident, hash: @event.incident.confirmation_hash)
+      comment_url = Rails.application.routes.url_helpers.new_incident_comment_url(@event.incident)
 
       case kind_of_event
       when :opened
         color = 'danger'
         title = 'New incident opened'
-        action_links = "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve>"
+        action_links = "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve> | <#{comment_url}|Comment>"
       when :acknowledged
         color = 'warning'
         title = 'Incident acknowledged'
-        action_links = "<#{resolve_url}|Resolve>"
+        action_links = "<#{resolve_url}|Resolve> | <#{comment_url}|Comment>"
       when :escalated
         color = 'warning'
         title = "Incident escalated to #{@event.escalated_to.name}"
-        action_links = "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve>"
+        action_links = "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve> | <#{comment_url}|Comment>"
       when :resolved
         color = 'good'
         title = 'Incident resolved'
-        action_links = nil
+        action_links = "<#{comment_url}|Comment>"
       end
 
       text = @event.incident.subject

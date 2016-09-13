@@ -1,0 +1,32 @@
+<h1>Listing Comments</h1>
+
+<p>
+  <strong>Incident:</strong>
+  <pre><%= @incident.subject %></pre>
+</p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Comment</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @comments.each do |comment| %>
+      <tr>
+        <td><%= comment.comment %> (<%= comment.user.name %>)</td>
+        <td><%= link_to 'Show', [@incident, comment] %></td>
+        <td><%= link_to 'Edit', edit_incident_comment_path(@incident, comment) %></td>
+        <td><%= link_to 'Destroy', [@incident, comment], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Comment', new_incident_comment_path %> |
+<%= link_to 'Incident', @incident %>
+

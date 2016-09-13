@@ -1,0 +1,30 @@
+<%= form_for([@incident, @comment]) do |f| %>
+  <% if @comment.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(@comment.errors.count, "error") %> prohibited this comment from being saved:</h2>
+
+      <ul>
+      <% @comment.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :incident_id, value: @incident.id %>
+  <%= f.hidden_field :user_id, value: current_user.id %>
+
+  <p>
+    <strong>Incident:</strong>
+    <pre><%= @incident.subject %></pre>
+  </p>
+
+  <div class="form-group">
+    <%= f.label :comment %>
+    <%= f.text_area :comment, class: 'form-control', rows: 8 %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit(class: 'btn btn-default') %>
+  </div>
+<% end %>

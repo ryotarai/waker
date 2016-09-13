@@ -69,3 +69,4 @@ end
 
 gem 'dogapi'
 gem 'aws-sdk'
+gem 'rails_autolink'

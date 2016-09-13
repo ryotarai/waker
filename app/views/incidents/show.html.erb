@@ -40,6 +40,23 @@
   <% end %>
 </table>
 
+<p>
+  <strong>Comment:</strong>
+</p>
+
+<table class="table">
+  <tr>
+    <th>Time</th>
+    <th>Comment</th>
+  </tr>
+  <% @incident.comments.each do |comment| %>
+    <tr>
+      <td><%= comment.created_at %></td>
+      <td><%= comment.comment %> (<%= comment.user.name %>)</td>
+    </tr>
+  <% end %>
+</table>
+
 <%= link_to 'Edit', edit_incident_path(@incident) %> |
-<%= link_to 'Destroy', @incident, method: :delete, data: { confirm: 'Are you sure?' } %>
+<%= link_to 'Destroy', @incident, method: :delete, data: { confirm: 'Are you sure?' } %> |
 <%= link_to 'Back', incidents_path %>
