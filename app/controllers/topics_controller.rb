@@ -85,6 +85,50 @@ class TopicsController < ApplicationController
     render json: {}, status: 200
   end
 
+  def mackerel
+    unless @topic.enabled
+      Rails.logger.info "Incident creation is skipped because the topic is disabled."
+      render json: {}, status: 200
+      return
+    end
+
+    if @topic.in_maintenance?
+      Rails.logger.info "Incident creation is skipped because the topic is in maintenance."
+      render json: {}, status: 200
+      return
+    end
+
+    # https://mackerel.io/ja/docs/entry/howto/alerts/webhook
+    @topic.incidents.create!(
+      subject: params['alert']['monitorName'] + ': ' + params['host']['name'] + ': '+ params['alert']['monitorName'],
+      description: params['alert']['url'],
+    )
+
+    render json: {}, status: 200
+  end
+
+  def nagios
+    unless @topic.enabled
+      Rails.logger.info "Incident creation is skipped because the topic is disabled."
+      render json: {}, status: 200
+      return
+    end
+
+    if @topic.in_maintenance?
+      Rails.logger.info "Incident creation is skipped because the topic is in maintenance."
+      render json: {}, status: 200
+      return
+    end
+
+    # https://mackerel.io/ja/docs/entry/howto/alerts/webhook
+    @topic.incidents.create!(
+      subject: params['alert']['monitorName'] + ': ' + params['host']['name'] + ': '+ params['alert']['monitorName'],
+      description: params['alert']['url'],
+    )
+
+    render json: {}, status: 200
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_topic

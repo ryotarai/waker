@@ -24,5 +24,15 @@
   <pre><%= mailgun_topic_url(@topic, format: :json) %></pre>
 </p>
 
+<p>
+  <strong>Mackerel Endpoint:</strong>
+  <pre><%= mackerel_topic_url(@topic, format: :json) %></pre>
+</p>
+
+<p>
+  <strong>Nagios Endpoint:</strong>
+  <pre><%= nagios_topic_url(@topic, format: :json) %></pre>
+</p>
+
 <%= link_to 'Edit', edit_topic_path(@topic) %> |
 <%= link_to 'Back', topics_path %>
