@@ -14,7 +14,11 @@ class MaintenancesController < ApplicationController
 
   # GET /maintenances/new
   def new
-    @maintenance = Maintenance.new
+    now = Time.now
+    @maintenance = Maintenance.new(
+      start_time: now,
+      end_time: now + 60*60
+    )
   end
 
   # GET /maintenances/1/edit
