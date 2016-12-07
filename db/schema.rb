@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160914063913) do
+ActiveRecord::Schema.define(version: 20161207045554) do
 
   create_table "comments", force: :cascade do |t|
     t.integer  "incident_id", limit: 4,     null: false
@@ -68,8 +68,9 @@ ActiveRecord::Schema.define(version: 20160914063913) do
     t.integer  "topic_id",   limit: 4
     t.datetime "start_time"
     t.datetime "end_time"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "filter",     limit: 255
   end
 
   add_index "maintenances", ["topic_id"], name: "index_maintenances_on_topic_id", using: :btree

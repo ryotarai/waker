@@ -4,4 +4,8 @@ class Maintenance < ActiveRecord::Base
   scope :expired,     -> { where('end_time < ?', Time.now) }
 
   belongs_to :topic
+
+  def filter_regexp
+    Regexp.new(filter)
+  end
 end

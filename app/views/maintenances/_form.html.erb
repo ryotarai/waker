@@ -16,6 +16,10 @@
     <%= f.collection_select(:topic_id, Topic.all, :id, :name, {}, class: 'form-control') %>
   </div>
   <div class="form-group">
+    <%= f.label :filter %><br>
+    <%= f.text_field(:filter, class: 'form-control', placeholder: 'regexp') %>
+  </div>
+  <div class="form-group">
     <%= f.label :start_time %><br>
     <%= f.datetime_select :start_time, class: 'form-control' %>
   </div>
