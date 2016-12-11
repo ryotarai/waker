@@ -311,6 +311,13 @@ class NotifierProvider < ActiveRecord::Base
         color = 'danger'
         title = 'New incident opened'
         action_links = "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve> | <#{comment_url}|Comment>"
+
+        if include_description
+          fields << {
+            "title" => "Description",
+            "value" => @event.incident.description,
+          }
+        end
       when :acknowledged
         color = 'warning'
         title = 'Incident acknowledged'
@@ -367,6 +374,10 @@ class NotifierProvider < ActiveRecord::Base
 
     def target_events
       [:escalated, :opened, :acknowledged, :resolved]
+    end
+
+    def include_description
+      settings['include_description']
     end
   end
 
