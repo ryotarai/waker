@@ -1,11 +1,3 @@
-production:
-  adapter: mysql2
-  host: <%= ENV['DB_HOST'] %>
-  username: root
-  password: <%= ENV['DB_PASSWORD'] %>
-  database: waker_production
-  encoding: utf8mb4
-
 development:
   adapter: mysql2
   database: waker_development
