@@ -63,13 +63,13 @@ class CalendarDescriptionAutoScheduler < AutoScheduler
       parameters: {
         'calendarId' => calendar['id'],
         'timeMin' => Time.now.iso8601,
-        'timeMax' => Time.now.next_month.iso8601,
+        'timeMax' => (Time.now + 2.day).next_month.iso8601, #1ヶ月ギリギリだと最後のほうの予定が取れなくなるので2日後にする
       }
     ).data.items.sort do |a, b|
       a.start.dateTime <=> b.start.dateTime
     end.each do |event|
       description = schedule_description(event)
-      event_list[description['tag']].push(event) if description
+      event_list[description['tag']].push(event) if description['tag']
     end
 
     if event_list.count < 1
@@ -78,7 +78,12 @@ class CalendarDescriptionAutoScheduler < AutoScheduler
     end
 
     event_list.each do |_, v|
-      description = schedule_description(v.first)
+      description = schedule_description(v.last)
+
+      #1ヶ月先まで既に入力されていたらスキップする
+      #disableが指定されていたらスキップする
+      next if v.last.description['disable']
+
       kimeruhi = (Date.today..Date.today.next_month).reject do |day|
         description['conditions'].none? do |condition|
           case condition
@@ -98,9 +103,8 @@ class CalendarDescriptionAutoScheduler < AutoScheduler
       order = v.last.summary.split(event_delimiter)
 
       kimeruhi.each do |target|
-        if target <= v.last.start.dateTime
-          next
-        end
+        #既に入力されている日はスキップする
+        next if target <= v.last.start.dateTime
 
         if description['target']
           order.rolling!(description['target']['start'] - 1, description['target']['end'] - 1)
