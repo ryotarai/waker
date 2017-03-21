@@ -1,29 +1,5 @@
 class CalendarDescriptionAutoScheduler < AutoScheduler
   class << self
-    def public_holiday
-      @@public_holiday ? @@public_holiday : @@public_holiday = HolidayJp.between(Date.today, Date.today.next_month).map { |day| day.date }
-    end
-
-    def holiday
-      @@holiday ? @@holiday : @@holiday = weekend.concat(public_holiday).sort
-    end
-
-    def weekend
-      @@weekend ? @@weekend : @@weekend = (Date.today..Date.today.next_month).select{ |day| day.saturday? || day.sunday? }
-    end
-
-    def weekday
-      @@weekday ? @@weekday : @@weekday = (Date.today..Date.today.next_month).to_a - holiday
-    end
-
-    def date_set
-      @@date_set ? @@data_set : @@data_set = {
-        'public_holiday' => public_holiday,
-        'weekend' => weekend,
-        'holiday' => holiday
-      }
-    end
-
     def public_holiday?(day)
       HolidayJp.holiday?(day)
     end
@@ -39,13 +15,7 @@ class CalendarDescriptionAutoScheduler < AutoScheduler
     def weekday?(day)
       !holiday?(day)
     end
-
   end
-  @@public_holiday = nil
-  @@weekend = nil
-  @@holiday = nil
-  @@date_set = nil
-  @@weekday = nil
 
   def initialize(*)
     super
@@ -102,6 +72,11 @@ class CalendarDescriptionAutoScheduler < AutoScheduler
       event_list[description['tag']].push(event) if description
     end
 
+    if event_list.count < 1
+      puts "event list is empty."
+      return
+    end
+
     event_list.each do |_, v|
       description = schedule_description(v.first)
       kimeruhi = (Date.today..Date.today.next_month).reject do |day|
@@ -114,25 +89,54 @@ class CalendarDescriptionAutoScheduler < AutoScheduler
           end
         end
       end
-      pp description['conditions']
-      pp kimeruhi
+
+      if kimeruhi.count < 1
+        puts "kimeruhi is empty."
+        return
+      end
+
+      order = v.last.summary.split(event_delimiter)
+
+      kimeruhi.each do |target|
+        if target <= v.last.start.dateTime
+          next
+        end
+
+        if description['target']
+          order.rolling!(description['target']['start'] - 1, description['target']['end'] - 1)
+        else
+          order.rolling!()
+        end
+        start = target.since(v.last.start.dateTime.seconds_since_midnight)
+        client.execute(
+          api_method: calendar_api.events.insert,
+          parameters: {
+            calendarId: calendar['id']
+          },
+          body_object: {
+            summary: order.join(event_delimiter),
+            start: {
+              dateTime: start.iso8601
+            },
+            end: {
+              dateTime: (start + (v.last.end.dateTime - v.last.start.dateTime)).iso8601
+            },
+            description: v.last.description
+          }
+        )
+      end
     end
   end
 
-  def tes
-    self.send("holiday?", Date.today)
-  end
-
   def term
-    @series.settigns['term'] || '1month'
+    @series.settings['term'] ||= '1.month'
   end
 
   def range
-    @series.settings['range'] || {start => 1, :end => @series.escalations.count}
+    @series.settings['range'] ||= {:start => 1, :end => @series.escalations.count}
   end
 
   def schedule_description(event)
     event['description'] ? YAML.load(event['description']) : nil
   end
-
 end

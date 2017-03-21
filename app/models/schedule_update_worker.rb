@@ -4,7 +4,7 @@ class ScheduleUpdateWorker
   def perform
     EscalationSeries.all.each do |series|
       updater_class = case series.settings['schedule_by']
-                      when 'calendar_description'
+                      when 'calendar'
                         CalendarDescriptionAutoScheduler
                       else
                         nil
