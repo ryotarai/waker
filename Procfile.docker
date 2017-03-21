@@ -1,4 +1,4 @@
 web: puma -C docker/puma.rb
-worker: sidekiq -C config/sidekiq.yml
+worker: sidekiq
 auto_scheduler: while true; do rails runner 'ScheduleUpdateWorker.perform_async()'; sleep 3600; done
 update_escalations: while true; do rails runner 'EscalationUpdateWorker.perform_async()'; sleep 60; done
