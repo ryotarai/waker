@@ -73,7 +73,7 @@ class CalendarDescriptionAutoScheduler < AutoScheduler
     end
 
     if event_list.count < 1
-      puts "event list is empty."
+      Rails.logger.error "event list is empty."
       return
     end
 
@@ -91,7 +91,7 @@ class CalendarDescriptionAutoScheduler < AutoScheduler
       end
 
       if kimeruhi.count < 1
-        puts "kimeruhi is empty."
+        Rails.logger.error "kimeruhi is empty."
         return
       end
 
@@ -126,14 +126,6 @@ class CalendarDescriptionAutoScheduler < AutoScheduler
         )
       end
     end
-  end
-
-  def term
-    @series.settings['term'] ||= '1.month'
-  end
-
-  def range
-    @series.settings['range'] ||= {:start => 1, :end => @series.escalations.count}
   end
 
   def schedule_description(event)
