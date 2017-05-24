@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  post 'slack/interactive'
+
   get '/auth/:provider/callback', to: 'sessions#create'
 
   resources :incident_events, only: [] do

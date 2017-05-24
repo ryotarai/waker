@@ -306,19 +306,35 @@ class NotifierProvider < ActiveRecord::Base
       resolve_url = Rails.application.routes.url_helpers.resolve_incident_url(@event.incident, hash: @event.incident.confirmation_hash)
       comment_url = Rails.application.routes.url_helpers.new_incident_comment_url(@event.incident)
 
+      actions = []
       case kind_of_event
       when :opened
         color = 'danger'
         title = 'New incident opened'
-        action_links = "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve> | <#{comment_url}|Comment>"
+        if buttons_enabled?
+          action_links = "<#{comment_url}|Comment>"
+          actions = [:acknowledge, :resolve]
+        else
+          action_links = "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve> | <#{comment_url}|Comment>"
+        end
       when :acknowledged
         color = 'warning'
         title = 'Incident acknowledged'
-        action_links = "<#{resolve_url}|Resolve> | <#{comment_url}|Comment>"
+        if buttons_enabled?
+          action_links = "<#{comment_url}|Comment>"
+          actions = [:resolve]
+        else
+          action_links = "<#{resolve_url}|Resolve> | <#{comment_url}|Comment>"
+        end
       when :escalated
         color = 'warning'
         title = "Incident escalated to #{@event.escalated_to.name}"
-        action_links = "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve> | <#{comment_url}|Comment>"
+        if buttons_enabled?
+          action_links = "<#{comment_url}|Comment>"
+          actions = [:acknowledge, :resolve]
+        else
+          action_links = "<#{acknowledge_url}|Acknowledge> or <#{resolve_url}|Resolve> | <#{comment_url}|Comment>"
+        end
       when :resolved
         color = 'good'
         title = 'Incident resolved'
@@ -330,12 +346,30 @@ class NotifierProvider < ActiveRecord::Base
         text += " (#{action_links})"
       end
 
+      action_types = {
+        acknowledge: {
+          "name" => "response",
+          "text" => "Acknowledge",
+          "type" => "button",
+          "value" => "acknowledge",
+        },
+        resolve: {
+          "name" => "response",
+          "text" => "Resolve",
+          "type" => "button",
+          "value" => "resolve",
+          "style" => "primary",
+        },
+      }
+
       attachments = [{
         "fallback" => "[#{kind_of_event.to_s.capitalize}] #{@event.incident.subject}",
         "color" => color,
         "title" => title,
         "text" => text,
         "fields" => fields,
+        "callback_id" => "incident.#{@event.incident.id}",
+        "actions" => actions.map {|t| action_types[t] },
       }]
 
       payload = {'attachments' => attachments}
@@ -363,6 +397,10 @@ class NotifierProvider < ActiveRecord::Base
 
     def channel
       settings['channel']
+    end
+
+    def buttons_enabled?
+      settings['enable_buttons']
     end
 
     def target_events
