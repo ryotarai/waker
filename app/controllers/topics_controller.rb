@@ -1,6 +1,6 @@
 class TopicsController < ApplicationController
-  before_action :set_topic, only: [:show, :edit, :update, :destroy, :mailgun]
-  skip_before_action :login_required, only: [:mailgun]
+  before_action :set_topic, only: [:show, :edit, :update, :destroy, :mailgun, :mackerel, :nagios]
+  skip_before_action :login_required, only: [:mailgun, :mackerel, :nagios]
 
   # GET /topics
   # GET /topics.json
@@ -83,6 +83,50 @@ class TopicsController < ApplicationController
     @topic.incidents.create!(
       subject: subject,
       description: description,
+    )
+
+    render json: {}, status: 200
+  end
+
+  def mackerel
+    # unless @topic.enabled
+    #   Rails.logger.info "Incident creation is skipped because the topic is disabled."
+    #   render json: {}, status: 200
+    #   return
+    # end
+    #
+    # if @topic.in_maintenance?
+    #   Rails.logger.info "Incident creation is skipped because the topic is in maintenance."
+    #   render json: {}, status: 200
+    #   return
+    # end
+
+    # https://mackerel.io/ja/docs/entry/howto/alerts/webhook
+    @topic.incidents.create!(
+      subject: params['alert']['monitorName'] + ': ' + params['host']['name'] + ': '+ params['alert']['monitorName'],
+      description: params['alert']['url'],
+    )
+
+    render json: {}, status: 200
+  end
+
+  def nagios
+    # unless @topic.enabled
+    #   Rails.logger.info "Incident creation is skipped because the topic is disabled."
+    #   render json: {}, status: 200
+    #   return
+    # end
+    #
+    # if @topic.in_maintenance?
+    #   Rails.logger.info "Incident creation is skipped because the topic is in maintenance."
+    #   render json: {}, status: 200
+    #   return
+    # end
+
+    # https://mackerel.io/ja/docs/entry/howto/alerts/webhook
+    @topic.incidents.create!(
+      subject: params['alert']['monitorName'] + ': ' + params['host']['name'] + ': '+ params['alert']['monitorName'],
+      description: params['alert']['url'],
     )
 
     render json: {}, status: 200
