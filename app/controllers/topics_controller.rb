@@ -1,6 +1,6 @@
 class TopicsController < ApplicationController
-  before_action :set_topic, only: [:show, :edit, :update, :destroy, :mailgun]
-  skip_before_action :login_required, only: [:mailgun]
+  before_action :set_topic, only: [:show, :edit, :update, :destroy, :mailgun, :mackerel]
+  skip_before_action :login_required, only: [:mailgun, :mackerel]
 
   # GET /topics
   # GET /topics.json
@@ -85,6 +85,32 @@ class TopicsController < ApplicationController
       description: description,
     )
 
+    render json: {}, status: 200
+  end
+
+  # POST /topics/1/mackerel
+  def mackerel
+    data = JSON.parse(request.body.read)
+
+    unless @topic.enabled
+      Rails.logger.info "Incident creation is skipped because the topic is disabled."
+      render json: {}, status: 200
+      return
+    end
+
+    subject = "[" + data['alert']['status'] + "] " + data['host']['name']
+    description = JSON.pretty_generate(data)
+
+    if @topic.in_maintenance?(subject, description)
+      Rails.logger.info "Incident creation is skipped because the topic is in maintenance"
+      render json: {}, status: 200
+      return
+    end
+
+    @topic.incidents.create!(
+      subject: subject,
+      description: description,
+    )
     render json: {}, status: 200
   end
 
