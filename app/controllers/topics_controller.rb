@@ -114,6 +114,32 @@ class TopicsController < ApplicationController
     render json: {}, status: 200
   end
 
+  # POST /topics/1/alertmanager
+  def alertmanager
+    data = JSON.parse(request.body.read)
+
+    unless @topic.enabled
+      Rails.logger.info "Incident creation is skipped because the topic is disabled."
+      render json: {}, status: 200
+      return
+    end
+
+    subject = "[#{data['commonLabels']['severity']}] #{data['commonLabels']['alertname']}: #{data['commonAnnotations']['summary']}"
+    description = JSON.pretty_generate(data)
+
+    if @topic.in_maintenance?(subject, description)
+      Rails.logger.info "Incident creation is skipped because the topic is in maintenance"
+      render json: {}, status: 200
+      return
+    end
+
+    @topic.incidents.create!(
+      subject: subject,
+      description: description,
+    )
+    render json: {}, status: 200
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_topic
