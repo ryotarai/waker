@@ -50,6 +50,7 @@ Rails.application.routes.draw do
     member do
       post 'mailgun'
       post 'mackerel'
+      post 'alertmanager'
     end
   end
 
