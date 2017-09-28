@@ -70,8 +70,13 @@ Visit [http://localhost:3000/topics/new](http://localhost:3000/topics/new) and c
 
 ### 10. Send alerts to the topic
 
-Currently, only Mailgun is supported to receive mails (Patches are welcome :) ) You can configure Mailgun route setting with Mailgun endpoint you can see in [http://localhost:3000/topics/1](http://localhost:3000/topics/1)
+Suppoted alerts generaters are below:
 
+- Mailgun ( `http://localhost:3000/topics/1/mailgun` )
+- Mackerel ( `http://localhost:3000/topics/1/mackerel` )
+- Alertmanager ( `http://localhost:3000/topics/1/alertmanager` )
+
+If you want to use Mailgun, you can configure Mailgun route setting with Mailgun endpoint you can see in [http://localhost:3000/topics/1/mailgun](http://localhost:3000/topics/1/mailgun)
 ## Configuration
 
 ### Notifier Providers
