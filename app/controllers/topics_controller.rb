@@ -1,6 +1,6 @@
 class TopicsController < ApplicationController
-  before_action :set_topic, only: [:show, :edit, :update, :destroy, :mailgun, :mackerel]
-  skip_before_action :login_required, only: [:mailgun, :mackerel]
+  before_action :set_topic, only: [:show, :edit, :update, :destroy, :mailgun, :mackerel, :alertmanager]
+  skip_before_action :login_required, only: [:mailgun, :mackerel, :alertmanager]
 
   # GET /topics
   # GET /topics.json
