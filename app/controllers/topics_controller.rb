@@ -98,7 +98,8 @@ class TopicsController < ApplicationController
       return
     end
 
-    subject = "[" + data['alert']['status'] + "] " + data['host']['name']
+    name = data.key?('host') ?  data['host']['name'] : data['alert']['monitorName']
+    subject = "[" + data['alert']['status'] + "] " + name
     description = JSON.pretty_generate(data)
 
     if @topic.in_maintenance?(subject, description)
