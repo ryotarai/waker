@@ -1,4 +1,4 @@
-# Waker
+# Waker [![Build Status](https://travis-ci.org/ryotarai/waker.svg?branch=master)](https://travis-ci.org/ryotarai/waker)
 
 Alert Escalation System
 
