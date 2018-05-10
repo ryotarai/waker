@@ -1,0 +1,8 @@
+language: ruby
+rvm:
+  - 2.3.0
+services:
+  - mysql
+script:
+  - bundle exec rake db:test:prepare
+  - bundle exec rake spec
