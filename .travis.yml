@@ -1,0 +1,18 @@
+sudo: false
+dist: trusty
+language: ruby
+rvm:
+  - ruby-head
+  - 2.5.1
+  - 2.4.4
+  - 2.3.7
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+    - rvm: 2.4.4
+    - rvm: 2.5.1
+services: mysql
+bundler_args: --deployment --without production
+cache: bundler
+before_script: bundle exec rake db:setup
+script: bundle exec rake spec
