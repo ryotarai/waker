@@ -67,6 +67,10 @@ group :development, :test do
   gem 'factory_girl_rails'
 end
 
+group :test do
+  gem 'simplecov', require: false
+end
+
 gem 'dogapi'
 gem 'aws-sdk'
 gem 'rails_autolink'
