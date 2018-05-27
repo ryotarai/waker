@@ -1,0 +1,60 @@
+AllCops:
+  TargetRubyVersion: 2.4
+  DisplayCopNames: true
+  DisabledByDefault: true
+  Exclude:
+    - 'db/**/*'
+    - 'vendor/**/*'
+
+Rails:
+  Enabled: true
+
+Rails/ActionFilter:
+  EnforcedStyle: action
+  Enabled: true
+
+Style/HashSyntax:
+  Enabled: true
+
+Style/MethodDefParentheses:
+  Enabled: true
+
+Style/Encoding:
+  Enabled: true
+
+Style/For:
+  EnforcedStyle: each
+  Enabled: true
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: never
+  Enabled: true
+
+Style/NumericLiteralPrefix:
+  EnforcedOctalStyle: zero_only
+  Enabled: true
+
+Style/StabbyLambdaParentheses:
+  EnforcedStyle: require_parentheses
+  Enabled: true
+
+Layout/EmptyLines:
+  Enabled: true
+
+Layout/TrailingBlankLines:
+  Enabled: true
+
+Layout/TrailingWhitespace:
+  Enabled: true
+
+Layout/AccessModifierIndentation:
+  EnforcedStyle: indent
+  Enabled: true
+
+Layout/CaseIndentation:
+  EnforcedStyle: end
+  Enabled: true
+
+Layout/MultilineHashBraceLayout:
+  EnforcedStyle: symmetrical
+  Enabled: true

@@ -15,4 +15,3 @@ class EscalationUpdateWorker
     series.update_escalations!
   end
 end
-

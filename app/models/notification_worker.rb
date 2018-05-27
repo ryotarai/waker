@@ -16,4 +16,3 @@ class NotificationWorker
     end
   end
 end
-
