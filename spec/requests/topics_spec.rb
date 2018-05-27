@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Topics", :type => :request do
+RSpec.describe "Topics", type: :request do
   describe "POST /topics/1/mailgun" do
     let(:subject) { 'New Alert' }
     let(:body) { "Your server is on fire" }

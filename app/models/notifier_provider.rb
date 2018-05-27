@@ -378,7 +378,7 @@ class NotifierProvider < ActiveRecord::Base
       end
 
       url = URI.parse(webhook_url)
-      conn = Faraday.new(:url => "#{url.scheme}://#{url.host}") do |faraday|
+      conn = Faraday.new(url: "#{url.scheme}://#{url.host}") do |faraday|
         faraday.adapter Faraday.default_adapter
       end
 

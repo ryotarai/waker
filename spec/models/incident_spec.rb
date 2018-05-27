@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Incident, :type => :model do
+RSpec.describe Incident, type: :model do
   describe "after_create enqueue" do
     it "creates escalation jobs" do
       series = create(:escalation_series)

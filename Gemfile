@@ -65,6 +65,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'dotenv-rails'
   gem 'factory_girl_rails'
+  gem 'rubocop', require: false
 end
 
 group :test do

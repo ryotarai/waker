@@ -104,16 +104,16 @@ class WakerClient
 end
 
 def setup_google_client
-  client = Google::APIClient.new(:application_name => 'Waker',
-                                 :application_version => '1.0.0')
+  client = Google::APIClient.new(application_name: 'Waker',
+                                 application_version: '1.0.0')
 
   file_storage = Google::APIClient::FileStorage.new($config.credential_store_file)
   if file_storage.authorization.nil?
     client_secrets = Google::APIClient::ClientSecrets.load($config.client_secret_file)
     flow = Google::APIClient::InstalledAppFlow.new(
-      :client_id => client_secrets.client_id,
-      :client_secret => client_secrets.client_secret,
-      :scope => ['https://www.googleapis.com/auth/calendar.readonly']
+      client_id: client_secrets.client_id,
+      client_secret: client_secrets.client_secret,
+      scope: ['https://www.googleapis.com/auth/calendar.readonly']
     )
     client.authorization = flow.authorize(file_storage)
   else
@@ -181,4 +181,3 @@ persons.each_with_index do |name, i|
   escalation = escalations[i]
   client.update_escalation(escalation, escalate_to: user)
 end
-

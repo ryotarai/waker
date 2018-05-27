@@ -21,4 +21,3 @@ class EscalationWorker
     end
   end
 end
-

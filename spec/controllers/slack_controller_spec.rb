@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SlackController, :type => :controller do
+RSpec.describe SlackController, type: :controller do
 
   describe "GET interactive" do
     it "raises token verification failed error" do

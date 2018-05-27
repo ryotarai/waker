@@ -51,4 +51,3 @@ class Incident < ActiveRecord::Base
     events.create(kind: :opened)
   end
 end
-
