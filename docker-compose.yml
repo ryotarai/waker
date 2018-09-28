@@ -5,7 +5,7 @@ services:
     ports:
       - 5000:5000
     environment:
-      DATABASE_URL: 'mysql2://database/waker_development'
+      DATABASE_URL: 'mysql2://database/waker_development?encoding=utf8mb4&collation=utf8mb4_unicode_ci'
       REDIS_HOST: cache
     depends_on:
       - database
