@@ -91,7 +91,7 @@ class TopicsController < ApplicationController
   # POST /topics/1/mackerel
   def mackerel
     data = JSON.parse(request.body.read)
-    return  render json: {}, status: 200 if data['alert']['status'] == 'ok'
+    return  render json: {}, status: 200 if data.dig('alert', 'status') == 'ok' || data.dig('alertGroup', 'status') == 'ok'
 
     unless @topic.enabled
       Rails.logger.info "Incident creation is skipped because the topic is disabled."
@@ -99,8 +99,12 @@ class TopicsController < ApplicationController
       return
     end
 
-    name = data.key?('host') ?  data['host']['name'] : data['alert']['monitorName']
-    subject = "[" + data['alert']['status'] + "] " + name
+    if data['event'] == 'alertGroup' then
+      subject = "[#{data['alertGroup']['status']}] #{data['alertGroupSetting']['name']}"
+    else
+      name = data.key?('host') ?  data['host']['name'] : data['alert']['monitorName']
+      subject = "[#{data['alert']['status']}] #{name}"
+    end
     description = JSON.pretty_generate(data)
 
     if @topic.in_maintenance?(subject, description)
