@@ -91,7 +91,7 @@ class TopicsController < ApplicationController
   # POST /topics/1/mackerel
   def mackerel
     data = JSON.parse(request.body.read)
-    return  render json: {}, status: 200 if data.dig('alert', 'status') == 'ok' || data.dig('alertGroup', 'status') == 'ok'
+    return  render json: {}, status: 200 if data.dig('alert', 'status') == 'ok' || data.dig('alertGroup', 'status') == 'OK'
 
     unless @topic.enabled
       Rails.logger.info "Incident creation is skipped because the topic is disabled."
