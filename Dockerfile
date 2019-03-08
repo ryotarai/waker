@@ -1,4 +1,4 @@
-FROM ruby:2.3
+FROM ruby:2.4.5-jessie
 
 RUN apt-get update && apt-get -y install nodejs
 

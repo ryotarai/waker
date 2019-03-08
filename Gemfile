@@ -39,7 +39,7 @@ gem 'kaminari'
 
 gem 'puma'
 gem 'rack-health'
-gem 'omniauth-google-oauth2'
+gem 'omniauth-google-oauth2', '~> 0.6.0'
 gem 'twilio-ruby'
 
 gem 'mysql2'
