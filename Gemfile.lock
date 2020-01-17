@@ -175,7 +175,7 @@ GEM
       pry (~> 0.10)
     public_suffix (3.0.3)
     puma (3.6.0)
-    rack (1.6.11)
+    rack (1.6.12)
     rack-health (0.1.2)
       rack (>= 1.2.0)
     rack-protection (1.5.5)
