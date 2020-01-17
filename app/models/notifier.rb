@@ -1,4 +1,4 @@
-class Notifier < ActiveRecord::Base
+class Notifier < ApplicationRecord
   belongs_to :provider, class_name: 'NotifierProvider'
   belongs_to :user
   belongs_to :topic

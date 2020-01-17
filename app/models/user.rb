@@ -1,6 +1,6 @@
 require 'securerandom'
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   scope :active, -> { where(active: true) }
 
   has_many :notifiers

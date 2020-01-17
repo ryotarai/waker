@@ -1,4 +1,4 @@
-class Escalation < ActiveRecord::Base
+class Escalation < ApplicationRecord
   belongs_to :escalation_series
   belongs_to :escalate_to, class_name: 'User'
 

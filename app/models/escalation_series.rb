@@ -1,4 +1,4 @@
-class EscalationSeries < ActiveRecord::Base
+class EscalationSeries < ApplicationRecord
   has_many :escalations, dependent: :destroy
   has_many :topics, dependent: :destroy
 

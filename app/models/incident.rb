@@ -1,6 +1,6 @@
 require 'digest/sha1'
 
-class Incident < ActiveRecord::Base
+class Incident < ApplicationRecord
   STATUSES = [:opened, :acknowledged, :resolved]
 
   belongs_to :topic

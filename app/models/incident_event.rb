@@ -1,4 +1,4 @@
-class IncidentEvent < ActiveRecord::Base
+class IncidentEvent < ApplicationRecord
   belongs_to :incident
 
   enum kind: [:opened, :acknowledged, :resolved, :escalated, :commented, :notified]

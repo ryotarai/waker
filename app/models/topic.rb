@@ -1,4 +1,4 @@
-class Topic < ActiveRecord::Base
+class Topic < ApplicationRecord
   enum kind: [:api]
   belongs_to :escalation_series
   has_many :incidents

@@ -1,4 +1,4 @@
-class NotifierProvider < ActiveRecord::Base
+class NotifierProvider < ApplicationRecord
   serialize :settings, JSON
   enum kind: [:mailgun, :file, :rails_logger, :hipchat, :twilio, :slack, :datadog, :sns]
 
