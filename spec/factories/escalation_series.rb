@@ -1,5 +1,5 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :escalation_series do
-    name "Infra"
+    name { "Infra" }
   end
 end

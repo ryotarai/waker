@@ -1,9 +1,9 @@
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   config.before(:suite) do
     begin
-      FactoryGirl.lint
+      FactoryBot.lint
     ensure
       DatabaseRewinder.clean_all
     end
