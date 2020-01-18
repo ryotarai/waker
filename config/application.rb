@@ -45,4 +45,3 @@ Rails.application.config.middleware.use OmniAuth::Builder do
                name: 'google_oauth2_with_calendar',
                access_type: 'offline', approval_prompt: 'force', prompt: 'consent')
 end
-OmniAuth.config.logger = Rails.logger
