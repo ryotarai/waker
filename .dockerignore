@@ -1,0 +1,6 @@
+logs/*
+bin/*
+doc/*
+vendor/*
+coverage/*
+tmp/*
