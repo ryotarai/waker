@@ -1,9 +1,11 @@
-FROM ruby:2.4.5-jessie
+FROM ruby:2.6.5
 
-RUN apt-get update && apt-get -y install nodejs
+RUN apt update -qqy && apt -qqy install nodejs
 
 WORKDIR /tmp
 ADD Gemfile* /tmp/
+
+RUN gem install bundler:2.1.4
 RUN bundle install --deployment -j4 --without development test
 
 ADD . /app
