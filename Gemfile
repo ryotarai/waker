@@ -17,7 +17,7 @@ gem 'jquery-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'sdoc'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -29,22 +29,21 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'capistrano-rails', group: :development
 
 gem 'sidekiq', '~> 3.3.0'
-
 gem 'sinatra'
 
-gem 'faraday'
+gem 'faraday', '~> 0.15.4'
 gem 'holiday_jp'
 gem 'hipchat'
 gem 'kaminari'
 
 gem 'puma'
 gem 'rack-health'
-gem 'omniauth-google-oauth2', '~> 0.6.0'
+gem 'omniauth-google-oauth2', '~> 0.6'
+gem 'retriable', '3.0.1'
 gem 'twilio-ruby'
-
 gem 'mysql2'
 
-gem 'google-api-client'
+gem 'google-api-client', '~> 0.7.1'
 
 gem 'foreman'
 
