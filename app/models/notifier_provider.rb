@@ -262,7 +262,7 @@ class NotifierProvider < ApplicationRecord
         @event, options
       )
 
-      Twilio::REST::Client.new(account_sid, auth_token).account.calls.create(
+      Twilio::REST::Client.new(account_sid, auth_token).calls.create(
         from: from,
         to: to,
         url: url,
@@ -305,7 +305,6 @@ class NotifierProvider < ApplicationRecord
       acknowledge_url = Rails.application.routes.url_helpers.acknowledge_incident_url(@event.incident, hash: @event.incident.confirmation_hash)
       resolve_url = Rails.application.routes.url_helpers.resolve_incident_url(@event.incident, hash: @event.incident.confirmation_hash)
       comment_url = Rails.application.routes.url_helpers.new_incident_comment_url(@event.incident)
-
       actions = []
       case kind_of_event
       when :opened
