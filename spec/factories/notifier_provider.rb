@@ -1,6 +1,6 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :notifier_provider do
-    name "Logger"
-    kind :rails_logger
+    name { "Logger" }
+    kind { :rails_logger }
   end
 end

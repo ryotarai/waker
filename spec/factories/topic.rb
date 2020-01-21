@@ -1,7 +1,7 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :topic do
-    name "Infra"
-    kind "api"
+    name { "Infra" }
+    kind { "api" }
     escalation_series
   end
 end

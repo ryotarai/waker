@@ -1,5 +1,5 @@
 class SlackController < ApplicationController
-  skip_before_action :login_required, only: [:interactive]
+  skip_before_action :login_required, only: [:interactive], raise: false
 
   def interactive
     verify!

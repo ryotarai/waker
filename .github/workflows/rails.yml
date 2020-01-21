@@ -1,0 +1,33 @@
+name: Rails
+
+on: [push]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    container:
+      image: ruby:2.6.5
+      env:
+        MYSQL_HOST: mysql
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup YARN and NodeJS
+      run: |
+        curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+        echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+        curl -sL https://deb.nodesource.com/setup_12.x | bash -
+        apt-get install -y yarn nodejs
+    - name: Build and setup
+      run: |
+        gem install bundler --no-document
+        bundle install --jobs 4 --retry 3 --deployment
+        bundle exec rails yarn:install db:setup assets:precompile
+        bundle exec rake
+      env:
+        RAILS_ENV: "test"

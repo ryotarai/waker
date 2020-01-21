@@ -1,4 +1,4 @@
-class NotifierProvider < ActiveRecord::Base
+class NotifierProvider < ApplicationRecord
   serialize :settings, JSON
   enum kind: [:mailgun, :file, :rails_logger, :hipchat, :twilio, :slack, :datadog, :sns]
 
@@ -262,7 +262,7 @@ class NotifierProvider < ActiveRecord::Base
         @event, options
       )
 
-      Twilio::REST::Client.new(account_sid, auth_token).account.calls.create(
+      Twilio::REST::Client.new(account_sid, auth_token).calls.create(
         from: from,
         to: to,
         url: url,
@@ -305,7 +305,6 @@ class NotifierProvider < ActiveRecord::Base
       acknowledge_url = Rails.application.routes.url_helpers.acknowledge_incident_url(@event.incident, hash: @event.incident.confirmation_hash)
       resolve_url = Rails.application.routes.url_helpers.resolve_incident_url(@event.incident, hash: @event.incident.confirmation_hash)
       comment_url = Rails.application.routes.url_helpers.new_incident_comment_url(@event.incident)
-
       actions = []
       case kind_of_event
       when :opened

@@ -31,18 +31,18 @@ ActiveRecord::Schema.define(version: 20161207045554) do
   end
 
   create_table "escalations", force: :cascade do |t|
-    t.integer  "escalate_to_id",       limit: 4
+    t.bigint "escalate_to_id",       limit: 4
     t.integer  "escalate_after_sec",   limit: 4
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
-    t.integer  "escalation_series_id", limit: 4
+    t.bigint "escalation_series_id", limit: 4
   end
 
   add_index "escalations", ["escalate_to_id"], name: "index_escalations_on_escalate_to_id", using: :btree
   add_index "escalations", ["escalation_series_id"], name: "index_escalations_on_escalation_series_id", using: :btree
 
   create_table "incident_events", force: :cascade do |t|
-    t.integer  "incident_id", limit: 4
+    t.bigint "incident_id", limit: 4
     t.integer  "kind",        limit: 4
     t.text     "text",        limit: 65535
     t.datetime "created_at",                null: false
@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 20161207045554) do
   create_table "incidents", force: :cascade do |t|
     t.string   "subject",     limit: 255
     t.text     "description", limit: 65535
-    t.integer  "topic_id",    limit: 4
+    t.bigint "topic_id",    limit: 4
     t.datetime "occured_at"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 20161207045554) do
   add_index "incidents", ["topic_id"], name: "index_incidents_on_topic_id", using: :btree
 
   create_table "maintenances", force: :cascade do |t|
-    t.integer  "topic_id",   limit: 4
+    t.bigint "topic_id",   limit: 4
     t.datetime "start_time"
     t.datetime "end_time"
     t.datetime "created_at",             null: false
@@ -88,9 +88,9 @@ ActiveRecord::Schema.define(version: 20161207045554) do
     t.integer  "notify_after_sec", limit: 4
     t.datetime "created_at",                                    null: false
     t.datetime "updated_at",                                    null: false
-    t.integer  "user_id",          limit: 4
-    t.integer  "provider_id",      limit: 4
-    t.integer  "topic_id",         limit: 4
+    t.bigint "user_id",          limit: 4
+    t.bigint "provider_id",      limit: 4
+    t.bigint "topic_id",         limit: 4
     t.boolean  "enabled",                        default: true
   end
 
@@ -103,7 +103,7 @@ ActiveRecord::Schema.define(version: 20161207045554) do
     t.integer  "kind",                 limit: 4
     t.datetime "created_at",                                      null: false
     t.datetime "updated_at",                                      null: false
-    t.integer  "escalation_series_id", limit: 4
+    t.bigint "escalation_series_id", limit: 4
     t.boolean  "enabled",                          default: true
   end
 

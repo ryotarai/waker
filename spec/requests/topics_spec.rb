@@ -6,7 +6,7 @@ RSpec.describe "Topics", type: :request do
     let(:body) { "Your server is on fire" }
     it "creates a new incident" do
       topic = create(:topic)
-      post mailgun_topic_path(topic, format: :json), {
+      post mailgun_topic_path(topic, format: :json), params: {
         'subject' => subject,
         'body-plain' => body,
       }

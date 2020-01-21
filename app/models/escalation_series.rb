@@ -1,4 +1,4 @@
-class EscalationSeries < ActiveRecord::Base
+class EscalationSeries < ApplicationRecord
   has_many :escalations, dependent: :destroy
   has_many :topics, dependent: :destroy
 
@@ -53,7 +53,11 @@ class EscalationSeries < ActiveRecord::Base
         raise "User ##{user_as.id} is not authenticated by 'google_oauth2_with_calendar' provider"
       end
 
-      client = Google::APIClient.new(application_name: "Waker", application_version: "2.0.0")
+      client = Google::APIClient.new(
+        application_name: "Waker",
+        application_version: "2.0.0",
+        user_agent: "Waker/2.0.0 google-api-client"
+      )
       auth = client.authorization
 
       expired = Time.at(user_as.credentials.fetch('expires_at')) < Time.now

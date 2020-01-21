@@ -8,8 +8,6 @@ class ApplicationController < ActionController::Base
     before_action :login_required
   end
 
-  private
-
   def login_required
     unless current_user
       session[:user_id] = nil
@@ -23,6 +21,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  private
   def current_user=(user)
     session[:user_id] = user.id
   end

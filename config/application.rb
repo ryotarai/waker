@@ -31,8 +31,17 @@ module Waker
     # config.i18n.default_locale = :de
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
-
     config.middleware.use Rack::Health
+    config.middleware.use OmniAuth::Builder do
+      config = {}
+      config[:hd] = ENV['GOOGLE_DOMAIN'] if ENV['GOOGLE_DOMAIN']
+
+      provider :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"], config
+      provider :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"],
+      config.merge(scope: 'userinfo.profile,userinfo.email,calendar',
+                   name: 'google_oauth2_with_calendar',
+                   access_type: 'offline', approval_prompt: 'force', prompt: 'consent')
+    end
   end
 end
+
