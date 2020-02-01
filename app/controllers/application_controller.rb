@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   def login_required
     unless current_user
       session[:user_id] = nil
-      redirect_to '/auth/google_oauth2'
+      redirect_to '/auth/google_oauth2_with_calendar'
       return
     end
 
