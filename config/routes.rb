@@ -51,6 +51,7 @@ Rails.application.routes.draw do
       post 'mailgun'
       post 'mackerel'
       post 'alertmanager'
+      post 'slack'
     end
   end
 

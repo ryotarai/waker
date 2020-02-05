@@ -34,5 +34,10 @@
   <pre><%= alertmanager_topic_url(@topic, format: :json) %></pre>
 </p>
 
+<p>
+  <strong>SlackEndpoint:</strong>
+  <pre><%= slack_topic_url(@topic, format: :json) %></pre>
+</p>
+
 <%= link_to 'Edit', edit_topic_path(@topic) %> |
 <%= link_to 'Back', topics_path %>

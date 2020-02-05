@@ -1,6 +1,6 @@
 class TopicsController < ApplicationController
-  before_action :set_topic, only: [:show, :edit, :update, :destroy, :mailgun, :mackerel, :alertmanager]
-  skip_before_action :login_required, only: [:mailgun, :mackerel, :alertmanager], raise: false
+  before_action :set_topic, only: [:show, :edit, :update, :destroy, :mailgun, :mackerel, :alertmanager, :slack]
+  skip_before_action :login_required, only: [:mailgun, :mackerel, :alertmanager, :slack], raise: false
 
   # GET /topics
   # GET /topics.json
@@ -144,6 +144,30 @@ class TopicsController < ApplicationController
       description: description,
     )
     render json: {}, status: 200
+  end
+
+  def slack
+    unless @topic.enabled
+      Rails.logger.info "Incident creation is skipped because the topic is disabled."
+      render json: {}, status: 200
+      return
+    end
+
+    subject = "channel:#{params['channel_name']} user:#{params['user_name']}"
+    description = params['text']
+
+    if @topic.in_maintenance?(subject, description)
+      Rails.logger.info "Incident creation is skipped because the topic is in maintenance."
+      render json: {}, status: 200
+      return
+    end
+
+    @topic.incidents.create!(
+      subject: subject,
+      description: description,
+    )
+
+    render json: {text: 'accept your page'}, status: 200
   end
 
   private
