@@ -29,8 +29,8 @@ RSpec.describe "Topics", type: :request do
       expect(response).to have_http_status(200)
 
       incident = Incident.last
-      expect(incident.subject).to eq("channel:test_channel user:test_user")
-      expect(incident.description).to eq("help me")
+      expect(incident.subject).to eq("escalation from slack,channel name:test_channel help me")
+      expect(incident.description).to eq("channel:test_channel user:test_user help me")
     end
   end
 end

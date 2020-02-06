@@ -153,8 +153,8 @@ class TopicsController < ApplicationController
       return
     end
 
-    subject = "channel:#{params['channel_name']} user:#{params['user_name']}"
-    description = params['text']
+    subject = "escalation from slack,channel name:#{params['channel_name']} #{params['text']}"
+    description = "channel:#{params['channel_name']} user:#{params['user_name']} #{params['text']}"
 
     if @topic.in_maintenance?(subject, description)
       Rails.logger.info "Incident creation is skipped because the topic is in maintenance."
