@@ -75,6 +75,7 @@ Suppoted alerts generaters are below:
 - Mailgun ( `http://localhost:3000/topics/1/mailgun` )
 - Mackerel ( `http://localhost:3000/topics/1/mackerel` )
 - Alertmanager ( `http://localhost:3000/topics/1/alertmanager` )
+- Slack( `http://localhost:3000/topics/1/slack` )
 
 If you want to use Mailgun, you can configure Mailgun route setting with Mailgun endpoint you can see in [http://localhost:3000/topics/1/mailgun](http://localhost:3000/topics/1/mailgun)
 ## Configuration

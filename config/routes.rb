@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :incident_events, only: [] do
     member do
       post 'twilio'
+      get 'twilio'
     end
   end
 
@@ -51,6 +52,7 @@ Rails.application.routes.draw do
       post 'mailgun'
       post 'mackerel'
       post 'alertmanager'
+      post 'slack'
     end
   end
 
