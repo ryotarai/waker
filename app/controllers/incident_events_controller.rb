@@ -1,7 +1,7 @@
 require 'securerandom'
 
 class IncidentEventsController < ApplicationController
-  skip_before_action :login_required, only: [:twilio]
+  skip_before_action :login_required, only: [:twilio], raise: false
 
   def twilio
     @event = IncidentEvent.find(params[:id])
