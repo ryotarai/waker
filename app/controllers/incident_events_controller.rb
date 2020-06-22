@@ -1,7 +1,7 @@
 require 'securerandom'
 
 class IncidentEventsController < ApplicationController
-  skip_before_action :login_required, only: [:twilio]
+  skip_before_action :login_required, only: [:twilio], raise: false
 
   def twilio
     @event = IncidentEvent.find(params[:id])
@@ -16,8 +16,8 @@ class IncidentEventsController < ApplicationController
         @event.incident.resolve! rescue nil
       end
       resp = Twilio::TwiML::VoiceResponse.new do |r|
-        r.Say @event.incident.status, voice: 'alice', language: language
-        r.Hangup
+        r.say message: @event.incident.status, voice: 'alice', language: language
+        r.hangup
       end
     else
       resp = Twilio::TwiML::VoiceResponse.new do |r|
