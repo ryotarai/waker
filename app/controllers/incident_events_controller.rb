@@ -16,8 +16,8 @@ class IncidentEventsController < ApplicationController
         @event.incident.resolve! rescue nil
       end
       resp = Twilio::TwiML::VoiceResponse.new do |r|
-        r.Say @event.incident.status, voice: 'alice', language: language
-        r.Hangup
+        r.say message: @event.incident.status, voice: 'alice', language: language
+        r.hangup
       end
     else
       resp = Twilio::TwiML::VoiceResponse.new do |r|
