@@ -1095,7 +1095,7 @@ GEM
     public_suffix (4.0.3)
     puma (4.3.5)
       nio4r (~> 2.0)
-    rack (2.1.1)
+    rack (2.2.3)
     rack-health (0.1.2)
       rack (>= 1.2.0)
     rack-protection (2.0.8.1)
