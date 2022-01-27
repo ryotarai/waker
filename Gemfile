@@ -28,7 +28,7 @@ gem 'sdoc'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'sidekiq', '~> 3.3.0'
+gem 'sidekiq', '~> 6.4.0'
 gem 'sinatra'
 
 gem 'faraday', '~> 0.15.4'
